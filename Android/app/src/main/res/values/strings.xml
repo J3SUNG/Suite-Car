@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">suiteCar</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_setting">Setting</string>
+    <string name="title_map">Map</string>
+    <string name="title_monitoring">Monitoring</string>
+
+    <string name="wo">Open the window</string>
+    <string name="wc">Close the window</string>
+    <string name="aic">Turn on the Air Conditioner with recirculation to cool</string>
+    <string name="ain">Turn on the Air Conditioner with recirculation</string>
+    <string name="aih">Turn on the Air Conditioner with recirculation to hot</string>
+    <string name="aoc">Turn on the Air Conditioner to cool</string>
+    <string name="aon">Turn on the Air Conditioner </string>
+    <string name="aoh">Turn on the Air Conditioner to hot</string>
+    <string name="title_activity_main">SuiteCar</string>
+</resources>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    tools:context=".ui.login.LogInActivity">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:src="@drawable/logo"
+        android:id="@+id/logo"/>
+
+    <com.google.android.material.tabs.TabLayout
+        android:layout_below="@+id/logo"
+        android:id="@+id/logInTabLayout"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabIndicator="@null"
+        app:tabSelectedTextColor="@color/mGreen"
+        app:tabTextColor="#44444444"/>
+
+    <androidx.viewpager.widget.ViewPager
+        android:layout_below="@+id/logInTabLayout"
+        android:id="@+id/logInViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:padding="10dp"/>
+
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="By QI_C"
+        android:textStyle="bold"
+        android:fontFamily="@font/dancingscript"
+        android:layout_marginBottom="10dp"/>
+
+</RelativeLayout>
