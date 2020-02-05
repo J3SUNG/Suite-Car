@@ -2,6 +2,8 @@ package com.qic.suitecar
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
@@ -10,6 +12,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.gms.maps.SupportMapFragment
+import com.qic.suitecar.ui.login.LogInActivity
+import com.qic.suitecar.ui.login.SharedPreValue
 import com.qic.suitecar.util.Map
 import com.qic.suitecar.util.TTS
 import kotlinx.android.synthetic.main.activity_main.*
@@ -38,8 +42,13 @@ class MainActivity : AppCompatActivity() {
             R.id.openDrawerButton -> {
                 drawerLayout.openDrawer(drawer)
             }
-            R.id.closeDrawerButton -> {
-                drawerLayout.closeDrawer(drawer)
+            R.id.drawerLogOutTextView->{
+                //TODO:Send to server for signout
+                SharedPreValue.setLoginFlag(this,false)
+                SharedPreValue.setUsername(this,"")
+                SharedPreValue.setUserNo(this,0)
+                var intent= Intent(this,LogInActivity::class.java)
+                startActivity(intent)
             }
         }
     }

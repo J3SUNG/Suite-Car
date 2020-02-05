@@ -27,4 +27,9 @@
         <item name="android:textColor">#ffffff</item>
         <item name="android:background">@drawable/bg_mgreen_button</item>
     </style>
+    <style name="drawerText" >
+        <item name="android:textSize">15sp</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:padding">5dp</item>
+    </style>
 </resources>

@@ -28,7 +28,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:orientation="vertical">
+            android:layout_margin="10dp"
+            android:background="#4427AE60"
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/mapHeart"
@@ -54,16 +57,17 @@
                 android:layout_below="@+id/mapInAir"
                 android:text="OUT-AIR : BAD"
                 android:textColor="#FF0000" />
-
         </LinearLayout>
 
-        <Button
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/openDrawerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_margin="10dp"
-            android:onClick="onClick" />
+            android:backgroundTint="@color/mGreen"
+            android:onClick="onClick"
+            android:src="@drawable/ic_menu_black_24dp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -75,114 +79,162 @@
         android:gravity="center_horizontal">
 
         <RelativeLayout
+            android:id="@+id/drawerUserTitle"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal"
+            android:background="@color/mGreen">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="User Information"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/drawerUserLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/drawerUserTitle"
             android:orientation="horizontal">
+
             <ImageView
                 android:id="@+id/drawerProfileImageView"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@drawable/logo"/>
+                android:src="@drawable/ic_person_black_24dp" />
+
             <TextView
                 android:id="@+id/drawerUsernameTextView"
-                android:layout_alignBottom="@+id/drawerProfileImageView"
-                android:layout_toRightOf="@+id/drawerProfileImageView"
+                style="@style/drawerText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Sarah"/>
-            <Button
-                android:id="@+id/closeDrawerButton"
-                android:layout_alignParentRight="true"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@null"
-                android:layout_margin="10dp"
-                android:text="X"
-                android:onClick="onClick" />
+                android:layout_alignBottom="@+id/drawerProfileImageView"
+                android:layout_toRightOf="@+id/drawerProfileImageView"
+                android:text="Sarah" />
+
         </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/drawerUserLayout"
+            android:background="@color/mGreen" />
 
         <LinearLayout
             android:id="@+id/sensorLayout"
-            android:layout_below="@+id/drawerUserLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/drawerUserLayout"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
+
                 <ImageView
                     android:id="@+id/drawerHeartImageView"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:src="@drawable/logo"/>
+                    android:src="@drawable/logo" />
+
                 <TextView
                     android:id="@+id/drawerHeartIdTextView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Sarah"/>
+                    android:text="Sarah" />
+
                 <TextView
                     android:id="@+id/drawerHeartMacTextView"
-                     android:layout_width="match_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Sarah"/>
+                    android:text="Sarah" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
+
                 <ImageView
                     android:id="@+id/drawerInAirImageView"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:src="@drawable/logo"/>
+                    android:src="@drawable/logo" />
+
                 <TextView
                     android:id="@+id/drawerInAirIdTextView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Sarah"/>
+                    android:text="Sarah" />
+
                 <TextView
                     android:id="@+id/drawerInAirMacTextView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Sarah"/>
+                    android:text="Sarah" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
+
                 <ImageView
                     android:id="@+id/drawerOutAirImageView"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:src="@drawable/logo"/>
+                    android:src="@drawable/logo" />
+
                 <TextView
                     android:id="@+id/drawerOutAirIdTextView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Sarah"/>
+                    android:text="Sarah" />
+
                 <TextView
                     android:id="@+id/drawerOutAirMacTextView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Sarah"/>
+                    android:text="Sarah" />
             </LinearLayout>
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@+id/drawerChangePasswordTextView"
+            android:background="@color/mGreen" />
+
         <TextView
             android:id="@+id/drawerChangePasswordTextView"
+            style="@style/drawerText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/separateLine0"
+            android:text="Change Password" />
+
+        <View
+            android:id="@+id/separateLine0"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
             android:layout_above="@+id/drawerLogOutTextView"
-            android:text="Change Password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:background="@color/mGreen" />
+
         <TextView
-            android:layout_alignParentBottom="true"
             android:id="@+id/drawerLogOutTextView"
-            android:text="Log Out"
+            style="@style/drawerText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="Sign out"
+            android:onClick="onClick"/>
     </RelativeLayout>
 </androidx.drawerlayout.widget.DrawerLayout>
