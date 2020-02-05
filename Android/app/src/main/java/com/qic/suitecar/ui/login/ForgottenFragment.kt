@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.qic.suitecar.R
 
 class ForgottenFragment : Fragment() {
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

@@ -1,7 +1,8 @@
-package com.qic.suitecar
+package com.qic.suitecar.util
 
 import android.content.Context
-import com.qic.suitecar.Action.*
+import com.qic.suitecar.R
+import com.qic.suitecar.util.Action.*
 import java.util.ArrayList
 
 class Fitting {

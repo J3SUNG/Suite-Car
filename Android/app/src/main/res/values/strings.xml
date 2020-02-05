@@ -14,4 +14,7 @@
     <string name="aon">Turn on the Air Conditioner </string>
     <string name="aoh">Turn on the Air Conditioner to hot</string>
     <string name="title_activity_main">SuiteCar</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAymdWK_9DnHXKY19cuUvg0oMo_FItNvQ0</string>
+    <string name="title_activity_maps">Map</string>
+
 </resources>

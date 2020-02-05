@@ -1,7 +1,6 @@
 package com.qic.suitecar.ui.monitoring
 
 import android.app.Activity.RESULT_OK
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
@@ -11,12 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.qic.suitecar.Action
-import com.qic.suitecar.Fitting
+import com.qic.suitecar.util.Action
+import com.qic.suitecar.util.Fitting
 import com.qic.suitecar.R
-import com.qic.suitecar.TTS
+import com.qic.suitecar.util.TTS
 import kotlinx.android.synthetic.main.fragment_monitoring.view.*
-import java.lang.Compiler.command
 import java.util.*
 
 class MonitoringFragment : Fragment(), View.OnClickListener {
@@ -35,7 +33,7 @@ class MonitoringFragment : Fragment(), View.OnClickListener {
 
         }
     }
-    lateinit var fitting:Fitting
+    lateinit var fitting: Fitting
     lateinit var root: View
     lateinit var actions: ArrayList<Action>
     override fun onCreateView(

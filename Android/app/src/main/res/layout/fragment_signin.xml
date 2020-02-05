@@ -15,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Username"
+            android:id="@+id/signInUsername"
             style="@style/editText"/>
 
         <EditText
@@ -22,6 +23,7 @@
             android:layout_height="wrap_content"
             android:hint="Password"
             android:inputType="textPassword"
+            android:id="@+id/signInPassword"
             style="@style/editText"/>
 
         <Button
