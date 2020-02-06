@@ -15,49 +15,85 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <Button
-            style="@style/normalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            android:layout_centerInParent="true"
-            android:onClick="onClick"
-            android:text="Fit for me" />
+            android:layout_margin="3dp"
+            android:background="@drawable/bg_white"
+            android:padding="3dp">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_margin="10dp"
-            android:background="#4427AE60"
-            android:orientation="vertical"
-            android:padding="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/mapHeart"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/perfect" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Heart" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/perfect" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="InAir" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/perfect" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="OutAir" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <Button
+                style="@style/normalButton"
+                android:id="@+id/suiteButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:text="Heart : Perfect"
-                android:textColor="#0000FF" />
-
-            <TextView
-                android:id="@+id/mapInAir"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/mapHeart"
-                android:text="IN-Air : Good"
-                android:textColor="#00FF00" />
-
-            <TextView
-                android:id="@+id/mapOutAir"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/mapInAir"
-                android:text="OUT-AIR : BAD"
-                android:textColor="#FF0000" />
-        </LinearLayout>
+                android:layout_alignParentRight="true"
+                android:onClick="onClick"
+                android:text="Suite" />
+        </RelativeLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/openDrawerButton"
@@ -82,8 +118,8 @@
             android:id="@+id/drawerUserTitle"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:orientation="horizontal"
-            android:background="@color/mGreen">
+            android:background="@color/mGreen"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
@@ -103,8 +139,8 @@
 
             <ImageView
                 android:id="@+id/drawerProfileImageView"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
                 android:src="@drawable/ic_person_black_24dp" />
 
             <TextView
@@ -114,6 +150,8 @@
                 android:layout_height="match_parent"
                 android:layout_alignBottom="@+id/drawerProfileImageView"
                 android:layout_toRightOf="@+id/drawerProfileImageView"
+                android:textSize="20sp"
+                android:gravity="bottom"
                 android:text="Sarah" />
 
         </RelativeLayout>
@@ -219,6 +257,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/separateLine0"
+            android:onClick="onClick"
             android:text="Change Password" />
 
         <View
@@ -234,7 +273,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:text="Sign out"
-            android:onClick="onClick"/>
+            android:onClick="onClick"
+            android:text="Sign out" />
     </RelativeLayout>
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -28,7 +28,7 @@ class SharedPreValue {
 
         fun getUsername(ctx: Context) : String{
             val preferences = ctx.getSharedPreferences("suitCar", Context.MODE_PRIVATE)
-            return preferences.getString("username"," ")!!
+            return preferences.getString("username","")!!
         }
         fun setUserNo(ctx: Context, value : Int){
             val preferences = ctx.getSharedPreferences("suitCar", Context.MODE_PRIVATE)

@@ -13,8 +13,8 @@ object RetrofitClient {
     fun getInstnace() : Retrofit {
         if(instance == null){
             instance = Retrofit.Builder()
-                //.baseUrl("http://teamc-iot.calit2.net/")
-                .baseUrl("http://192.168.33.99")
+                .baseUrl("http://teamc-iot.calit2.net/")
+                //.baseUrl("http://192.168.33.99")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         }

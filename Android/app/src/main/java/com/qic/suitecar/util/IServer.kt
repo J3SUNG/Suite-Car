@@ -8,9 +8,16 @@ interface IServer {
     @POST("signIn")
     @FormUrlEncoded
     fun signIn(
-        @Field("deivce") device :Int,
+        @Field("device") device :Int,
         @Field("username") username : String,
         @Field("password") password : String
     ): Call<ResponseBody>
-
+    @POST("changePassword")
+    @FormUrlEncoded
+    fun changePassword(
+        @Field("device") device :Int,
+        @Field("originalPassword") originalPassword : String,
+        @Field("newPassword") newPassword : String,
+        @Field("confirmPassword") passwordConfirm : String
+    ): Call<ResponseBody>
 }
