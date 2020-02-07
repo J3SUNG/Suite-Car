@@ -13,9 +13,11 @@ interface IServer {
         @Field("password") password : String
     ): Call<ResponseBody>
     @POST("changePassword")
+
     @FormUrlEncoded
     fun changePassword(
         @Field("device") device :Int,
+        @Field("user_no") user_no :Int,
         @Field("originalPassword") originalPassword : String,
         @Field("newPassword") newPassword : String,
         @Field("confirmPassword") passwordConfirm : String

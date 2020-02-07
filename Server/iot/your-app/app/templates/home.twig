@@ -1,14 +1,95 @@
 <html>
     <head>
-        <meta charset="utf-8"/>
-        <title>Slim 3</title>
-        <link href='//fonts.googleapis.com/css?family=Lato:300' rel='stylesheet' type='text/css'>
-        <link href='{{ base_url() }}/css/style.css' rel='stylesheet' type='text/css'>
+        <title>Suite Car</title>
+        <style>
+        .body {
+            background-color: #27ae60;
+        }
+        .signin_box {
+            margin:auto;
+            margin-top:130px;
+            height:300px;
+            width:1100px;
+            background-color: white;
+        }
+        .box_left {
+            float:left;
+            height:270px;
+            width:440px;
+            margin: 10px 40px 40px 40px;
+        }
+        .box_right {
+            float:left;
+            height:200px;
+            width:410px;
+            margin: 60px 40px 40px 90px;
+        }
+        .input_text {
+            border:0px;
+            font-size: 18px;
+            margin-top: 5px;
+        }
+        .img_logo {
+            width:450px;
+            height:auto;
+        }
+        .home_message {
+            text-align: right;
+            font-size: 24px;
+            font-weight: bold;
+            color: #27ae60;
+            font-family: Arial, Helvetica, sans-serif;
+            margin-right: 10px;
+        }
+        .button {
+            background-color: #27ae60;
+            border: none;
+            border-radius: 5px;
+            width: 125px;
+            height: 30px;
+            text-align: center;
+            color: white;
+            float: right;
+            margin-left: 10px;
+        }
+        .hr_h {
+            border:solid 0.3px;
+            height: 280px;
+            width: 0px;
+            float: left;
+        }
+        input {
+            width: 100%;
+        }
+        input:focus {
+            outline: none;
+        }
+        button {
+            cursor: pointer;
+        }
+        button:focus {
+            outline: none;
+        }
+        </style>
     </head>
-    <body>
-        <h1>Slim</h1>
-        <div>a microframework for PHP</div>
-	<h2>J3SUNG was Here</h2>
+    <body class = "body">
+        <div class = "signin_box">
+            <div class = "box_left">
+                <img class = "img_logo" src="images/logo.png" alt="logo">
+                <br><br>
+                <div class = "home_message">
+                    For your PERFECT driving,<br>
+                    Join us Right NOW!                        
+                </div>
+            </div>
+            <hr class = hr_h>
+            <div class = "box_right">
+                <button type="button" onclick="location.href='change_password_page'" class = "button" id = "password_change">Password Change</button>
+                <button type="button" onclick="location.href='login'" class = "button" id = "signout">Sign Out</button>
+                <form action="id_cancelation_page" method="get">
+                <button type="submit" class = "button" id = "id_cancelation_page">ID Cancelation</button>
+                </form>
+            </div>
+        </div>
     </body>
 </html>
-        

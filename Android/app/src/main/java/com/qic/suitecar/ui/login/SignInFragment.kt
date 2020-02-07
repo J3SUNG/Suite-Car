@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import com.qic.suitecar.MainActivity
 import com.qic.suitecar.R
 import com.qic.suitecar.dataclass.ResultData
+import com.qic.suitecar.dataclass.ResultSignInData
 import com.qic.suitecar.util.IServer
 import com.qic.suitecar.util.RetrofitClient
 import kotlinx.android.synthetic.main.fragment_signin.*
@@ -54,10 +55,12 @@ class SignInFragment : Fragment(), View.OnClickListener {
                 ) {
                     var a = response.body()!!.string()
                     var gson = Gson()
-                    var resultData = gson.fromJson(a, ResultData::class.java)
-                    if (resultData.result) {
+                    var resultSignInData = gson.fromJson(a, ResultSignInData::class.java)
+                    if (resultSignInData.result) {
                         Toast.makeText(mContext,"Welcome to SuitCar",Toast.LENGTH_SHORT).show()
                         SharedPreValue.setLoginFlag(context!!,true)
+                        SharedPreValue.setUserNo(context!!,resultSignInData.user_no)
+                        SharedPreValue.setUsername(context!!,username!!)
                         var intent = Intent(mContext, MainActivity::class.java)
                         startActivity(intent)
                     } else {

@@ -8,13 +8,15 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
         <fragment
             android:id="@+id/googleMap"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
+</LinearLayout>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -37,7 +39,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/perfect" />
+                        android:src="@drawable/ic_perfect" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -56,7 +58,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/perfect" />
+                        android:src="@drawable/ic_good" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -74,7 +76,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/perfect" />
+                        android:src="@drawable/ic_bad" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -86,8 +88,8 @@
             </LinearLayout>
 
             <Button
-                style="@style/normalButton"
                 android:id="@+id/suiteButton"
+                style="@style/normalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -113,152 +115,80 @@
         android:layout_gravity="start"
         android:background="#ffffff"
         android:gravity="center_horizontal">
-
-        <RelativeLayout
-            android:id="@+id/drawerUserTitle"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:background="@color/mGreen"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="User Information"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
-        </RelativeLayout>
-
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/drawerUserLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/drawerUserTitle"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/drawerProfileImageView"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:src="@drawable/ic_person_black_24dp" />
-
-            <TextView
-                android:id="@+id/drawerUsernameTextView"
-                style="@style/drawerText"
+            android:orientation="vertical">
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignBottom="@+id/drawerProfileImageView"
-                android:layout_toRightOf="@+id/drawerProfileImageView"
-                android:textSize="20sp"
-                android:gravity="bottom"
-                android:text="Sarah" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/drawerUserLayout"
-            android:background="@color/mGreen" />
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:background="@color/mGreen"
+                    android:text="User Information"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+                <Button
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="5dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/edit_black_24dp"
+                    android:id="@+id/drawerEditUserButton"
+                    android:onClick="onClick"/>
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/drawerUsernameTextView"
+                    style="@style/drawerText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_person_black_24dp"
+                    android:gravity="bottom|top"
+                    android:text="Sarah"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/sensorLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/drawerUserLayout"
+            android:layout_above="@+id/separateLine0"
             android:orientation="vertical">
-
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/drawerHeartImageView"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/logo" />
-
-                <TextView
-                    android:id="@+id/drawerHeartIdTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Sarah" />
-
-                <TextView
-                    android:id="@+id/drawerHeartMacTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Sarah" />
-            </LinearLayout>
-
-            <LinearLayout
+                android:layout_height="wrap_content">
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:background="@color/mGreen"
                 android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/drawerInAirImageView"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/logo" />
-
-                <TextView
-                    android:id="@+id/drawerInAirIdTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Sarah" />
-
-                <TextView
-                    android:id="@+id/drawerInAirMacTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Sarah" />
-            </LinearLayout>
-
-            <LinearLayout
+                android:text="Sensor Information"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+                <Button
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_margin="3dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/ic_add_black_24dp"
+                    android:id="@+id/drawerAddSensorButton"
+                    android:onClick="onClick"/>
+            </RelativeLayout>
+            <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/drawerOutAirImageView"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/logo" />
-
-                <TextView
-                    android:id="@+id/drawerOutAirIdTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Sarah" />
-
-                <TextView
-                    android:id="@+id/drawerOutAirMacTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Sarah" />
-            </LinearLayout>
+                android:layout_height="match_parent"
+                android:id="@+id/drawerSensorRecyclerView"/>
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_above="@+id/drawerChangePasswordTextView"
-            android:background="@color/mGreen" />
-
-        <TextView
-            android:id="@+id/drawerChangePasswordTextView"
-            style="@style/drawerText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/separateLine0"
-            android:onClick="onClick"
-            android:text="Change Password" />
 
         <View
             android:id="@+id/separateLine0"
@@ -273,7 +203,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:drawableLeft="@drawable/ic_exit_to_app_black_24dp"
             android:onClick="onClick"
-            android:text="Sign out" />
+            android:text=" Sign out" />
     </RelativeLayout>
 </androidx.drawerlayout.widget.DrawerLayout>

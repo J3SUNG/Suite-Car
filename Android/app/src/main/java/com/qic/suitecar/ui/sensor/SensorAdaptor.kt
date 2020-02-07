@@ -1,4 +1,4 @@
-package com.qic.suitecar.ui.setting
+package com.qic.suitecar.ui.sensor
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -28,6 +28,7 @@ class SensorAdaptor(val context: Context, val sensorInfoList: ArrayList<SensorIn
             itemView.sensorImageView.setImageDrawable(context.getDrawable(sensorInfo.img))
             itemView.sensorIdTextView.text = sensorInfo.id
             itemView.sensorMacTextView.text = sensorInfo.mac
+            itemView.sensorTypeTextView.text=sensorInfo.type
         }
     }
 

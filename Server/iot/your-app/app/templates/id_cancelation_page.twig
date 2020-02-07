@@ -22,14 +22,11 @@
             width: 450px;
             margin-bottom: 18px;
         }
-        .forgotten_info {
+        .signup_info {
             text-align: center;
         }
-        .forgotten_input {
-            margin-top: 50px;
-        }
-        .forgotten_button {
-            background-color: #27ae60;
+        .signup_button {
+            background-color: #27c96a;
             border: none;
             border-radius: 5px;
             width: 130px;
@@ -52,10 +49,10 @@
         button:focus {
             outline: none;
         }
-        #cancel {
+        #cancle {
             margin-right: 50px;
         }
-        #find {
+        #submit {
             margin-right: 20px;
         }
         </style>
@@ -63,18 +60,18 @@
     <body class = "body">
         <div class = "signup_box">
             <img class = "mini_img_logo" src="images/logo.png" alt="logo"><br>
-            <div class = "forgotten_info">
-                <div class = "forgotten_input">
-                    <form action = "forgotten_check">    
-                        <input class = "input_text" type = "text" name="username" placeholder="Username">
-                        <hr class = "hr_w"><br>
-                        <input class = "input_text" type = "text" name="email" placeholder="Email Address"><br>
-                        <hr class = "hr_w"><br>
-                        <button type="button" onclick="location.href='login'" class = "forgotten_button" id = "cancel">CANCLE</button>
-                        <button type="submit" class = "forgotten_button" id = "find">FIND</button>
-                    </form>
+            <form action="id_cancelation" method="post">
+                <div class = "signup_info">
+                    <input class = "input_text" type = "text" name="username" placeholder="Username">
+                    <hr class = "hr_w">
+                    <input class = "input_text" type = "password" name="password" placeholder="Password"> <br>
+                    <hr class = "hr_w">
+                    <input class = "input_text" type = "password" name="password_confirm" placeholder="Password_confirm"><br>
+                    <hr class = "hr_w">
+                    <button type = "button" onclick="location.href = 'login'" class = "signup_button" id = "cancel">CANCEL</button>
+                    <button type = "submit" class = "signup_button" id = "submit">SUBMIT</button>
                 </div>
-            </div>
+            </form>
         </div>
     </body>
 </html>

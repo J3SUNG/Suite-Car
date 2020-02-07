@@ -16,6 +16,12 @@ $app->get('/login', 'App\Controller\HomeController:login')
 $app->post('/signIn', 'App\Controller\HomeController:signIn')
     ->setName('signIn');
 
+$app->post('/signout', 'App\Controller\HomeController:signout')
+    ->setName('signout');
+
+$app->post('/changePassword', 'App\Controller\HomeController:changePassword')
+    ->setName('changePassword');
+
 $app->get('/forgotten', 'App\Controller\HomeController:forgotten')
     ->setName('forgotten');
 
@@ -40,17 +46,17 @@ $app->get('/testQuery', 'App\Controller\HomeController:testQuery')
 $app->get('/home', 'App\Controller\HomeController:home')
     ->setName('home');
 
-$app->post('/handlesignup', 'App\Controller\HomeController:handlesignup')
-    ->setName('handlesignup');
+$app->post('/signup_check', 'App\Controller\HomeController:signup_check')
+    ->setName('signup_check');
 
-$app->get('/post/{id}', 'App\Controller\HomeController:viewPost')
-    ->setName('view_post');
+$app->get('/signup_authorization', 'App\Controller\HomeController:signup_authorization')
+    ->setName('signup_authorization');
 
-$app->get('/testJSON', 'App\Controller\HomeController:testJSON')
-    ->setName('testJSON');
+$app->get('/id_cancelation_page', 'App\Controller\HomeController:id_cancelation_page')
+    ->setName('id_cancelation_page');
 
-$app->get('/ucsd/iot/testJSON/{start}/{end}/', 'App\Controller\HomeController:longerpath')
-    ->setName('longerpath');
-
-$app->post('/receive', 'App\Controller\HomeController:receive')
-    ->setName('receive');
+$app->post('/id_cancelation', 'App\Controller\HomeController:id_cancelation')
+    ->setName('id_cancelation');
+ 
+$app->get('/change_password_page', 'App\Controller\HomeController:change_password_page')
+->setName('change_password_page');

@@ -4,11 +4,13 @@ import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import com.github.mikephil.charting.data.Entry
 import kotlinx.android.synthetic.main.activity_air_info.*
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.data.LineData
 import com.qic.suitecar.R
+import com.qic.suitecar.dataclass.aqiData
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -17,13 +19,21 @@ class AirInfoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_air_info)
-        var data = ArrayList<String>()
-        data.add("Test1")
-        data.add("test2")
-        data.add("Test3")
-        airInfoViewPager.adapter = AirInfoPageAdapter(data)
+        var data = ArrayList<aqiData>()
+        data.add(aqiData(R.drawable.test,"AQI",30.0F))
+        data.add(aqiData(R.drawable.test,"PM10",30.0F))
+        data.add(aqiData(R.drawable.test,"PM2.5",30.0F))
+        data.add(aqiData(R.drawable.test,"CO",30.0F))
+        data.add(aqiData(R.drawable.test,"O3",30.0F))
+        data.add(aqiData(R.drawable.test,"SO2",30.0F))
+        data.add(aqiData(R.drawable.test,"NO2",30.0F))
+        airInfoViewPager.adapter = AirInfoPageAdapter(data,this)
         airInfoViewPager.startAutoScroll()
         setChart()
+        var sensorList=arrayOf("Sensor1","Sensor2","Sensor3")
+        var array_adapter=ArrayAdapter(this,R.layout.item_spinner_sensor,sensorList)
+        array_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
+        airInfoSpinner.adapter=array_adapter
     }
 
     private fun setChart() {
@@ -64,10 +74,15 @@ class AirInfoActivity : AppCompatActivity() {
 
     fun onClick(view: View) {
         when (view.id) {
-            R.id.airInfoLineChart -> {
+            R.id.airInfoSettingButton->{
                 showDialog()
             }
-
+            R.id.airInfoLeftButton->{
+                airInfoViewPager.currentItem--
+            }
+            R.id.airInfoRightButton->{
+                airInfoViewPager.currentItem++
+            }
         }
     }
 
