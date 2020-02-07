@@ -12,7 +12,7 @@ define('SIGN_UP', 0);
 define('FORGOTTEN', 1);
 define('INTMAX', 2147483647);
 define('WEB',0);
-define('ANDROID',0);
+define('ANDROID',1);
 final class HomeController extends BaseController
 {
     public function dispatch(Request $request, Response $response, $args)
@@ -179,32 +179,37 @@ final class HomeController extends BaseController
 		$str_now=strtotime(date("Y-m-d"));
 		$str_db=strtotime($row['password_date']);
 		
-		if(str_now>=str_db){
-			$check_date=true;
-		}else{
-			$check_date=false;
+		if(password_verify($Ppassword,$row[hashed_password])){
+			if($str_now>=$str_db) $result_code=2;
+			else $result_code=1;
+
+			$sql = "UPDATE Users SET login_flag = 2 WHERE user_no = :user_no";
+			$stmt = $this->em->getConnection()->prepare($sql);
+			$params['user_no'] =$row['user_no'];
+			$stmt->execute($params);
+		}else{			
+			$result_code=0;		
 		}
+		$data=['result'=>$result_code,'user_no'=>(int)$row['user_no']];
+
 		if($Pdevice==WEB){
-			if(password_verify($Ppassword,$row[hashed_password])){
-				if($Pdevice==0){
-					session_start();
-					$_SESSION['user_no']=$row['user_no'];
-					$this->view->render($response, 'home.twig', ['post' => $_POST]);				
-				}
-			}else{
-				echo "<script>alert(\"$a\");</script>";
-				$this->view->render($response, 'login.twig');				
-				// $data = ['result'=>false,'user_no'=>0];		
-			}
+			if($result_code==0){
+				echo "<script>alert(\"Something is wrong.. You know what I'm Saying?!\");</script>";
+				$this->view->render($response, 'login.twig');
+			}else if($result_code==1){
+				session_start();
+				$_SESSION['user_no']=$row['user_no'];
+				echo "<script>alert(\"Welcome to suiteCar!\");</script>";
+				$this->view->render($response, 'home.twig', ['post' => $_POST]);	
+			}else if($result_code==2){
+				session_start();
+				$_SESSION['user_no']=$row['user_no'];
+				echo "<script>alert(\"you should change the password\");</script>";
+				$this->view->render($response, 'home.twig', ['post' => $_POST]);
+			}	
 		}else if($Pdevice==ANDROID){
-			if(password_verify($Ppassword,$row[hashed_password])){
-				$result_code=true;
-			}else{			
-				$result_code=false;		
-			}
-			$data=['result'=>$result_code,'user_no'=>$row['user_no'],'check_date'=>$check_date];
-				 header('Content-type: application/json');
-				 echo json_encode($data);
+			header('Content-type: application/json');
+			echo json_encode($data);
 		}
 		
     }
@@ -212,7 +217,7 @@ final class HomeController extends BaseController
 	public function signout(Request $request, Response $response, $args)
     {
 		$user_no = $_GET['user_no'];
-		$sql = "UPDATE Users SET flag = 1 WHERE user_no = :user_no";
+		$sql = "UPDATE Users SET login_flag = 1 WHERE user_no = :user_no";
 		$stmt = $this->em->getConnection()->prepare($sql);
 		$params['user_no'] = $user_no;
 		$stmt->execute($params);
@@ -226,37 +231,55 @@ final class HomeController extends BaseController
 
 	public function changePassword(Request $request, Response $response, $args)
     {
-		//$Puser_no=$_POST['user_no'];
+		//check the password and origin is same
+		//check the password and confirm is same	Do it in js
+		$Puser_no=$_POST['user_no'];
 		$PoriginalPassword = $_POST['originalPassword'];
 		$Ppassword = $_POST['newPassword'];
 		$PpasswordConfirm = $_POST['confirmPassword'];
 		$Pdevice=$_POST['device'];
-	
-		//check the original password is valid
-		//check the password and origin is same
-		//check the password and confirm is same
-		//if it's done
-		
-		$hashed_password = password_hash($Ppassword,PASSWORD_DEFAULT);
-
-		$sql="UPDATE Users SET hashed_password=:hashed_password, password_date=:change_password WHERE user_no=:user_no";
-		$stmt=$this->em->getConnection()->prepare($sql);
-		$params['user_no'] = $_SESSION['user_no'];
-		$params['hashed_password'] = $hashed_password;
-		$params['change_password'] = date("Y-m-d");
-		$resultCount = $stmt->execute($params);
-		
-		if($resultCount){
-			$data = ['result'=>true,'device'=>$Pdevice];
-			if($Pdevice==1){
-			}else{
-				$this->view->render($response, 'login.twig', ['post' => $_POST]);				
-			}
-		}else{	
-			$data = ['result'=>false];		
+		if($Pdevice==WEB){
+			$Puser_no = $_SESSION['user_no'];
+		}else if($Pdevice==ANDROID){
+			$Puser_no=$_POST['user_no'];
 		}
-		header('Content-type: application/json');
-		echo json_encode($data);
+		$params1['user_no']=$Puser_no;
+		$sql="SELECT hashed_password FROM Users WHERE user_no=:user_no";
+		$stmt=$this->em->getConnection()->prepare($sql);
+		$resultCount = $stmt->execute($params1);
+		$row = $stmt->fetch();
+		$hashed_password=$row['hashed_password'];
+
+		//check the original password is valid
+		if(password_verify($PoriginalPassword, $hashed_password)){
+			$result_code=1;
+			$hashed_password = password_hash($Ppassword,PASSWORD_DEFAULT);
+			$sql="UPDATE Users SET hashed_password=:hashed_password, password_date=:password_date WHERE user_no=:user_no";
+			$params2['user_no'] = $Puser_no;
+			$params2['hashed_password'] = $hashed_password;
+			$timestamp = strtotime("+6 months");
+			$params2['password_date'] = date("Y-m-d", $timestamp);
+			$stmt=$this->em->getConnection()->prepare($sql);
+			$resultCount = $stmt->execute($params2);
+		}else{	
+			$result_code=0;	
+		}
+		
+		$data = ['result'=>$result_code];
+
+		if($Pdevice==WEB){
+			if($result_code==0){
+				echo "<script>alert(\"Something worng with you! Check again!\");</script>";
+				$this->view->render($response, 'change_password_page.twig');
+			}else if($result_code==1){
+				echo "<script>alert(\"Login agian plz$resultCount\");</script>";
+				$this->view->render($response, 'login.twig', ['post' => $_POST]);	
+			}
+		}else if($Pdevice==ANDROID){
+			header('Content-type: application/json');
+			echo json_encode($data);
+		}
+		
 	}
 
 	//Id cancelation function : erase every table related to user except outer air data

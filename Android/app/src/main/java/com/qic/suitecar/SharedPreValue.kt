@@ -33,7 +33,7 @@ class SharedPreValue {
         fun setUserNo(ctx: Context, value : Int){
             val preferences = ctx.getSharedPreferences("suitCar", Context.MODE_PRIVATE)
             val editor = preferences.edit()
-            editor.putInt("userNo",0)
+            editor.putInt("userNo",value)
             editor.commit()
         }
 

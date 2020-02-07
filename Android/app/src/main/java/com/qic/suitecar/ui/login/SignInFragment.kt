@@ -54,18 +54,29 @@ class SignInFragment : Fragment(), View.OnClickListener {
                     response: Response<ResponseBody>
                 ) {
                     var a = response.body()!!.string()
+
                     var gson = Gson()
                     var resultSignInData = gson.fromJson(a, ResultSignInData::class.java)
-                    if (resultSignInData.result) {
-                        Toast.makeText(mContext,"Welcome to SuitCar",Toast.LENGTH_SHORT).show()
-                        SharedPreValue.setLoginFlag(context!!,true)
-                        SharedPreValue.setUserNo(context!!,resultSignInData.user_no)
-                        SharedPreValue.setUsername(context!!,username!!)
-                        var intent = Intent(mContext, MainActivity::class.java)
-                        startActivity(intent)
-                    } else {
-                        Toast.makeText(mContext,"Check your ID or Password",Toast.LENGTH_SHORT).show()
+                    when(resultSignInData.result){
+                        0->{
+                            Toast.makeText(mContext,"Check your ID or Password",Toast.LENGTH_SHORT).show()
+                            return
+                        }
+                        1->{
+                            Toast.makeText(mContext,"Welcome to SuitCar",Toast.LENGTH_SHORT).show()
+
+                        }
+                        2->{
+                            Toast.makeText(mContext,"You should change the password",Toast.LENGTH_SHORT).show()
+
+                        }
                     }
+                    SharedPreValue.setLoginFlag(mContext,true)
+                    SharedPreValue.setUserNo(mContext,resultSignInData.user_no)
+                    Log.d("SignIn",resultSignInData.user_no.toString()+"asd")
+                    SharedPreValue.setUsername(mContext,username!!)
+                    var intent = Intent(mContext, MainActivity::class.java)
+                    startActivity(intent)
                 }
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     Log.d("SignIn", "Fail : " + t.message)

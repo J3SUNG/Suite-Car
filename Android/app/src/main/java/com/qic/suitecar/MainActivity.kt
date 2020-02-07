@@ -46,11 +46,11 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.ACCESS_BACKGROUND_LOCATION,
         Manifest.permission.READ_EXTERNAL_STORAGE
     )
-    var sensors=ArrayList<SensorInfo>()
+    var sensors = ArrayList<SensorInfo>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        drawerUsernameTextView.text=" "+SharedPreValue.getUsername(this)
+        drawerUsernameTextView.text = " " + SharedPreValue.getUsername(this)
         checkPermissions()
         TTS.set(this)
         var smf = supportFragmentManager.findFragmentById(R.id.googleMap) as SupportMapFragment
@@ -58,15 +58,16 @@ class MainActivity : AppCompatActivity() {
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         suiteManager = SuiteManager(this)
         setSensors()
+        Log.d("welcome",SharedPreValue.getUserNo(this).toString())
     }
 
     private fun setSensors() {
 
-        sensors.add(SensorInfo(R.drawable.ic_heartsensor,"뿌앵","뿌애앵","뿌애애애앵"))
-        sensors.add(SensorInfo(R.drawable.ic_inair,"뿌앵","뿌애앵","뿌애애애앵"))
-        sensors.add(SensorInfo(R.drawable.ic_outair,"뿌앵","뿌애앵","뿌애애애앵"))
-        drawerSensorRecyclerView.adapter= SensorAdaptor(this,sensors)
-        drawerSensorRecyclerView.layoutManager= LinearLayoutManager(this)
+        sensors.add(SensorInfo(R.drawable.ic_heartsensor, "뿌앵", "뿌애앵", "뿌애애애앵"))
+        sensors.add(SensorInfo(R.drawable.ic_inair, "뿌앵", "뿌애앵", "뿌애애애앵"))
+        sensors.add(SensorInfo(R.drawable.ic_outair, "뿌앵", "뿌애앵", "뿌애애애앵"))
+        drawerSensorRecyclerView.adapter = SensorAdaptor(this, sensors)
+        drawerSensorRecyclerView.layoutManager = LinearLayoutManager(this)
     }
 
     fun onClick(view: View) {
@@ -85,50 +86,53 @@ class MainActivity : AppCompatActivity() {
             R.id.suiteButton -> {
                 suiteManager.suite()
             }
-            R.id.drawerAddSensorButton->{
+            R.id.drawerAddSensorButton -> {
                 showAddSensorDiagram()
             }
-            R.id.drawerEditUserButton->{
+            R.id.drawerEditUserButton -> {
                 showEditUserButton()
             }
         }
     }
+
     private fun showEditUserButton() {
         var dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_edituser)
         dialog.setCancelable(true)
         dialog.show()
-        dialog.editUserDialogChangePasswordButton.setOnClickListener{
+        dialog.editUserDialogChangePasswordButton.setOnClickListener {
             showChangePasswordDiagram()
             dialog.dismiss()
         }
-        dialog.editUserDialogCloseAccountButton.setOnClickListener{
+        dialog.editUserDialogCloseAccountButton.setOnClickListener {
             Log.d("Edit User", "close account")
             dialog.dismiss()
         }
-        dialog.editUserDialogCancelButton.setOnClickListener{
+        dialog.editUserDialogCancelButton.setOnClickListener {
             Log.d("Edit User", "Cancel")
             dialog.dismiss()
         }
     }
+
     private fun showAddSensorDiagram() {
         var dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_addsensor)
         dialog.setCancelable(true)
         dialog.show()
-        dialog.addSensorDialogAddButton.setOnClickListener{
-            val sensorId=dialog.addSensorId.text.toString()
-            val sensorMac=dialog.addSensorMac.text.toString()
-            val sensorType=dialog.addSensorType.text.toString()
-            sensors.add(SensorInfo(R.drawable.logo,sensorId,sensorMac,sensorType))
+        dialog.addSensorDialogAddButton.setOnClickListener {
+            val sensorId = dialog.addSensorId.text.toString()
+            val sensorMac = dialog.addSensorMac.text.toString()
+            val sensorType = dialog.addSensorType.text.toString()
+            sensors.add(SensorInfo(R.drawable.logo, sensorId, sensorMac, sensorType))
             drawerSensorRecyclerView.adapter!!.notifyDataSetChanged()
             dialog.dismiss()
         }
-        dialog.addSensorDialogCancelButton.setOnClickListener{
+        dialog.addSensorDialogCancelButton.setOnClickListener {
             Log.d("Add Sensor", "Cancel")
             dialog.dismiss()
         }
     }
+
     private fun showChangePasswordDiagram() {
         var dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_changepassword)
@@ -140,11 +144,11 @@ class MainActivity : AppCompatActivity() {
             val originalPassword = dialog.originalPasswordEditText.text.toString()
             val newPassword = dialog.newPasswordEditText.text.toString()
             val confirmPassword = dialog.passwordConfirmEditText.text.toString()
-            val user_no=SharedPreValue.getUserNo(this)
+            val user_no = SharedPreValue.getUserNo(this)
             Log.d("Change", originalPassword + newPassword + confirmPassword)
             if (newPassword == confirmPassword) {
                 Runnable {
-                    myApi.changePassword(1, user_no,originalPassword, newPassword, confirmPassword)
+                    myApi.changePassword(1, user_no, originalPassword, newPassword, confirmPassword)
                         .enqueue(object :
                             retrofit2.Callback<ResponseBody> {
                             override fun onResponse(
@@ -155,35 +159,43 @@ class MainActivity : AppCompatActivity() {
                                 var gson = Gson()
                                 Log.d("Change Password", a)
                                 var resultData = gson.fromJson(a, ResultData::class.java)
-                                if (resultData.result) {
-                                    Toast.makeText(
-                                        baseContext,
-                                        "Success to change the Password",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    SharedPreValue.setLoginFlag(baseContext, false)
-                                    var intent = Intent(baseContext, LogInActivity::class.java)
-                                    startActivity(intent)
-                                } else {
-                                    Toast.makeText(
-                                        baseContext,
-                                        "Check you original password",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                when (resultData.result) {
+                                    0 -> {
+                                        Toast.makeText(
+                                            baseContext,
+                                            "Check you original password",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                    1 -> {
+                                        Toast.makeText(
+                                            baseContext,
+                                            "Success to change the Password",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        SharedPreValue.setLoginFlag(baseContext, false)
+                                        var intent = Intent(baseContext, LogInActivity::class.java)
+                                        startActivity(intent)
+                                    }
                                 }
                             }
+
                             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                                 Log.d("SignIn", "Fail : " + t.message)
                             }
                         })
                 }.run()
                 dialog.dismiss()
-            }else{
-                Toast.makeText(baseContext,"The new and confirm password are not same",Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(
+                    baseContext,
+                    "The new and confirm password are not same",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
         }
-        dialog.changeDialogCancelButton.setOnClickListener {
+        dialog.changeDialogCancelButton.setOnClickListener{
             Log.d("Change Password", "Cancel")
             dialog.dismiss()
         }
