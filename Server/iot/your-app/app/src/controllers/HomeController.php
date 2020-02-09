@@ -46,8 +46,8 @@ final class HomeController extends BaseController
 			$mail->isSMTP();                                            // Send using SMTP
 			$mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
 			$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-			$mail->Username   = 'qkrtmdtn1115@gmail.com';                     // SMTP username
-			$mail->Password   = 'MCmactisibic234';                               // SMTP password
+			$mail->Username   = 'franklinpark10@gamil.com';                     // SMTP username
+			$mail->Password   = 'frank123!';                               // SMTP password
 			$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
 			$mail->Port       = 587;                                    // TCP port to connect to
 
@@ -83,6 +83,7 @@ final class HomeController extends BaseController
 	
 	public function login(Request $request, Response $response, $args)
     {
+		echo "Im here";
 		$this->view->render($response, 'login.twig');
     }
 	
@@ -333,7 +334,8 @@ final class HomeController extends BaseController
 			$stmt->execute();
 
 			//3. delete inner air data
-			$sql = "DELETE Air_data FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE Sensors.type = 'I'";
+			$sql = "DELETE Air_data FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE Sensors.type = 'I' 
+					AND Users.user_no = $user_no";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
 

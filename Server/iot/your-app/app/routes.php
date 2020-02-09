@@ -1,8 +1,8 @@
 <?php
 // Routes
 
-$app->get('/', 'App\Controller\HomeController:dispatch')
-    ->setName('homepage');
+$app->get('/', 'App\Controller\HomeController:login')
+    ->setName('login');
 
 $app->get('/sendmail', 'App\Controller\HomeController:sendMail')
     ->setName('sendmail');
