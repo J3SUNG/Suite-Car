@@ -83,7 +83,6 @@ final class HomeController extends BaseController
 	
 	public function login(Request $request, Response $response, $args)
     {
-		echo "Im here";
 		$this->view->render($response, 'login.twig');
     }
 	
@@ -335,7 +334,7 @@ final class HomeController extends BaseController
 
 			//3. delete inner air data
 			$sql = "DELETE Air_data FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE Sensors.type = 'I' 
-					AND Users.user_no = $user_no";
+					AND Sensors.user_no = $user_no";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
 
