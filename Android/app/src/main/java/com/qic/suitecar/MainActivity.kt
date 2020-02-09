@@ -30,6 +30,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_addsensor.*
 import kotlinx.android.synthetic.main.dialog_addsensor.addSensorDialogCancelButton
 import kotlinx.android.synthetic.main.dialog_changepassword.*
+import kotlinx.android.synthetic.main.dialog_closeaccount.*
 import kotlinx.android.synthetic.main.dialog_edituser.*
 import kotlinx.android.synthetic.main.fragment_setting.view.*
 import okhttp3.ResponseBody
@@ -58,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         suiteManager = SuiteManager(this)
         setSensors()
-        Log.d("welcome",SharedPreValue.getUserNo(this).toString())
+        Log.d("welcome", SharedPreValue.getUserNo(this).toString())
     }
 
     private fun setSensors() {
@@ -105,7 +106,7 @@ class MainActivity : AppCompatActivity() {
             dialog.dismiss()
         }
         dialog.editUserDialogCloseAccountButton.setOnClickListener {
-            Log.d("Edit User", "close account")
+            showCloseAccountDiagram()
             dialog.dismiss()
         }
         dialog.editUserDialogCancelButton.setOnClickListener {
@@ -123,7 +124,7 @@ class MainActivity : AppCompatActivity() {
             val sensorId = dialog.addSensorId.text.toString()
             val sensorMac = dialog.addSensorMac.text.toString()
             val sensorType = dialog.addSensorType.text.toString()
-            sensors.add(SensorInfo(R.drawable.logo, sensorId, sensorMac, sensorType))
+            sensors.add(SensorInfo(R.drawable.ic_outair, sensorId, sensorMac, sensorType))
             drawerSensorRecyclerView.adapter!!.notifyDataSetChanged()
             dialog.dismiss()
         }
@@ -131,6 +132,55 @@ class MainActivity : AppCompatActivity() {
             Log.d("Add Sensor", "Cancel")
             dialog.dismiss()
         }
+    }
+
+    private fun showCloseAccountDiagram() {
+        var dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_closeaccount)
+        dialog.setCancelable(true)
+        dialog.show()
+        dialog.closeAccountSubmitButton.setOnClickListener {
+            var retrofit = RetrofitClient.getInstnace()
+            var myApi = retrofit.create(IServer::class.java)
+            val user_no = SharedPreValue.getUserNo(baseContext)
+            val password = dialog.closeAccountPassword.text.toString()
+            Runnable {
+                myApi.closeAccount(1, user_no, password)
+                    .enqueue(object :
+                        retrofit2.Callback<ResponseBody> {
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            var a = response.body()!!.string()
+                            var gson = Gson()
+                            Log.d("Change Password", a)
+                            var resultData = gson.fromJson(a, ResultData::class.java)
+                            when(resultData.result){
+                                0->{
+                                    Toast.makeText(baseContext,"I Won't let you go!!!!",Toast.LENGTH_SHORT).show()
+                                }
+                                1->{
+                                    Toast.makeText(baseContext,"Success to Close Account... Bye...",Toast.LENGTH_SHORT).show()
+                                    var intent=Intent(baseContext,LogInActivity::class.java)
+                                    startActivity(intent)
+                                }
+                            }
+                            dialog.dismiss()
+
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            Log.d("Close Account",t.message)
+                        }
+                    })
+            }.run()
+            dialog.closeAccountCancelButton.setOnClickListener {
+                Log.d("Change Password", "Cancel")
+                dialog.dismiss()
+            }
+        }
+
     }
 
     private fun showChangePasswordDiagram() {
@@ -195,7 +245,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-        dialog.changeDialogCancelButton.setOnClickListener{
+        dialog.changeDialogCancelButton.setOnClickListener {
             Log.d("Change Password", "Cancel")
             dialog.dismiss()
         }

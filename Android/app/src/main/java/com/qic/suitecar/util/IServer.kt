@@ -52,7 +52,7 @@ interface IServer {
 
     @POST("idCancellation")
     @FormUrlEncoded
-    fun idCancellation(
+    fun closeAccount(
         @Field("device") device :Int,
         @Field("user_no") user_no :Int,
         @Field("password") password : String

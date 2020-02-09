@@ -31,9 +31,9 @@ class AirInfoActivity : AppCompatActivity() {
         airInfoViewPager.startAutoScroll()
         setChart()
         var sensorList=arrayOf("Sensor1","Sensor2","Sensor3")
-        var array_adapter=ArrayAdapter(this,R.layout.item_spinner_sensor,sensorList)
+        /*var array_adapter=ArrayAdapter(this,R.layout.item_spinner_sensor,sensorList)
         array_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
-        airInfoSpinner.adapter=array_adapter
+        airInfoSpinner.adapter=array_adapter*/
     }
 
     private fun setChart() {

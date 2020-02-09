@@ -45,12 +45,6 @@ class Map : OnMapReadyCallback {
     override fun onMapReady(p0: GoogleMap?) {
         Log.d("Map", "Map is ready" + p0)
         mMap = p0
-        val sydney = LatLng(32.7158, -117.1692)
-        mMap!!.addMarker(
-            MarkerOptions().position(sydney)
-                .title("Marker in Sydney")
-        )
-        mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 17F))
         fusedLocationClient.requestLocationUpdates(                     //위치정보 요청
             locationRequest,
             locationCallback,
