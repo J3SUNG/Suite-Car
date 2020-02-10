@@ -69,10 +69,12 @@ final class HomeController extends BaseController
 			$mail->send();
 			echo "<script>alert(\"E-mail has been sent. Check your E-mail.\");</script>";
 			echo "<script>location.replace('login')</script>";
+
+			echo "not server setting<br>";
 		}
 		catch (Exception $e) {
-			//echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-			$this->view->render($response, 'failure_page.twig', ['alert_message' => "Message could not be sent. Mailer Error: {$mail->ErrorInfo}"]);
+			echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+			//$this->view->render($response, 'failure_page.twig', ['alert_message' => "Message could not be sent. Mailer Error: {$mail->ErrorInfo}"]);
 		}
 	}
 
@@ -405,7 +407,10 @@ final class HomeController extends BaseController
 			$stmt->execute();
 
 			//move to sendMail
+
+			echo "front<br>";
 			$this->sendMail($email, $username, $auth_code, SIGN_UP);
+			echo "back<br>";
 		}
 
 		//fail, move to default page : login page
@@ -464,5 +469,12 @@ final class HomeController extends BaseController
 	public function id_cancelation_page(Request $request, Response $response, $args)
 	{
 		$this->view->render($response, 'id_cancelation_page.twig');
+	}
+
+	public function air_data_transfer(Request $request, Response $response, $args)
+	{
+		$sql = "SELECT ";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
 	}
 }
