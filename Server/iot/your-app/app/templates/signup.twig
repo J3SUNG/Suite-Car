@@ -1,5 +1,6 @@
 <html>
     <head>
+        <script type='text/javascript' src='http://code.jquery.com/jquery.min.js'></script>
         <title>Suite Car</title>
         <style>
         .body {
@@ -70,6 +71,8 @@
                     <hr class = "hr_w">
                     <input class = "input_text" type = "password" name="password_confirm" id="password_confirm" placeholder="Password_confirmation"><br>
                     <hr class = "hr_w">
+                    <div class = "input_text" type = "text" name="alert_notEqual" id="alert_notEqual">Incorrect Password</div>
+                    <div class = "input_text" type = "text" name="alert_equal" id="alert_equal">Correct Password<br></div>
                     <input class = "input_text" type = "text" name="phone" placeholder="Phone_number"> <br>
                     <hr class = "hr_w">
                     <input class = "input_text" type = "text" name="first_name" placeholder="First_name"><br>
@@ -77,14 +80,14 @@
                     <input class = "input_text" type = "text" name="last_name" placeholder="Last_name"><br>
                     <hr class = "hr_w">
                     <button type = "button" onclick="location.href = 'login'" class = "signup_button" id = "cancel">CANCEL</button>
-                    <button type = "submit" class = "signup_button" id = "submit">SUBMIT</button>
+                    <button type = "submit" class = "signup_button" id = "submit" disabled>SUBMIT</button>
                 </div>
             </form>
         </div>
     </body>
 </html>
 
-<script>
+<script type='text/javascript'>
 /*
     function password_compare() {
         var password = $('#password').val();
@@ -101,21 +104,45 @@
         }
     }
 */
-/*
+$(function(){
+    $("#alert_notEqual").hide();
+    $("#alert_equal").hide();
+
     $('#password_confirm').keyup(function(event) {
         var password = $('#password').val();
         var password_confirm = $('#password_confirm').val();
-        alert("lll~!");
         //compare two password
         if(password == password_confirm) {
-            alert("~!");
-            $("#submit").removeAttr("disabled");
+            $("#alert_equal").show();
+            $("#alert_notEqual").hide();
+            document.getElementById("submit").disabled = false;
         }
         else {
-            $("#submit").attr("disabled", true);
+            $("#alert_equal").hide();
+            $("#alert_notEqual").show();
+            document.getElementById("submit").disabled = true;
         }
     });
-*/
+});
+
+$(document).ready(function(){
+    test();
+    function test(){
+        $.ajax({
+        url: "/signup_check",
+        success: 
+            function(data){
+            $('#listposts').html(data); //insert text of test.php into your div
+            
+        },
+        complete: function() {
+        // Schedule the next request when the current one's complete
+        setInterval(test, 5000); // The interval set to 5 seconds
+        }
+    });
+    };
+});
+
     /*
     $(password_compare)()
     {

@@ -37,7 +37,7 @@ final class HomeController extends BaseController
 						<br>$auth_code<br>";
 		}
 					
-		//email send
+		//email send (problem occur : maybe composer process need)
 		$mail = new PHPMailer(true);
 
 		try {
@@ -46,8 +46,8 @@ final class HomeController extends BaseController
 			$mail->isSMTP();                                            // Send using SMTP
 			$mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
 			$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-			$mail->Username   = 'franklinpark10@gamil.com';                     // SMTP username
-			$mail->Password   = 'frank123!';                               // SMTP password
+			$mail->Username   = 'wptjd6141@gamil.com';                     // SMTP username
+			$mail->Password   = 'wpgns213';                               // SMTP password
 			$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
 			$mail->Port       = 587;                                    // TCP port to connect to
 
@@ -369,6 +369,8 @@ final class HomeController extends BaseController
 	}
 		else
 		{
+			echo "<script>alert(\"passwords are not matched. Please type correct passwords.\");</script>";
+			echo "<script>location.replace('id_cancelation_page')</script>";
 		}
 	}
 
@@ -389,10 +391,34 @@ final class HomeController extends BaseController
 		$hash_password = password_hash($password, PASSWORD_DEFAULT);
 		$auth_code = password_hash($username, PASSWORD_DEFAULT);
 		
-		/* modify with java script */
+		//check duplication of username
+		$sql = "SELECT username FROM Users WHERE username = '$username';";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$temp_result = $stmt->fetch();
+		$username_db_Users = $temp_result['username'];
+		$sql = "SELECT username FROM Auths WHERE username = '$username';";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$temp_result2 = $stmt->fetch();
+		$username_db_Auths = $temp_result2['username'];
+
+		echo "Auth : $username_db_Auths<br>";
+		echo "User : $username_db_Users<br>";
+		
+		if($username_db_Users != null || !$username_db_Auths != null) {
+			echo "<script>alert(\"This Username is already registered or on procedure to be authorized Try other Username.\");</script>";
+			echo "<script>location.replace('signup')</script>";
+		}
+		else{
+			echo "<script>alert(\"else entered.\");</script>";
+			echo "<script>location.replace('signup')</script>"; 
+		}
+		
+		//modify with java script
 		//success, insert database & go to sendMail
 		if(!empty($email) && !empty($username) && !empty($password) && !empty($password_confirm) 
-		&& !empty($phone_number) && !empty($first_name) && !empty($last_name) && ($password == $password_confirm))
+		&& !empty($phone_number) && !empty($first_name) && !empty($last_name))
 		{
 			//database insertion : Auths
 			$sql = "INSERT INTO Auths (username, auth_code) VALUES ('$username', '$auth_code');";
@@ -408,9 +434,7 @@ final class HomeController extends BaseController
 
 			//move to sendMail
 
-			echo "front<br>";
 			$this->sendMail($email, $username, $auth_code, SIGN_UP);
-			echo "back<br>";
 		}
 
 		//fail, move to default page : login page
@@ -419,6 +443,7 @@ final class HomeController extends BaseController
 			echo "<script>alert(\"Please Enter Every Information.\");</script>";
 			echo "<script>location.replace('signup')</script>";
 		}
+		
 	}
 
 	//e-mail link click : authorization function
@@ -473,8 +498,12 @@ final class HomeController extends BaseController
 
 	public function air_data_transfer(Request $request, Response $response, $args)
 	{
-		$sql = "SELECT ";
-		$stmt= $this->em->getConnection()->prepare($sql);
-		$stmt->execute();
+		//$sql = "SELECT * FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE ";
+
+		//SELECT auth_code FROM Auths WHERE username='$username'
+		//DELETE Air_data FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE Sensors.type = 'I'
+		
+		//$stmt= $this->em->getConnection()->prepare($sql);
+		//$stmt->execute();
 	}
 }
