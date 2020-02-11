@@ -65,7 +65,7 @@
                 <div class = "signup_info">
                     <input class = "input_text" type = "text" name="username" id="username" placeholder="Username">
                     <hr class = "hr_w">
-                    <input class = "input_text" type = "text" name="email" placeholder="Email Address"><br>
+                    <input class = "input_text" type = "text" name="email" id="email" placeholder="Email Address"><br>
                     <hr class = "hr_w">
                     <input class = "input_text" type = "password" name="password" id="password" placeholder="Password" > <br>
                     <hr class = "hr_w">
@@ -73,14 +73,14 @@
                     <hr class = "hr_w">
                     <div class = "input_text" type = "text" name="alert_notEqual" id="alert_notEqual">Incorrect Password</div>
                     <div class = "input_text" type = "text" name="alert_equal" id="alert_equal">Correct Password<br></div>
-                    <input class = "input_text" type = "text" name="phone" placeholder="Phone_number"> <br>
+                    <input class = "input_text" type = "text" name="phone" id="phone" placeholder="Phone_number"> <br>
                     <hr class = "hr_w">
-                    <input class = "input_text" type = "text" name="first_name" placeholder="First_name"><br>
+                    <input class = "input_text" type = "text" name="first_name" id="first_name" placeholder="First_name"><br>
                     <hr class = "hr_w">
-                    <input class = "input_text" type = "text" name="last_name" placeholder="Last_name"><br>
+                    <input class = "input_text" type = "text" name="last_name" id = "last_name" placeholder="Last_name"><br>
                     <hr class = "hr_w">
                     <button type = "button" onclick="location.href = 'login'" class = "signup_button" id = "cancel">CANCEL</button>
-                    <button type = "submit" class = "signup_button" id = "submit" disabled>SUBMIT</button>
+                    <button type = "submit" class = "signup_button" onclick="check()" id = "submit" disabled>SUBMIT</button>
                 </div>
             </form>
         </div>
@@ -108,24 +108,33 @@ $(function(){
         }
     });
 });
-
-$(document).ready(function(){
-    test();
-    function test(){
-        $.ajax({
-        url: "/signup_check",
-        success: 
-            function(data){
-            $('#listposts').html(data); //insert text of test.php into your div
-            
+function check()
+{
+    $.ajax({
+        type : "POST"
+        url :"./signup_check",
+        data : {
+            "username" : $('#username').val(),
+            "email" : $('#email').val(),
+            "password" : $('#password').val(),
+            "password_confirm" : $('#password_confirm').val(),
+            "phone" : $('#phone').val(),
+            "first_name" : $('#first_name').val(),
+            "last_name" : $('#last_name').val()
         },
-        complete: function() {
-        // Schedule the next request when the current one's complete
-        setInterval(test, 5000); // The interval set to 5 seconds
+        success : function(data) {
+            alert(\"succees to send email\");
+        },
+        error : function(data) {
+            alert(\"failed to send email\");
         }
     });
-    };
-});
+}
+
+
+$(function() {
+
+})
 
     /*
     $(password_compare)()
@@ -140,39 +149,31 @@ $(document).ready(function(){
         )
     }
     */
-</script>
-
-<!--
-<script>
-    function test(){
-    alert("~!~!");
-        $.ajax({
-            type:"GET",
-            url:"checkSignup",
-            data:{
-                "username":$('#username').val()
-            },
-            success:function(data){	//data : checkSignup에서 넘겨준 결과
-                if($.trim(data)=="YES"){
-                    if($('#username').val()!=''){ 
-                        alert("사용가능한 아이디입니다.");
-                    }
-                }
-                else{
-                    if($('#id').val()!=''){
-                        alert("중복된 아이디입니다.");
-                        $('#id').val('');
-                        $('#id').focus();
-                    }
+/*
+function test(){
+    $.ajax({
+        type:"POST",
+        url:"/signup_check",
+        data:{
+            "username":$('#username').val()
+            "
+        },
+        success:function(data){	//data : checkSignup에서 넘겨준 결과
+            if($.trim(data)=="YES"){
+                if($('#username').val()!=''){ 
+                    alert("사용가능한 아이디입니다.");
                 }
             }
-        }) 
+            else{
+                if($('#id').val()!=''){
+                    alert("중복된 아이디입니다.");
+                    $('#id').val('');
+                    $('#id').focus();
+                }
+            }
+        }
     })
-
-                        }
+})
+}
+*/
 </script>
-
-
-                    <button type = "button" class = "signup_button" id = "sibal" onclick="test()">check_duplicate</button>
-
--->
