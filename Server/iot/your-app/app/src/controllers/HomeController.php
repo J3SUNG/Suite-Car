@@ -19,7 +19,6 @@ final class HomeController extends BaseController
     {
     	$this->view->render($response, 'login.twig');
 	}
-	
 	//Request $request, Response $response, $args
 	//e-mail sender : under the check of all input
     public function sendMail($email, $username, $auth_code, $temp)
@@ -43,11 +42,11 @@ final class HomeController extends BaseController
 		try {
 			//Server settings
 			//$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
-			$mail->isSMTP();                                            // Send using SMTP
+			/*$mail->isSMTP();                                            // Send using SMTP
 			$mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
 			$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
 			$mail->Username   = 'qkrtmdtn1115@gmail.com';                     // SMTP username
-			$mail->Password   = 'MCmactisibic234';                               // SMTP password
+			$mail->Password   = 'MCmactisibic1!';                               // SMTP password
 			$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
 			$mail->Port       = 587;                                    // TCP port to connect to
 
@@ -66,14 +65,14 @@ final class HomeController extends BaseController
 			$mail->AddEmbeddedImage('images/logo.png', 'Logoimage');
 			$mail->Body=$message;
 			$mail->AltBody = 'Thank you . Please Click the link to activate your account.';
-			$mail->send();
+			$mail->send();*/
 			echo "<script>alert(\"E-mail has been sent. Check your E-mail.\");</script>";
 			echo "<script>location.replace('login')</script>";
 		}
 		catch (Exception $e) {
-			//echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+			echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
 			$this->view->render($response, 'failure_page.twig', ['alert_message' => "Message could not be sent. Mailer Error: {$mail->ErrorInfo}"]);
-		}
+		}*/
 	}
 
     public function signup(Request $request, Response $response, $args)

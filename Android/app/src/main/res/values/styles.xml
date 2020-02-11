@@ -1,11 +1,13 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/mYellow</item>
+    </style>
+    <style name="myDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowNoTitle">true</item>
     </style>
     <style name="editText" >
         <item name="android:textSize">13sp</item>
@@ -31,5 +33,11 @@
         <item name="android:textSize">15sp</item>
         <item name="android:layout_margin">5dp</item>
         <item name="android:padding">5dp</item>
+    </style>
+    <style name="dialogTitle">
+        <item name="android:background">@color/mGreen</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
 </resources>

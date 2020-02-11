@@ -25,10 +25,24 @@ class SensorAdaptor(val context: Context, val sensorInfoList: ArrayList<SensorIn
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(sensorInfo: SensorInfo, context: Context) {
-            itemView.sensorImageView.setImageDrawable(context.getDrawable(sensorInfo.img))
             itemView.sensorIdTextView.text = sensorInfo.id
             itemView.sensorMacTextView.text = sensorInfo.mac
-            itemView.sensorTypeTextView.text=sensorInfo.type
+            when(sensorInfo.type){
+                0->{
+                    itemView.sensorImageView.setImageDrawable(context.getDrawable(R.drawable.ic_heartsensor))
+                    itemView.sensorTypeTextView.text="Heart Sensor"
+                }
+                1->
+                {
+                    itemView.sensorImageView.setImageDrawable(context.getDrawable(R.drawable.ic_inair))
+                    itemView.sensorTypeTextView.text="In Air Sensor"
+                }
+                2->{
+                    itemView.sensorImageView.setImageDrawable(context.getDrawable(R.drawable.ic_outair))
+                    itemView.sensorTypeTextView.text="Out Air Sensor"
+                }
+            }
+
         }
     }
 
