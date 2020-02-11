@@ -19,7 +19,9 @@ final class HomeController extends BaseController
     {
     	$this->view->render($response, 'login.twig');
 	}
-	
+	 
+
+
 	//Request $request, Response $response, $args
 	//e-mail sender : under the check of all input
     public function sendMail($email, $username, $auth_code, $temp)
