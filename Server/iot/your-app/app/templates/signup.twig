@@ -64,6 +64,7 @@
             <form action="signup_check" method="post">
                 <div class = "signup_info">
                     <input class = "input_text" type = "text" name="username" id="username" placeholder="Username">
+                    <button type = "button" onclick="location.href = 'login'" class = "signup_button" id = "cancel">CANCEL</button>
                     <hr class = "hr_w">
                     <input class = "input_text" type = "text" name="email" placeholder="Email Address"><br>
                     <hr class = "hr_w">
@@ -88,22 +89,6 @@
 </html>
 
 <script type='text/javascript'>
-/*
-    function password_compare() {
-        var password = $('#password').val();
-        var password_confirm = $('#password_confirm').val();
-
-        //compare two password
-        if(password != password_confirm && password == null && password_confirm == null) {
-            var submit_btn = document.getElementById('submit');
-            submit_btn.disabled = 'disabled';
-        }
-        else {
-            var submit_btn = document.getElementById('submit');
-            submit_btn.disabled = 'false';
-        }
-    }
-*/
 $(function(){
     $("#alert_notEqual").hide();
     $("#alert_equal").hide();

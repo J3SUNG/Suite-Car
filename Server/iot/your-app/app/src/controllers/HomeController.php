@@ -173,7 +173,6 @@ final class HomeController extends BaseController
 		$Ppassword = $_POST['password'];
 		$Pdevice=$_POST['device'];
 		$sql="SELECT user_no, hashed_password,password_date FROM Users WHERE username=:username";
-
 		$stmt=$this->em->getConnection()->prepare($sql);
 		$stmt->bindValue(":username",$Pusername);
 		$resultCount = $stmt->execute();
@@ -411,8 +410,6 @@ final class HomeController extends BaseController
 			echo "<script>location.replace('signup')</script>";
 		}
 		else{
-			echo "<script>alert(\"else entered.\");</script>";
-			echo "<script>location.replace('signup')</script>"; 
 		}
 		
 		//modify with java script
@@ -505,5 +502,10 @@ final class HomeController extends BaseController
 		
 		//$stmt= $this->em->getConnection()->prepare($sql);
 		//$stmt->execute();
+	}
+
+	public function maps(Request $request, Response $response, $args)
+	{
+		$this->view->render($response, 'maps.twig');
 	}
 }
