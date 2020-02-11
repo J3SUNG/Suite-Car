@@ -80,7 +80,7 @@
                     <input class = "input_text" type = "text" name="last_name" id = "last_name" placeholder="Last_name"><br>
                     <hr class = "hr_w">
                     <button type = "button" onclick="location.href = 'login'" class = "signup_button" id = "cancel">CANCEL</button>
-                    <button type = "submit" class = "signup_button" onclick="check()" id = "submit" disabled>SUBMIT</button>
+                    <button type = "submit" class = "signup_button" id = "submit" disabled>SUBMIT</button>
                 </div>
             </form>
         </div>
@@ -108,6 +108,7 @@ $(function(){
         }
     });
 });
+/*
 function check()
 {
     $.ajax({
@@ -123,18 +124,14 @@ function check()
             "last_name" : $('#last_name').val()
         },
         success : function(data) {
-            alert(\"succees to send email\");
+            //alert(\"succees to send email\");
         },
         error : function(data) {
-            alert(\"failed to send email\");
+            //alert(\"failed to send email\");
         }
     });
 }
-
-
-$(function() {
-
-})
+*/
 
     /*
     $(password_compare)()
