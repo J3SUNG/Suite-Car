@@ -36,7 +36,7 @@ final class HomeController extends BaseController
 						<br>$auth_code<br>";
 		}
 					
-		//email send
+		//email send (problem occur : maybe composer process need)
 		$mail = new PHPMailer(true);
 
 		try {
@@ -45,8 +45,8 @@ final class HomeController extends BaseController
 			/*$mail->isSMTP();                                            // Send using SMTP
 			$mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
 			$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-			$mail->Username   = 'qkrtmdtn1115@gmail.com';                     // SMTP username
-			$mail->Password   = 'MCmactisibic1!';                               // SMTP password
+			$mail->Username   = 'wptjd6141@gamil.com';                     // SMTP username
+			$mail->Password   = 'wpgns213';                               // SMTP password
 			$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
 			$mail->Port       = 587;                                    // TCP port to connect to
 
@@ -68,11 +68,12 @@ final class HomeController extends BaseController
 			$mail->send();*/
 			echo "<script>alert(\"E-mail has been sent. Check your E-mail.\");</script>";
 			echo "<script>location.replace('login')</script>";
+
+			echo "not server setting<br>";
 		}
 		catch (Exception $e) {
 			echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-			$this->view->render($response, 'failure_page.twig', ['alert_message' => "Message could not be sent. Mailer Error: {$mail->ErrorInfo}"]);
-		}*/
+			//$this->view->render($response, 'failure_page.twig', ['alert_message' => "Message could not be sent. Mailer Error: {$mail->ErrorInfo}"]);
 	}
 
     public function signup(Request $request, Response $response, $args)
@@ -170,7 +171,6 @@ final class HomeController extends BaseController
 		$Ppassword = $_POST['password'];
 		$Pdevice=$_POST['device'];
 		$sql="SELECT user_no, hashed_password,password_date FROM Users WHERE username=:username";
-
 		$stmt=$this->em->getConnection()->prepare($sql);
 		$stmt->bindValue(":username",$Pusername);
 		$resultCount = $stmt->execute();
@@ -332,7 +332,8 @@ final class HomeController extends BaseController
 			$stmt->execute();
 
 			//3. delete inner air data
-			$sql = "DELETE Air_data FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE Sensors.type = 'I'";
+			$sql = "DELETE Air_data FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE Sensors.type = 'I' 
+					AND Sensors.user_no = $user_no";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
 
@@ -365,6 +366,8 @@ final class HomeController extends BaseController
 	}
 		else
 		{
+			echo "<script>alert(\"passwords are not matched. Please type correct passwords.\");</script>";
+			echo "<script>location.replace('id_cancelation_page')</script>";
 		}
 	}
 
@@ -385,10 +388,32 @@ final class HomeController extends BaseController
 		$hash_password = password_hash($password, PASSWORD_DEFAULT);
 		$auth_code = password_hash($username, PASSWORD_DEFAULT);
 		
-		/* modify with java script */
+		//check duplication of username
+		$sql = "SELECT username FROM Users WHERE username = '$username';";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$temp_result = $stmt->fetch();
+		$username_db_Users = $temp_result['username'];
+		$sql = "SELECT username FROM Auths WHERE username = '$username';";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$temp_result2 = $stmt->fetch();
+		$username_db_Auths = $temp_result2['username'];
+
+		echo "Auth : $username_db_Auths<br>";
+		echo "User : $username_db_Users<br>";
+		
+		if($username_db_Users != null || !$username_db_Auths != null) {
+			echo "<script>alert(\"This Username is already registered or on procedure to be authorized Try other Username.\");</script>";
+			echo "<script>location.replace('signup')</script>";
+		}
+		else{
+		}
+		
+		//modify with java script
 		//success, insert database & go to sendMail
 		if(!empty($email) && !empty($username) && !empty($password) && !empty($password_confirm) 
-		&& !empty($phone_number) && !empty($first_name) && !empty($last_name) && ($password == $password_confirm))
+		&& !empty($phone_number) && !empty($first_name) && !empty($last_name))
 		{
 			//database insertion : Auths
 			$sql = "INSERT INTO Auths (username, auth_code) VALUES ('$username', '$auth_code');";
@@ -403,6 +428,7 @@ final class HomeController extends BaseController
 			$stmt->execute();
 
 			//move to sendMail
+
 			$this->sendMail($email, $username, $auth_code, SIGN_UP);
 		}
 
@@ -412,6 +438,7 @@ final class HomeController extends BaseController
 			echo "<script>alert(\"Please Enter Every Information.\");</script>";
 			echo "<script>location.replace('signup')</script>";
 		}
+		
 	}
 
 	//e-mail link click : authorization function
@@ -463,4 +490,76 @@ final class HomeController extends BaseController
 	{
 		$this->view->render($response, 'id_cancelation_page.twig');
 	}
+
+	public function air_data_transfer(Request $request, Response $response, $args)
+	{
+		//$sql = "SELECT * FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE ";
+
+		//SELECT auth_code FROM Auths WHERE username='$username'
+		//DELETE Air_data FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE Sensors.type = 'I'
+		
+		//$stmt= $this->em->getConnection()->prepare($sql);
+		//$stmt->execute();
+	}
+
+	public function maps(Request $request, Response $response, $args)
+	{
+		$this->view->render($response, 'maps.twig');
+	}
+// public function marker(double latitude, double longitude, int color)
+	// {
+	// 	switch(color){
+	// 		case green:
+	// 			//draw 해당 위도 경도
+	// 			break;
+	// 		case yellow:
+	// 			//draw 해당 위도 경도
+	// 			break;
+	// 		case orange:
+	// 			//draw 해당 위도 경도
+	// 			break;
+	// 		case red:
+	// 			//draw 해당 위도 경도
+	// 			break;
+	// 		case purple:
+	// 			//draw 해당 위도 경도
+	// 			break;
+	// 	}
+	// }
+
+	// public function color(double co, double co2, double so2, double nc2, double o3)
+	// {
+	// 	//$tatal = 수식
+
+	// 	//if total = very_low return Green
+	// 	//if total = low return yellow
+	// 	//if tatal = mid return orange
+	// 	//if total = high return red
+	// 	//if total = very high return purple	
+	// }
+
+	// public function range_view(double latitude, double longitude, int level)
+	// {
+	// 	// sql문 작성 (경도와 위도가 - (level * x) 이상이면서 경도와 위도가 + (level * x) 이하인 데이터)
+	// 	// for(int i=0; i<count; ++i){
+	// 		// color(range[i]['co'], range[i]['co2'], range[i]['so2'], range[i]['nc2'], range[i]['o3']);
+	// 		// draw marker(range[i]['latitude'], range[i]['longitude], color);
+	// 	// }
+	// }
+
+	// public function map_view()	// 맵 전체 뷰
+	// {
+	// 	// latitude = 현재 구글맵 중심의 위치 위도
+	// 	// longitude = 현재 구글맵 중심의 위치 경도
+	// 	// level = 구글맵의 줌 레벨
+	// 	range_view(latitude, longitude, level);
+	// }
+
+	// public function senser_view()	// 하나의 센서를 클릭시
+	// {
+	// 	// $sql = 해당센서의 센서넘버와, 범위의 날짜에 해당하는 air데이터 값들 전부 받음
+	// 	// 프론트에 해당하는 값들 삽입, 차트 생성
+	// 	//$this->view->render($response, 'sensor_view.twig', [co, co2, ....]);	// 프론트로 값을 넘김
+	// }
+
 }

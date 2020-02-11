@@ -1,8 +1,8 @@
 <?php
 // Routes
 
-$app->get('/', 'App\Controller\HomeController:dispatch')
-    ->setName('homepage');
+$app->get('/', 'App\Controller\HomeController:login')
+    ->setName('login');
 
 $app->get('/sendmail', 'App\Controller\HomeController:sendMail')
     ->setName('sendmail');
@@ -60,3 +60,6 @@ $app->post('/id_cancelation', 'App\Controller\HomeController:id_cancelation')
  
 $app->get('/change_password_page', 'App\Controller\HomeController:change_password_page')
 ->setName('change_password_page');
+
+$app->get('/maps', 'App\Controller\HomeController:maps')
+->setName('maps');

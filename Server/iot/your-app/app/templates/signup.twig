@@ -1,5 +1,6 @@
 <html>
     <head>
+        <script type='text/javascript' src='http://code.jquery.com/jquery.min.js'></script>
         <title>Suite Car</title>
         <style>
         .body {
@@ -62,14 +63,17 @@
             <img class = "mini_img_logo" src="images/logo.png" alt="logo"><br>
             <form action="signup_check" method="post">
                 <div class = "signup_info">
-                    <input class = "input_text" type = "text" name="username" placeholder="Username">
+                    <input class = "input_text" type = "text" name="username" id="username" placeholder="Username">
+                    <button type = "button" onclick="location.href = 'login'" class = "signup_button" id = "cancel">CANCEL</button>
                     <hr class = "hr_w">
                     <input class = "input_text" type = "text" name="email" placeholder="Email Address"><br>
                     <hr class = "hr_w">
-                    <input class = "input_text" type = "password" name="password" placeholder="Password"> <br>
+                    <input class = "input_text" type = "password" name="password" id="password" placeholder="Password" > <br>
                     <hr class = "hr_w">
-                    <input class = "input_text" type = "password" name="password_confirm" placeholder="Password_confirmation"><br>
+                    <input class = "input_text" type = "password" name="password_confirm" id="password_confirm" placeholder="Password_confirmation"><br>
                     <hr class = "hr_w">
+                    <div class = "input_text" type = "text" name="alert_notEqual" id="alert_notEqual">Incorrect Password</div>
+                    <div class = "input_text" type = "text" name="alert_equal" id="alert_equal">Correct Password<br></div>
                     <input class = "input_text" type = "text" name="phone" placeholder="Phone_number"> <br>
                     <hr class = "hr_w">
                     <input class = "input_text" type = "text" name="first_name" placeholder="First_name"><br>
@@ -77,9 +81,99 @@
                     <input class = "input_text" type = "text" name="last_name" placeholder="Last_name"><br>
                     <hr class = "hr_w">
                     <button type = "button" onclick="location.href = 'login'" class = "signup_button" id = "cancel">CANCEL</button>
-                    <button type = "submit" class = "signup_button" id = "submit">SUBMIT</button>
+                    <button type = "submit" class = "signup_button" id = "submit" disabled>SUBMIT</button>
                 </div>
             </form>
         </div>
     </body>
 </html>
+
+<script type='text/javascript'>
+$(function(){
+    $("#alert_notEqual").hide();
+    $("#alert_equal").hide();
+
+    $('#password_confirm').keyup(function(event) {
+        var password = $('#password').val();
+        var password_confirm = $('#password_confirm').val();
+        //compare two password
+        if(password == password_confirm) {
+            $("#alert_equal").show();
+            $("#alert_notEqual").hide();
+            document.getElementById("submit").disabled = false;
+        }
+        else {
+            $("#alert_equal").hide();
+            $("#alert_notEqual").show();
+            document.getElementById("submit").disabled = true;
+        }
+    });
+});
+
+$(document).ready(function(){
+    test();
+    function test(){
+        $.ajax({
+        url: "/signup_check",
+        success: 
+            function(data){
+            $('#listposts').html(data); //insert text of test.php into your div
+            
+        },
+        complete: function() {
+        // Schedule the next request when the current one's complete
+        setInterval(test, 5000); // The interval set to 5 seconds
+        }
+    });
+    };
+});
+
+    /*
+    $(password_compare)()
+    {
+        var ajax = $.ajax({
+            type : "POST",
+            url : "./signup_check"
+        });
+
+        ajax.done(password_compare(data)
+        
+        )
+    }
+    */
+</script>
+
+<!--
+<script>
+    function test(){
+    alert("~!~!");
+        $.ajax({
+            type:"GET",
+            url:"checkSignup",
+            data:{
+                "username":$('#username').val()
+            },
+            success:function(data){	//data : checkSignup에서 넘겨준 결과
+                if($.trim(data)=="YES"){
+                    if($('#username').val()!=''){ 
+                        alert("사용가능한 아이디입니다.");
+                    }
+                }
+                else{
+                    if($('#id').val()!=''){
+                        alert("중복된 아이디입니다.");
+                        $('#id').val('');
+                        $('#id').focus();
+                    }
+                }
+            }
+        }) 
+    })
+
+                        }
+</script>
+
+
+                    <button type = "button" class = "signup_button" id = "sibal" onclick="test()">check_duplicate</button>
+
+-->
