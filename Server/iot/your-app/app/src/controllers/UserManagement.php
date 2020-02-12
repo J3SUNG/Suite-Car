@@ -62,10 +62,8 @@ final class UserManagement extends BaseController
 			$mail->Body=$message;
 			$mail->AltBody = 'Thank you . Please Click the link to activate your account.';
 			$mail->send();
-			echo "<script>alert(\"E-mail has been sent. Check your E-mail.\");</script>";
+			//echo "<script>alert(\"E-mail has been sent. Check your E-mail.\");</script>";
 			echo "<script>location.replace('login')</script>";
-
-			echo "not server setting<br>";
 		}
 		catch (Exception $e) {
 			echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
@@ -177,7 +175,6 @@ final class UserManagement extends BaseController
 			header('Content-type: application/json');
 			echo json_encode($data);
 		}
-		
     }
 
 	public function signout(Request $request, Response $response, $args)
