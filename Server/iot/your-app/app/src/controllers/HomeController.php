@@ -4,10 +4,6 @@ namespace App\Controller;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
-
 define('SIGN_UP', 0);
 define('FORGOTTEN', 1);
 define('INTMAX', 2147483647);
