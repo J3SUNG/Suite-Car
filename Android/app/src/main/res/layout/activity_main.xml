@@ -8,15 +8,21 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-        <fragment
-            android:id="@+id/googleMap"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-</LinearLayout>
+            android:layout_height="match_parent">
+
+            <fragment
+                android:id="@+id/googleMap"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/logTextView"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -115,35 +121,41 @@
         android:layout_gravity="start"
         android:background="#ffffff"
         android:gravity="center_horizontal">
+
         <LinearLayout
             android:id="@+id/drawerUserLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:gravity="center"
                     android:background="@color/mGreen"
+                    android:gravity="center"
                     android:text="User Information"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp" />
+
                 <Button
+                    android:id="@+id/drawerEditUserButton"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_margin="5dp"
                     android:layout_alignParentRight="true"
+                    android:layout_margin="5dp"
                     android:background="@drawable/edit_black_24dp"
-                    android:id="@+id/drawerEditUserButton"
-                    android:onClick="onClick"/>
+                    android:onClick="onClick" />
             </RelativeLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/drawerUsernameTextView"
                     style="@style/drawerText"
@@ -160,33 +172,37 @@
             android:id="@+id/sensorLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/drawerUserLayout"
             android:layout_above="@+id/separateLine0"
+            android:layout_below="@+id/drawerUserLayout"
             android:orientation="vertical">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@color/mGreen"
-                android:gravity="center"
-                android:text="Sensor Information"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@color/mGreen"
+                    android:gravity="center"
+                    android:text="Sensor Information"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+
                 <Button
+                    android:id="@+id/drawerAddSensorButton"
                     android:layout_width="34dp"
                     android:layout_height="34dp"
-                    android:layout_margin="3dp"
                     android:layout_alignParentRight="true"
+                    android:layout_margin="3dp"
                     android:background="@drawable/ic_add_black_24dp"
-                    android:id="@+id/drawerAddSensorButton"
-                    android:onClick="onClick"/>
+                    android:onClick="onClick" />
             </RelativeLayout>
+
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/drawerSensorRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/drawerSensorRecyclerView"/>
+                android:layout_height="match_parent" />
         </LinearLayout>
 
 

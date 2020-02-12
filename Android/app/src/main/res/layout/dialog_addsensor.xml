@@ -22,19 +22,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/addSensorId"
-            android:hint="addSensorId" />
+            android:hint="Sensor Name" />
 
-        <EditText
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/addSensorMac"
-            android:hint="addSensorMac" />
+            android:hint="Sensor Mac address" />
 
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/addSensorType"
-            android:hint="addSensorType" />
+            android:orientation="horizontal">
+            <RadioGroup
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="match_parent"
+                android:id="@+id/addSensorRadioGroup"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/addSensorHeartRadio"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:text="Heart"/>
+                <RadioButton
+                    android:id="@+id/addSensorInAirRadio"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:text="In Air"/>
+                <RadioButton
+                    android:id="@+id/addSensorOutAirRadio"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:text="Out Air"/>
+            </RadioGroup>
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/addSensorScanButton"
+                android:text="Scan"/>
+        </LinearLayout>
     </LinearLayout>
 
     <View
