@@ -21,4 +21,7 @@ object Constants {
     val HEARTSENSER=0
     val INAIRSENSER=1
     val OUTAIRSENSER=2
+
+    val WEB=0
+    val ANDROID=1
 }

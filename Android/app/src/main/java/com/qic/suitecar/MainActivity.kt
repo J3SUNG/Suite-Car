@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         var map = Map(smf, this)
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         suiteManager = SuiteManager(this)
-        setSensors()
+        loadSensors()
         Log.d("welcome", SharedPreValue.getUserNo(this).toString())
 
         // Get local Bluetooth adapter
@@ -99,14 +99,56 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun setSensors() {
+    private fun loadSensors() {
+        var retrofit = RetrofitClient.getInstnace()
+        var myApi = retrofit.create(IServer::class.java)
+        val user_no = SharedPreValue.getUserNo(baseContext)
+        Runnable {
+            myApi.sensorList(Constants.ANDROID, user_no)
+                .enqueue(object :
+                    retrofit2.Callback<ResponseBody> {
+                    override fun onResponse(
+                        call: Call<ResponseBody>,
+                        response: Response<ResponseBody>
+                    ) {
+                        var a = response.body()!!.string()
+                        var gson = Gson()
+                        Log.d("sensorList", a)
+                       /* var resultData = gson.fromJson(a, ResultData::class.java)
+                        when (resultData.result) {
+                            0 -> {
+                                Toast.makeText(
+                                    baseContext,
+                                    "I Won't let you go!!!!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            1 -> {
+                                Toast.makeText(
+                                    baseContext,
+                                    "Success to Close Account... Bye...",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                var intent = Intent(baseContext, LogInActivity::class.java)
+                                startActivity(intent)
+                            }
+                        }*/
+                        setSensors()
+                    }
+
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        Log.d("Close Account", t.message)
+                    }
+                })
+        }.run()
+    }
+    fun setSensors(){
         sensors.add(SensorInfo(0, "뿌앵", "뿌애앵", -1))
         sensors.add(SensorInfo(0, "뿌앵", "뿌애앵", -2))
         sensors.add(SensorInfo(0, "뿌앵", "뿌애앵", -3))
         drawerSensorRecyclerView.adapter = SensorAdaptor(this, this,sensors)
         drawerSensorRecyclerView.layoutManager = LinearLayoutManager(this)
     }
-
     fun onClick(view: View) {
         when (view.id) {
             R.id.openDrawerButton -> {

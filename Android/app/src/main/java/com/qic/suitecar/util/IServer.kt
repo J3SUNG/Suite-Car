@@ -64,4 +64,5 @@ interface IServer {
         @Field("device") device :Int,
         @Field("user_no") user_no :Int
     ): Call<ResponseBody>
+
 }
