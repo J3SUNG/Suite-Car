@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Simple Markers</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+        width: auto;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 80%;
+        width: 80%;
+        margin: 0px 10% 0px 10%;
+        padding: 0;
+      }
+      .img_logo {
+        float: left;
+        width: 320px;
+        height: auto;
+      }
+      .nav {
+        float: right;
+        font-weight: bold;
+        color: #27ae60;
+        margin: 0px 0px 0px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <img class = "img_logo" src="images/logo.png" alt="logo">
+    <br><br><a href="login" class="nav">Sign Out</a>
+    <a href="id_cancelation_page" class="nav">ID Cancellation</a>
+    <a href="change_password_page" class="nav">Change Password</a><br><br><br><br>
+    
+    <div id="map">
+      <script>
+
+        function initMap() {
+          var myLatLng = {lat: -25.363, lng: 131.044};
+
+          var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 4,
+            center: myLatLng
+          });
+
+          var marker = new google.maps.Marker({
+            position: myLatLng,
+            map: map,
+            title: 'Hello World!'
+          });
+        }
+      </script>
+    </div>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4E2DLjl0PUtVHjQruVcL0GJgmamn4UgY&callback=initMap">
+    </script>
+  </body>
+</html>
