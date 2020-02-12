@@ -11,15 +11,16 @@ define('WEB',0);
 define('ANDROID',1);
 final class DataManagement extends BaseController
 {
-	public function air_data_transfer(Request $request, Response $response, $args)
+	public function db_data_for_map(Request $request, Response $response, $args)
 	{
-		//$sql = "SELECT * FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE ";
+		$user_no = $_SESSION['user_no'];
 
-		//SELECT auth_code FROM Auths WHERE username='$username'
-		//DELETE Air_data FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE Sensors.type = 'I'
-		
-		//$stmt= $this->em->getConnection()->prepare($sql);
-		//$stmt->execute();
+		$sql = "SELECT * FROM Air_data INNER JOIN Sensors ON Sensors.user_no = $user_no AND WHERE username='$username';";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$auth_code_db = $stmt->fetch();
+
+		//DELETE Air_data FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE Sensors.type = 'I' AND Sensors.user_no = $user_no";
     }
     
 // public function marker(double latitude, double longitude, int color)
