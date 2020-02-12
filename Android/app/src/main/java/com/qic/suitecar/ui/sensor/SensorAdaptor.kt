@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.qic.suitecar.MainActivity
 import com.qic.suitecar.R
 import kotlinx.android.synthetic.main.item_sensor.view.*
 
-class SensorAdaptor(val context: Context, val sensorInfoList: ArrayList<SensorInfo>) :
+class SensorAdaptor(val context: Context, val activity:MainActivity, val sensorInfoList: ArrayList<SensorInfo>) :
     RecyclerView.Adapter<SensorAdaptor.Holder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_sensor, parent, false)
@@ -28,6 +29,24 @@ class SensorAdaptor(val context: Context, val sensorInfoList: ArrayList<SensorIn
             itemView.sensorIdTextView.text = sensorInfo.id
             itemView.sensorMacTextView.text = sensorInfo.mac
             when(sensorInfo.type){
+                -1->{
+                    itemView.addSensorLayout.setOnClickListener{
+                        activity.showAddSensorDiagram(0)
+                    }
+                    itemView.addSensorText.text="Add Heart Sensor"
+                }
+                -2->{
+                    itemView.addSensorLayout.setOnClickListener{
+                        activity.showAddSensorDiagram(1)
+                    }
+                    itemView.addSensorText.text="Add In AIR Sensor"
+                }
+                -3->{
+                    itemView.addSensorLayout.setOnClickListener{
+                        activity.showAddSensorDiagram(2)
+                    }
+                    itemView.addSensorText.text="Add Out Air Sensor"
+                }
                 0->{
                     itemView.sensorImageView.setImageDrawable(context.getDrawable(R.drawable.ic_heartsensor))
                     itemView.sensorTypeTextView.text="Heart Sensor"
@@ -42,8 +61,6 @@ class SensorAdaptor(val context: Context, val sensorInfoList: ArrayList<SensorIn
                     itemView.sensorTypeTextView.text="Out Air Sensor"
                 }
             }
-
         }
     }
-
 }

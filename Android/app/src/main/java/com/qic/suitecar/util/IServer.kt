@@ -57,4 +57,11 @@ interface IServer {
         @Field("user_no") user_no :Int,
         @Field("password") password : String
     ): Call<ResponseBody>
+
+    @POST("sensorList")
+    @FormUrlEncoded
+    fun sensorList(
+        @Field("device") device :Int,
+        @Field("user_no") user_no :Int
+    ): Call<ResponseBody>
 }

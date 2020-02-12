@@ -27,13 +27,6 @@ class Map : OnMapReadyCallback {
     var userMaker: Marker? = null        //사용자 마커
     lateinit var userIcon: BitmapDescriptor    //사용자 이미지 아이콘(마커에 들어가는 이미지)
     val context:Context
-    private val multiplePermissionsCode = 100          //권한
-    private val requiredPermissions = arrayOf(
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-        Manifest.permission.READ_EXTERNAL_STORAGE
-    )
     
     override fun onMapReady(p0: GoogleMap?) {
         Log.d("Map", "Map is ready" + p0)

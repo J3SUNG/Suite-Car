@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -20,8 +21,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.gson.Gson
 import com.qic.suitecar.dataclass.ResultData
@@ -38,6 +41,8 @@ import kotlinx.android.synthetic.main.dialog_changepassword.*
 import kotlinx.android.synthetic.main.dialog_closeaccount.*
 import kotlinx.android.synthetic.main.dialog_edituser.*
 import kotlinx.android.synthetic.main.fragment_setting.view.*
+import kotlinx.android.synthetic.main.item_sensor.*
+import kotlinx.android.synthetic.main.item_sensor.view.*
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -88,17 +93,17 @@ class MainActivity : AppCompatActivity() {
         // If the adapter is null, then Bluetooth is not supported
         if (mBluetoothAdapter == null) {
             Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show()
-            this.finish()
+           // this.finish()
         }
 
     }
 
 
     private fun setSensors() {
-  /*      sensors.add(SensorInfo(R.drawable.ic_heartsensor, "뿌앵", "뿌애앵", 0))
-        sensors.add(SensorInfo(R.drawable.ic_inair, "뿌앵", "뿌애앵", 1))
-        sensors.add(SensorInfo(R.drawable.ic_outair, "뿌앵", "뿌애앵", 2))*/
-        drawerSensorRecyclerView.adapter = SensorAdaptor(this, sensors)
+        sensors.add(SensorInfo(0, "뿌앵", "뿌애앵", -1))
+        sensors.add(SensorInfo(0, "뿌앵", "뿌애앵", -2))
+        sensors.add(SensorInfo(0, "뿌앵", "뿌애앵", -3))
+        drawerSensorRecyclerView.adapter = SensorAdaptor(this, this,sensors)
         drawerSensorRecyclerView.layoutManager = LinearLayoutManager(this)
     }
 
@@ -120,7 +125,7 @@ class MainActivity : AppCompatActivity() {
                 //suiteManager.suite()
             }
             R.id.drawerAddSensorButton -> {
-                showAddSensorDiagram()
+
             }
             R.id.drawerEditUserButton -> {
                 showEditUserButton()
@@ -147,7 +152,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAddSensorDiagram() {
+    fun showAddSensorDiagram(type:Int) {
         var dialog = Dialog(this)
         nowDialog=dialog
         dialog.setContentView(R.layout.dialog_addsensor)
@@ -160,9 +165,11 @@ class MainActivity : AppCompatActivity() {
         dialog.addSensorDialogAddButton.setOnClickListener {
             val sensorId = dialog.addSensorId.text.toString()
             val sensorMac = dialog.addSensorMac.text.toString()
-            val sensorType = dialog.addSensorRadioGroup.checkedRadioButtonId
-            sensors.add(SensorInfo(R.drawable.ic_outair, sensorId, sensorMac, sensorType))
+            val sensorType = type
+            sensors[type]=(SensorInfo(R.drawable.ic_outair, sensorId, sensorMac, sensorType))
             drawerSensorRecyclerView.adapter!!.notifyDataSetChanged()
+            drawerSensorRecyclerView[type].addSensorLayout.visibility=View.GONE
+            drawerSensorRecyclerView[type].itemSensorLayout.visibility=View.VISIBLE
             connectDevice(sensorMac, true)
             dialog.dismiss()
         }
@@ -226,7 +233,6 @@ class MainActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
         }
-
     }
 
     override fun onStart() {
@@ -479,7 +485,7 @@ class MainActivity : AppCompatActivity() {
                     this, "asddas",
                     Toast.LENGTH_SHORT
                 ).show()
-                this.finish()
+                //this.finish()
             }
 
         }
