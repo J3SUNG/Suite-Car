@@ -57,6 +57,14 @@ final class HomeController extends BaseController
 
 	public function maps(Request $request, Response $response, $args)
 	{
-		$this->view->render($response, 'maps.twig');
+		$user_no = $_SESSION['user_no'];
+		$sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+
+		$username = $result['username'];
+		$email = $result['email'];
+		$this->view->render($response, 'maps.twig', ['username'=>$username, 'email'=>$email]);
 	}
 }

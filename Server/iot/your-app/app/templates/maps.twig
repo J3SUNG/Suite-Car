@@ -81,7 +81,7 @@
                                             <img src="images/icon/avatar-03.jpg" alt="J3SUNG" />
                                         </div>
                                         <div class="content">
-                                            <a class="js-acc-btn" href="#">J3SUNG</a>
+                                            <a class="js-acc-btn" href="#">{{username}}</a>
                                         </div>
                                         <div class="account-dropdown js-dropdown">
                                             <div class="info clearfix">
@@ -92,9 +92,9 @@
                                                 </div>
                                                 <div class="content">
                                                     <h5 class="name">
-                                                        <a href="#">J3SUNG</a>
+                                                        <a href="#">{{username}}</a>
                                                     </h5> 
-                                                    <span class="email">wptjd6141@naver.com</span>
+                                                    <span class="email">{{email}}</span>
                                                 </div>
                                             </div>
                                             <div class="account-dropdown__body">
@@ -129,43 +129,49 @@
                                 <!-- MAP DATA-->
                                 <div id="map"></div>
                                 <script>
+                                var map;
 
-                                function getJSONMarkers() {
-                                    const markers = [
-                                        {
-                                            name: "ONE",
-                                            location: [25.1212, 55.1535]
+                                var get_json_data = (function(){
+                                    var json = null;
+                                    $.ajax({
+                                        'async': false,
+                                        'global':false,
+                                         'url' : "/db_data_for_map",
+                                        'dataType' : "json",
+                                        'success' : function(data) {
+                                            console.log("SUccess");
+                                            json = data;
                                         },
-                                        {
-                                            name: "TWO",
-                                            location: [25.2084, 55.2719]
-                                        },
-                                        {
-                                            name: "THREE",
-                                            location: [25.2285, 55.3273]
+                                        'error' : function(data) {
+                                            alert("There is something wrong. ");
                                         }
-                                    ];
-                                    return markers;
-                                }
+                                    });
+                                    return json;
+                                })();
 
                                 function initMap() {
-                                    
-                                    const mapOptions = {
-                                        center:new google.maps.LatLng(25.2048, 55.2708),
-                                        zoom:11
+                                    var options = {
+                                        center : {
+                                            lat : 37.0000,
+                                            lng : 37.0000
+                                        },
+                                        zoom : 5,
+                                        mapTypeId : google.maps.MapTypeId.TERRAIN
                                     }
-                                    const map = new google.maps.Map(document.getElementById("map"), mapOptions);
+                                    map = new google.maps.Map(document.getElementById("map"), options);
+                                    create_mark(get_json_data);
+                                }
 
-                                    const hotelMarkers = getJSONMarkers();
+                                function create_mark(json_data) {
+                                    for(var index in json_data) {
+                                        var data_info = json_data[index];
 
-                                    for(hotel of hotelMarkers){
-                                        let marker = new google.maps.Marker({
-                                            map: map,
-                                            position: new google.maps.LatLng(hotel.location[0], hotel.location[1]),
-                                            title: $_POST['name']
-                                            {# position: new google.maps.LatLng(hotel.location[0], hotel.location[1]),
-                                            title: hotel.name #}
-                                        })
+                                        var marker = new google.maps.Marker({
+                                            map : map,
+                                            position : data_info.center,
+                                            title : data_info.username,
+                                            //id : data_info.sensor_no
+                                        });
                                     }
                                 }
                                 </script>
@@ -215,9 +221,10 @@
 
     <!-- Main JS-->
     <script src="js/main.js"></script>
+
     <script type = "text/javascript">
-    var myLocation;
-    var centerLocation;
+    var myLocation = new Array();
+    var centerLocation = new Array();
 
     $.map_update = (function(){
         $.ajax({
@@ -225,13 +232,17 @@
             url : "./db_data_for_map",
             dataType : "json",
             succes : function(data) {
-                myLocation = {
-                    lat : data['latitude'],
-                    lot : data['longitude']
-                },
+                alert(data[0]['latitude']);
+                for(i = 0; i < data.length; i++) {
+                    myLocation = {
+                        latitude : data[i]['latitude'],
+                        longtitude : data[i]['longtitude']
+                    }
+                    
+                }
                 centerLocation = {
-                    lat : data['latitude'],
-                    lot : data['longitude]
+                    latitude : data[0]['latitude'],
+                    longtitude : data[0]['longtitude']
                 }
             },
             error : function(data) {
@@ -245,3 +256,44 @@
 
 </html>
 <!-- end document-->
+<!--
+<script type='text/javascript'>
+var myLocation[];
+var currentLocation[];
+function initMap() {
+        var myLatLng = {lat: -25.363, lng: 131.044};
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: myLatLng
+        });
+
+        var marker = new google.maps.Marker({
+          position: myLatLng,
+          map: map,
+          title: 'Hello World!'
+        });
+      }
+
+$.map_update = (function(){
+    $.ajax({
+        type : "POST",
+        url : "./db_data_for_map",
+        dataType : "json",
+        success : function(data) {
+            myLocation = {
+                lat : data['latitude'],
+                lot : data['longitude']
+            },
+            centerLocation = {
+                lat : data['latitude'],
+                lot : data['longitude']
+            }
+        },
+        error : function(data) {
+            alert("There is something wrong.");
+        }
+    });
+});
+</script>
+-->

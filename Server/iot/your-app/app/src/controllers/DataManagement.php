@@ -13,12 +13,44 @@ final class DataManagement extends BaseController
 {
 	public function db_data_for_map(Request $request, Response $response, $args)
 	{
-		$user_no = $_SESSION['user_no'];
-
-		$sql = "SELECT * FROM Air_data INNER JOIN Sensors ON Sensors.user_no = $user_no AND WHERE username='$username';";
+		$sql = "SELECT Users.username as username, Air_data.*
+		FROM Users, Air_data
+		INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no
+		INNER JOIN Users U2 ON Sensors.user_no = U2.user_no;";
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
-		$auth_code_db = $stmt->fetch();
+		$result = $stmt->fetchAll();
+
+
+		if($result) {
+			$map_data_db = [];
+			foreach($result as $map_data) {
+				$map_data_db[] =
+				array("username"=>$map_data['username'],
+				"Air_data_no"=>$map_data['Air_data_no'],
+				"sensor_no"=>$map_data['sensor_no'],
+				"time"=>$map_data['time'],
+				"CO_raw"=>$map_data['CO_raw'],
+				"CO_aqi"=>$map_data['CO_aqi'],
+				"SO2_raw"=>$map_data['SO2_raw'],
+				"SO2_aqi"=>$map_data['SO2_aqi'],
+				"NO2_raw"=>$map_data['NO2_raw'],
+				"NO2_aqi"=>$map_data['NO2_aqi'],
+				"O3_raw"=>$map_data['O3_raw'],
+				"O3_aqi"=>$map_data['O3_aqi'],
+				"PM2.5_raw"=>$map_data['PM2.5_raw'],
+				"PM2.5_aqi"=>$map_data['PM2.5_aqi'],
+				"center"=>array("lat"=>$map_data['latitude'],
+								"lng"=>$map_data['longtitude'])
+			);
+			}
+			return $response->withHeader('Content-type', 'application/json')
+					->write(json_encode($map_data_db, JSON_NUMERIC_CHECK))
+					->withStatus(200);
+		}
+		else {
+			$response = $response->withStatus(404);
+		}
 
 		//DELETE Air_data FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE Sensors.type = 'I' AND Sensors.user_no = $user_no";
     }
