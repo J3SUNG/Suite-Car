@@ -67,3 +67,6 @@ $app->get('/map_view', 'App\Controller\DataManagement:map_view')
 
 $app->get('/senser_view', 'App\Controller\DataManagement:senser_view')
     ->setName('senser_view');
+
+$app->get('/fakesensors_as_json', 'App\Controller\DataManagement:fakesensors_as_json')
+    ->setName('fakesensors_as_json');

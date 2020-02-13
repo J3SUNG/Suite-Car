@@ -342,6 +342,7 @@ section {
 }
 
 .main-content {
+    background-color: white;
     padding-top: 100px;
     min-height: 100vh;
 }

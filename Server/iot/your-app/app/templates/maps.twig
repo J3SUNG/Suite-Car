@@ -1,8 +1,7 @@
-<!DOCTYPE html>
-
 <html lang="en">
 
 <head>
+    <script type='text/javascript' src='http://code.jquery.com/jquery.min.js'></script>
     <!-- Required meta tags-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -122,7 +121,7 @@
             </header>
             <!-- END HEADER DESKTOP-->
 
-            <div class="main-content">
+            <div class="main-content" id="back_maps">
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
                         <div class="row">
@@ -131,19 +130,43 @@
                                 <div id="map"></div>
                                 <script>
 
+                                function getJSONMarkers() {
+                                    const markers = [
+                                        {
+                                            name: "ONE",
+                                            location: [25.1212, 55.1535]
+                                        },
+                                        {
+                                            name: "TWO",
+                                            location: [25.2084, 55.2719]
+                                        },
+                                        {
+                                            name: "THREE",
+                                            location: [25.2285, 55.3273]
+                                        }
+                                    ];
+                                    return markers;
+                                }
+
                                 function initMap() {
-                                    var myLatLng = {lat: -25.363, lng: 131.044};
+                                    
+                                    const mapOptions = {
+                                        center:new google.maps.LatLng(25.2048, 55.2708),
+                                        zoom:11
+                                    }
+                                    const map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
-                                    var map = new google.maps.Map(document.getElementById('map'), {
-                                    zoom: 4,
-                                    center: myLatLng
-                                    });
+                                    const hotelMarkers = getJSONMarkers();
 
-                                    var marker = new google.maps.Marker({
-                                    position: myLatLng,
-                                    map: map,
-                                    title: 'Hello World!'
-                                    });
+                                    for(hotel of hotelMarkers){
+                                        let marker = new google.maps.Marker({
+                                            map: map,
+                                            position: new google.maps.LatLng(hotel.location[0], hotel.location[1]),
+                                            title: $_POST['name']
+                                            {# position: new google.maps.LatLng(hotel.location[0], hotel.location[1]),
+                                            title: hotel.name #}
+                                        })
+                                    }
                                 }
                                 </script>
                                 <!-- END MAP DATA-->
@@ -156,7 +179,6 @@
     </div>
     
     <!-- Map -->
->>>>>>> add map, interface
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4E2DLjl0PUtVHjQruVcL0GJgmamn4UgY&callback=initMap">
     </script>
@@ -193,6 +215,31 @@
 
     <!-- Main JS-->
     <script src="js/main.js"></script>
+    <script type = "text/javascript">
+    var myLocation;
+    var centerLocation;
+
+    $.map_update = (function(){
+        $.ajax({
+            type : "POST",
+            url : "./db_data_for_map",
+            dataType : "json",
+            succes : function(data) {
+                myLocation = {
+                    lat : data['latitude'],
+                    lot : data['longitude']
+                },
+                centerLocation = {
+                    lat : data['latitude'],
+                    lot : data['longitude]
+                }
+            },
+            error : function(data) {
+                alert("There is something wrong. ");
+            }
+        });
+    });
+    </script>
 
 </body>
 

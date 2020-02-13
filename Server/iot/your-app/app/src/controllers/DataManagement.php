@@ -22,7 +22,42 @@ final class DataManagement extends BaseController
 
 		//DELETE Air_data FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE Sensors.type = 'I' AND Sensors.user_no = $user_no";
     }
-    
+	
+	
+	public function fakesensors_as_json(Request $request, Response $response, $args) {
+		try {
+			$sql = "select * from sensors";
+			$stmt = $this->em->getConnection()->prepare($sql);
+			$stmt->execute();
+			$results = $stmt->fetchAll();
+
+			if($results) {
+				$person_array = [];
+				foreach ($results as $person) {
+					$person_array[] =
+					array("name"=>$person['name'],
+					"x"=>$person['x'],
+					"y"=>$person['y']);
+				}
+
+				// return $response->withStatus(200)
+				// ->withHeader('Content-Type', 'application/json')
+				// ->write(json_encode($person_array, JSON_NUMERIC_CHECK));
+
+				$this->view->render($response, 'maps.twig', ['name'=>"Abcd", 'x'=>"person['x']", 'y'=>"person['y']"]);
+				// return $response->withHeader('Content-type', 'application/json')
+				// ->write(json_encode($person_array, JSON_NUMERIC_CHECK))
+				// ->withStatus(200);
+			}
+			else{
+				$response = $response->withStatus(404);
+			}
+		}
+		catch(PDOException $e) {
+			echo '{"error":{"text":'. $e->getMessage() .'}}';
+		}
+	}
+
 // public function marker(double latitude, double longitude, int color)
 	// {
 	// 	switch(color){
