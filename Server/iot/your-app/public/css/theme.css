@@ -83,7 +83,7 @@ input, textarea {
 
 button {
     border: none;
-    background: none;
+    background: none;    
 }
 
 img {
@@ -501,6 +501,18 @@ section {
     color: white;
     float: right;
 }
+.air_button {
+    background-color: #27AE60;
+    border: none;
+    border-radius: 5px;
+    width: 130px;
+    height: 30px;
+    text-align: center;
+    color: white;
+    margin-left: 20px;
+    float: left;
+}
+
 .input_text {
     background-color: white;
     text-align: center;

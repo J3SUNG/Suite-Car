@@ -128,6 +128,37 @@
                             <div class="col-md-12 m-t-20">
                                 <!-- MAP DATA-->
                                 <div id="map"></div>
+                                <script type = "text/javascript">
+                                var myLocation;
+                                var centerLocation;
+                                var array = [
+                                    {
+                                        name: "nice",
+                                            x: 25.4212, 
+                                            y: 55.4535
+                                    }
+                                ];
+
+                                $.map_update = (function(){
+                                    $.ajax({    
+                                        type : "POST",  
+                                        url : "./fakesensors_as_json",
+                                        dataType : "json",
+                                        succes : function(data) {
+                                            alert(data);
+                                            $.each(data, function (index, item){
+                                                array.append
+                                                array[index]['name'] = item.name;
+                                                array[index]['x'] = item.x;
+                                                array[index]['y'] = item.y;
+                                            })
+                                        },
+                                        error : function(data) {
+                                            alert("There is something wrong. ");
+                                        }
+                                    })();
+                                });              
+                                </script>
                                 <script>
                                 var map;
 
@@ -136,10 +167,9 @@
                                     $.ajax({
                                         'async': false,
                                         'global':false,
-                                         'url' : "/db_data_for_map",
+                                        'url' : "/db_data_for_map",
                                         'dataType' : "json",
                                         'success' : function(data) {
-                                            console.log("SUccess");
                                             json = data;
                                         },
                                         'error' : function(data) {

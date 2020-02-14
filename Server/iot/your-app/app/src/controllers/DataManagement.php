@@ -76,10 +76,10 @@ final class DataManagement extends BaseController
 				// ->withHeader('Content-Type', 'application/json')
 				// ->write(json_encode($person_array, JSON_NUMERIC_CHECK));
 
-				$this->view->render($response, 'maps.twig', ['name'=>"Abcd", 'x'=>"person['x']", 'y'=>"person['y']"]);
-				// return $response->withHeader('Content-type', 'application/json')
-				// ->write(json_encode($person_array, JSON_NUMERIC_CHECK))
-				// ->withStatus(200);
+				//$this->view->render($response, 'maps.twig', ['name'=>"Abcd"]);
+				return $response->withHeader('Content-type', 'application/json')
+				->write(json_encode($person_array, JSON_NUMERIC_CHECK))
+				->withStatus(200);
 			}
 			else{
 				$response = $response->withStatus(404);

@@ -70,3 +70,24 @@ $app->get('/senser_view', 'App\Controller\DataManagement:senser_view')
 
 $app->get('/fakesensors_as_json', 'App\Controller\DataManagement:fakesensors_as_json')
     ->setName('fakesensors_as_json');
+
+$app->get('/charts/chartdata-as-json', 'App\Controller\ChartsController:chart1_json')
+    ->setName('/chart1_json');
+
+$app->get('/charts/chart1', 'App\Controller\ChartsController:chart1')
+    ->setName('/chart1');
+
+$app->get('/charts/dynamic_chart_json', 'App\Controller\ChartsController:dynamic_chart_json')
+    ->setName('/dynamic_chart_json');
+
+$app->get('/charts/chart2_json', 'App\Controller\ChartsController:chart2_json')
+    ->setName('/chart2_json');
+
+$app->get('/charts/chart3_json', 'App\Controller\ChartsController:chart3_json')
+    ->setName('/chart3_json');
+
+$app->get('/charts/chart3', 'App\Controller\ChartsController:chart3')
+    ->setName('/chart3');
+
+$app->get('/chart', 'App\Controller\ChartsController:dynamic_chart_json')
+    ->setName('/chart');
