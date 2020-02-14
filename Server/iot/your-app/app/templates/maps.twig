@@ -130,16 +130,16 @@
                                 <div id="map"></div>
                                 <script>
                                 var map;
+                                var activeInfoWindow;
 
                                 var get_json_data = (function(){
                                     var json = null;
                                     $.ajax({
                                         'async': false,
                                         'global':false,
-                                         'url' : "/db_data_for_map",
+                                        'url' : "/db_data_for_map",
                                         'dataType' : "json",
                                         'success' : function(data) {
-                                            console.log("SUccess");
                                             json = data;
                                         },
                                         'error' : function(data) {
@@ -165,12 +165,53 @@
                                 function create_mark(json_data) {
                                     for(var index in json_data) {
                                         var data_info = json_data[index];
+                                        var data_color;
+                                        if(data_info.PM25_aqi <= 50) {
+                                            data_color = '#00FF00';
+                                        }
+                                        else if(data_info.PM25_aqi > 50 && data_info.PM25_aqi <=100) {
+                                            data_color = '#FFFF00';
+                                        }
+                                        else if(data_info.PM25_aqi > 100 && data_info.PM25_aqi <= 150) {
+                                            data_color = '#FF8000';
+                                        }
+                                        else if(data_info.PM25_aqi > 150 && data_info.PM25_aqi <= 200) {
+                                            data_color = '#FF0000';
+                                        }
+                                        else if(data_info.PM25_aqi > 200 && data_info.PM25_aqi <= 300) {
+                                            data_color = '#FF00BF';
+                                        }
+                                        else if(data_info.PM25_aqi > 300 && data_info.PM25_aqi <= 500) {
+                                            data_color = '#8A2908';
+                                        }
+                                        else {
+                                            data_color = '#000000';
+                                        }
+                                        
+                                        contents = "<div><h1>" + data_info.username + "\'s Sensor" + "</h1></div><br>"
+                                                               + "CO : " + data_info.CO_aqi + "<br>SO2 : " + data_info.SO2_aqi + "<br>NO2 : "
+                                                               + data_info.NO2_aqi + "<br>O3 : " + data_info.O3_aqi + "<br>PM2.5 : " + data_info.PM25_aqi
+                                                               + "</string></div>";
 
-                                        var marker = new google.maps.Marker({
+                                        var marker = new google.maps.Circle({
                                             map : map,
-                                            position : data_info.center,
-                                            title : data_info.username,
-                                            //id : data_info.sensor_no
+                                            center : data_info.center,
+                                            radius : 70000,
+                                            strokeColor: data_color,
+                                            strokeOpacity : 0.8,
+                                            strokeWeight : 2,
+                                            fillColor : data_color,
+                                            fillOpacity : 0.5,
+                                            draggable : false
+                                        });
+                                        marker.content = contents;
+
+                                        var infowindow = new google.maps.InfoWindow();
+
+                                        google.maps.event.addListener(marker, 'click', function() {
+                                            infowindow.setContent(this.content);
+                                            infowindow.setPosition(this.getCenter());
+                                            infowindow.open(map);
                                         });
                                     }
                                 }

@@ -111,21 +111,22 @@ $(function(){
     $("#submit").click(function(event) {
         $.ajax({
             type : "POST",
-            url :"./signup_check",
+            url :"/signup_check",
             data : {
-                "username" : $('username').val(),
-                "email" : $('email').val(),
-                "password" : $('password').val(),
-                "password_confirm" : $('password_confirm').val(),
-                "phone" : $('phone').val(),
-                "first_name" : $('first_name').val(),
-                "last_name" : $('last_name').val()
+                "username" : $('#username').val(),
+                "email" : $('#email').val(),
+                "password" : $('#password').val(),
+                "password_confirm" : $('#password_confirm').val(),
+                "phone" : $('#phone').val(),
+                "first_name" : $('#first_name').val(),
+                "last_name" : $('#last_name').val()
             },
             success : function(data) {
-                alert("E-mail has been sent. Check your E-mail.");
+                alert(data);
+                //alert("E-mail has been sent. Check your E-mail.");
             },
-            error : function(data) {
-                alert("There is something wrong.");
+            error : function (request, error) {
+                alert(" Can't do because: " + error);
             }
         });
     });
