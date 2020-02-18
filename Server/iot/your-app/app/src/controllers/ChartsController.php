@@ -74,9 +74,9 @@ final class ChartsController extends BaseController
                     $sql = "SELECT * 
                             FROM Air_data 
                             WHERE sensor_no = :sensor_no 
-                                AND STR_TO_DATE(time, '%Y-%m-%d')
-                                BETWEEN STR_TO_DATE(:start_date, '%Y-%m-%d')
-                                    AND STR_TO_DATE(:end_date, '%Y-%m-%d')";
+                            AND STR_TO_DATE(time, '%Y-%m-%d %H:%i:%s')
+                                BETWEEN STR_TO_DATE(:start_date, '%Y-%m-%d %H:%i:%s')
+                                    AND STR_TO_DATE(:end_date, '%Y-%m-%d %H:%i:%s')";
                     $stmt = $this->em->getConnection()->prepare($sql);
                     $params['sensor_no'] = $sensor_no;
                     $params['start_date'] = $start_date;
@@ -101,9 +101,9 @@ final class ChartsController extends BaseController
                     $sql = "SELECT * 
                             FROM Heart_data 
                             WHERE sensor_no = :sensor_no 
-                                AND STR_TO_DATE(time, '%Y-%m-%d')
-                                BETWEEN STR_TO_DATE(:start_date, '%Y-%m-%d')
-                                    AND STR_TO_DATE(:end_date, '%Y-%m-%d')";
+                                AND STR_TO_DATE(time, '%Y-%m-%d %H:%i:%s')
+                                BETWEEN STR_TO_DATE(:start_date, '%Y-%m-%d %H:%i:%s')
+                                    AND STR_TO_DATE(:end_date, '%Y-%m-%d %H:%i:%s')";
                     $stmt = $this->em->getConnection()->prepare($sql);
                     $params['sensor_no'] = $sensor_no;
                     $params['start_date'] = $start_date;
@@ -266,13 +266,13 @@ final class ChartsController extends BaseController
         $type = $_GET['type'];
         
         if($type == 0){
-            $sql = "SELECT DISTINCT Sensors.sensor_no from Sensors LEFT OUTER JOIN Air_data ON Air_data.sensor_no = Sensors.sensor_no WHERE Sensors.user_no = :user_no AND type = 'A'";
+            $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND type = 'A'";
             $stmt = $this->em->getConnection()->prepare($sql);
             $params['user_no'] = $user_no;
             $stmt->execute($params);
         }
         else{
-            $sql = "SELECT sensor_no from Heart_data WHERE user_no = :user_no LIMIT 1";
+            $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND type = 'H' LIMIT 1";
             $stmt = $this->em->getConnection()->prepare($sql);
             $params['user_no'] = $user_no;
             $stmt->execute($params);
