@@ -178,7 +178,16 @@ final class ChartsController extends BaseController
 
     public function air_chart(Request $request, Response $response, $args) {
         //$response = $this->view->render($response, 'charts/dynamic-chart.phtml');
-        $response = $this->view->render($response, 'air_chart.twig');
+        $user_no = $_SESSION['user_no'];
+		$sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+
+		$username = $result['username'];
+        $email = $result['email'];
+        
+        $response = $this->view->render($response, 'air_chart.twig', ['username'=>$username, 'email'=>$email]);
         return $response;
     }    
 

@@ -97,3 +97,6 @@ $app->get('/heart_chart', 'App\Controller\ChartsController:heart_chart')
 
 $app->get('/charts/receive_combobox', 'App\Controller\ChartsController:receive_combobox')
     ->setName('/charts/receive_combobox');
+
+$app->get('/infowindow_to_chart', 'App\Controller\DataManagement:infowindow_to_chart')
+    ->setName('/infowindow_to_chart');

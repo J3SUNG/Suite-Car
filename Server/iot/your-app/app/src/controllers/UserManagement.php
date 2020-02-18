@@ -63,7 +63,7 @@ final class UserManagement extends BaseController
 			$mail->AltBody = 'Thank you . Please Click the link to activate your account.';
 			$mail->send();
 			//echo "<script>alert(\"E-mail has been sent. Check your E-mail.\");</script>";
-			echo "<script>location.replace('login')</script>";
+			echo "E-mail has been sent. Please Check your E-mail.";
 		}
 		catch (Exception $e) {
 			echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
@@ -345,8 +345,6 @@ final class UserManagement extends BaseController
 		$phone_number = $_POST['phone'];
 		$first_name = $_POST['first_name'];
 		$last_name = $_POST['last_name'];
-
-		//echo "$username, $email, $password, $phone_number";
 
 		//data for email phpmailer
 		$hash_password = password_hash($password, PASSWORD_DEFAULT);

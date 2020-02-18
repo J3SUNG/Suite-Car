@@ -131,46 +131,4 @@ $(function(){
         });
     });
 });
-
-
-    /*
-    $(password_compare)()
-    {
-        var ajax = $.ajax({
-            type : "POST",
-            url : "./signup_check"
-        });
-
-        ajax.done(password_compare(data)
-        
-        )
-    }
-    */
-/*
-function test(){
-    $.ajax({
-        type:"POST",
-        url:"/signup_check",
-        data:{
-            "username":$('#username').val()
-            "
-        },
-        success:function(data){	//data : checkSignup에서 넘겨준 결과
-            if($.trim(data)=="YES"){
-                if($('#username').val()!=''){ 
-                    alert("사용가능한 아이디입니다.");
-                }
-            }
-            else{
-                if($('#id').val()!=''){
-                    alert("중복된 아이디입니다.");
-                    $('#id').val('');
-                    $('#id').focus();
-                }
-            }
-        }
-    })
-})
-}
-*/
 </script>
