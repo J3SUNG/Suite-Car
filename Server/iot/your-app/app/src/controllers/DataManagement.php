@@ -13,13 +13,17 @@ final class DataManagement extends BaseController
 {
 	public function db_data_for_map(Request $request, Response $response, $args)
 	{
-		$sql = "SELECT Users.username, a.*
-				FROM Users, Air_data AS a
-				JOIN(
+		//modify the value of time interval
+		$sql = "SELECT Users.username, a.* 
+				FROM Users, Air_data AS a 
+				JOIN( 
 					SELECT sensor_no, MAX(time_in) time_in 
-					FROM Air_data
-					GROUP BY sensor_no) AS b
-				ON a.sensor_no = b.sensor_no AND a.time_in = b.time_in;";
+					FROM Air_data 
+					GROUP BY sensor_no) AS b 
+				ON a.sensor_no = b.sensor_no AND a.time_in = b.time_in
+				WHERE STR_TO_DATE(b.time_in, '%Y-%m-%d') - STR_TO_DATE(CURRENT_DATE, '%Y-%m-%d') = 0
+				AND TIME(CURRENT_TIME) - TIME(b.time_in) < 500000
+				;";
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
@@ -94,14 +98,10 @@ final class DataManagement extends BaseController
 	}
 
 	public function infowindow_to_chart(Request $request, Response $response, $args) {
+		$sensor_no = $_GET['sensor_no'];
+		$flag = $_GET['flag'];
 		$user_no = $_SESSION['user_no'];
-		$sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
-		$stmt= $this->em->getConnection()->prepare($sql);
-		$stmt->execute();
-		$result = $stmt->fetch();
 
-		$username = $result['username'];
-        $email = $result['email'];
-		$this->view->render($response, 'air_chart.twig', ['user_no'=>$user_no, 'username'=>$username, 'email'=>$email]);
+		$this->view->render($response, 'air_chart.twig', ['user_no'=>$user_no, 'flag'=>$flag, 'sensor_no'=>$sensor_no]);
 	}
 }

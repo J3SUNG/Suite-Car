@@ -165,7 +165,7 @@
                                 })();
 
                                 function initMap() {
-                                    var map_center = get_json_data[0].center;
+                                    var map_center = get_json_data[0].center; // problem occur
                                     var options = {
                                         center : map_center,
                                         zoom : 5,
@@ -200,19 +200,35 @@
                                         }
                                         else {
                                             data_color = '#000000';
-                                        }
+                                        } 
                                         //inserted <string> term.
+                                        /*
                                         contents = "<div><string><h1>" + data_info.username + "\'s Sensor" + "</h1></div><br>"
                                                                + "CO : " + data_info.CO_aqi + "<br>SO2 : " + data_info.SO2_aqi + "<br>NO2 : "
                                                                + data_info.NO2_aqi + "<br>O3 : " + data_info.O3_aqi + "<br>PM2.5 : " + data_info.PM25_aqi
                                                                + "</string></div>"
                                                                + "<br>"
-                                                               + '<button type = "button" class = "signup_button" onclick = "location.href = \'/infowindow_to_chart\'" id = "chart_view">Chart View</button>';
+                                                               + '<button type = "submit" class = "signup_button" onclick = chart_view() id = "chart_view">Chart View</button>'
+                                                               ;
+                                                               */
+                                        contents = "<form action = \"infowindow_to_chart\" method = \"get\">"
+                                                               + "<div><string><h1>" + data_info.username + "\'s Sensor" + "</h1></div><br>"
+                                                               + "CO : " + data_info.CO_aqi + "<br>SO2 : " + data_info.SO2_aqi + "<br>NO2 : "
+                                                               + data_info.NO2_aqi + "<br>O3 : " + data_info.O3_aqi + "<br>PM2.5 : " + data_info.PM25_aqi
+                                                               + "</string></div>"
+                                                               + "<br>"
+                                                               + "<a href='infowindow_to_chart?sensor=" + data_info.sensor_no + "&flag=" + 1 + "'>chart view</a>"
+                                                               + '<button type = "submit" class = "signup_button" id = "chart_view">Chart View</button>'
+                                                               + '<input class=\"input_text\" type = \"hidden\" id=\"sensor_no\" name=\"sensor_no\" value = \'data_info.sensor_no\'>'
+                                                               + "</form>";
+                                        //document.getElementById("sensor_no").val() = data_info.sensor_no;
 
+                                        var map_zoom = map.getZoom();
+                                        var radius_with_zoom = 10000 * map_zoom * (1 / Math.pow(2, map_zoom - 5));
                                         marker[index] = new google.maps.Circle({
                                             map : map,
                                             center : data_info.center,
-                                            radius : 50000,
+                                            radius : radius_with_zoom,
                                             strokeColor: data_color,
                                             strokeOpacity : 0.5,
                                             strokeWeight : 2,
@@ -229,6 +245,26 @@
                                             infowindow[index].setPosition(this.getCenter());
                                             infowindow[index].open(map, this);
                                         });
+/*
+                                        function chart_view() {
+                                            var sensor_no = data_info.sensor_no;
+                                            $.ajax({
+                                                'async': false,
+                                                'global': false,
+                                                'url' : "/infowindow_to_chart",
+                                                'dataType' : "json",
+                                                'data' : {
+                                                    "sensor_no" : data_info.sensor_no
+                                                },
+                                                'success' : function(data) {
+                                                    window.location.href = data.redirect;
+                                                },
+                                                'error' : function(data) {
+                                                    alert("chart_view() wrong. ");
+                                                }
+                                            });
+                                        });
+                                        */
                                     }
                                 }
 

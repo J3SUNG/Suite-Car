@@ -62,7 +62,7 @@ final class ChartsController extends BaseController
                     $sql = "SELECT * 
                     from Air_data 
                     WHERE sensor_no = :sensor_no
-                    ORDER BY time
+                    ORDER BY time_in
                     LIMIT 10";
                     $stmt = $this->em->getConnection()->prepare($sql);
                     $params['sensor_no'] = $sensor_no;
@@ -90,7 +90,7 @@ final class ChartsController extends BaseController
                             FROM (SELECT * 
                                 FROM Heart_data 
                                 WHERE user_no = :user_no 
-                                ORDER BY time DESC LIMIT 10) A ORDER BY A.time";
+                                ORDER BY time_in DESC LIMIT 10) A ORDER BY A.time_in";
                     $stmt = $this->em->getConnection()->prepare($sql);
                     $params['user_no'] = $user_no;
                     $stmt->execute($params);
@@ -128,7 +128,7 @@ final class ChartsController extends BaseController
                 // loop thru the sensor data and build sensor_array
                 foreach ($result as $row) {
                     $sensor_array = array();
-                    $sensor_array[] = array('v'=>$row['time']);
+                    $sensor_array[] = array('v'=>$row['time_in']);
                     if($CO == 0){
                         $sensor_array[] = array('v'=>$row['CO_aqi']);
                     }
@@ -169,7 +169,7 @@ final class ChartsController extends BaseController
                 // loop thru the sensor data and build sensor_array
                 foreach ($result as $row) {
                     $sensor_array = array();
-                    $sensor_array[] = array('v'=>$row['time']);
+                    $sensor_array[] = array('v'=>$row['time_in']);
                     $sensor_array[] = array('v'=>$row['heart']);
                    
                     // add current sensor_array line to $rows
@@ -264,13 +264,14 @@ final class ChartsController extends BaseController
     public function receive_combobox(Request $request, Response $response, $args) {
         $user_no = $_GET['user_no'];
         $type = $_GET['type'];
-        
+        //air data receive
         if($type == 0){
             $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND type = 'A'";
             $stmt = $this->em->getConnection()->prepare($sql);
             $params['user_no'] = $user_no;
             $stmt->execute($params);
         }
+        //heart data receive
         else{
             $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND type = 'H' LIMIT 1";
             $stmt = $this->em->getConnection()->prepare($sql);
