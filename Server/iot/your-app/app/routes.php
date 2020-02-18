@@ -49,7 +49,7 @@ $app->get('/forgotten_check', 'App\Controller\UserManagement:forgotten_check')
 $app->post('/signin', 'App\Controller\UserManagement:signin')
     ->setName('signin');
 
-$app->get('/home', 'App\Controller\UserManagement:home')
+$app->post('/home', 'App\Controller\UserManagement:home')
     ->setName('home');
 
 $app->get('/signout', 'App\Controller\UserManagement:signout')

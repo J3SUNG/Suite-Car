@@ -150,13 +150,13 @@
                                 var get_json_data = (function(){
                                     var json = null;
                                     $.ajax({
-                                        'type' : "POST",
+                                        //'type' : "POST",
                                         'async': false,
                                         'global': false,
                                         'url' : "/db_data_for_map",
                                         'dataType' : "json",
-                                        'data' : {
-                                        },
+                                        //'data' : {
+                                        //},
                                         'success' : function(data) {
                                             json = data;
                                         },
