@@ -4,15 +4,20 @@ import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.bluetooth.BluetoothAdapter
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
+import android.os.IBinder
 import android.os.Message
 import android.speech.RecognizerIntent
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.util.Log
-import android.view.ActionMode
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.TextView
@@ -22,54 +27,64 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.gson.Gson
 import com.qic.suitecar.dataclass.ResultData
+import com.qic.suitecar.ui.heart.HeartActivity
 import com.qic.suitecar.ui.login.LogInActivity
 import com.qic.suitecar.ui.login.SharedPreValue
 import com.qic.suitecar.ui.sensor.SensorAdaptor
 import com.qic.suitecar.ui.sensor.SensorInfo
 import com.qic.suitecar.util.*
+import com.qic.suitecar.util.Constants.SensorType
 import com.qic.suitecar.util.Map
+import com.qic.suitecar.util.bluetooth.BluetoothDevice
+import com.qic.suitecar.util.bluetooth.SerialListener
+import com.qic.suitecar.util.bluetooth.SerialService
+import com.qic.suitecar.util.bluetooth.SerialSocket
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_addsensor.*
 import kotlinx.android.synthetic.main.dialog_addsensor.addSensorDialogCancelButton
 import kotlinx.android.synthetic.main.dialog_changepassword.*
 import kotlinx.android.synthetic.main.dialog_closeaccount.*
+import kotlinx.android.synthetic.main.dialog_deregistration.*
 import kotlinx.android.synthetic.main.dialog_edituser.*
-import kotlinx.android.synthetic.main.fragment_setting.view.*
 import okhttp3.ResponseBody
+import org.json.JSONObject
+import polar.com.sdk.api.model.PolarOhrPPGData
 import retrofit2.Call
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
-class MainActivity : AppCompatActivity() {
-    val REQ_CODE_SPEECH_INPUT = 0
+class MainActivity : AppCompatActivity(), ServiceConnection, SerialListener {
+
+
     lateinit var suiteManager: SuiteManager
     private val multiplePermissionsCode = 100          //권한
-
-    // Intent request codes
-    private val REQUEST_CONNECT_DEVICE_SECURE = 1
-    private val REQUEST_CONNECT_DEVICE_INSECURE = 2
-    private val REQUEST_ENABLE_BT = 3
-
-    //Name of the connected device
-    private var mConnectedDeviceName: String? = null
-    //Array adapter for the conversation thread
-    private var mConversationArrayAdapter: ArrayAdapter<String>? = null
-    //String buffer for outgoing messages
-    private var mOutStringBuffer: StringBuffer? = null
-    //Local Bluetooth adapter
-    private var mBluetoothAdapter: BluetoothAdapter? = null
+    lateinit var polarSensor: PolarSensor
     //Member object for the chat services
-    lateinit var nowDialog:Dialog
-
+    lateinit var nowDialog: Dialog
+    lateinit var map: Map
     private val requiredPermissions = arrayOf(
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-        Manifest.permission.READ_EXTERNAL_STORAGE
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+            Manifest.permission.READ_EXTERNAL_STORAGE
     )
     var sensors = ArrayList<SensorInfo>()
+
+    var heartThread = HeartThread()
+
+
+    private val newline = "\r\n"
+
+    var bluetoothDevices = arrayOf(BluetoothDevice(), BluetoothDevice(), BluetoothDevice(), BluetoothDevice())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -77,28 +92,56 @@ class MainActivity : AppCompatActivity() {
         checkPermissions()
         TTS.set(this)
         var smf = supportFragmentManager.findFragmentById(R.id.googleMap) as SupportMapFragment
-        var map = Map(smf, this)
+        map = Map(smf, this)
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         suiteManager = SuiteManager(this)
-        setSensors()
+        loadSensors()
         Log.d("welcome", SharedPreValue.getUserNo(this).toString())
 
-        // Get local Bluetooth adapter
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        // If the adapter is null, then Bluetooth is not supported
-        if (mBluetoothAdapter == null) {
-            Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show()
-            this.finish()
-        }
 
+        polarSensor = PolarSensor(this, this)
     }
 
 
-    private fun setSensors() {
-  /*      sensors.add(SensorInfo(R.drawable.ic_heartsensor, "뿌앵", "뿌애앵", 0))
-        sensors.add(SensorInfo(R.drawable.ic_inair, "뿌앵", "뿌애앵", 1))
-        sensors.add(SensorInfo(R.drawable.ic_outair, "뿌앵", "뿌애앵", 2))*/
-        drawerSensorRecyclerView.adapter = SensorAdaptor(this, sensors)
+    fun loadSensors() {
+        var retrofit = RetrofitClient.getInstnace()
+        var myApi = retrofit.create(IServer::class.java)
+        val user_no = SharedPreValue.getUserNo(baseContext)
+        Runnable {
+            myApi.sensorList(Constants.ANDROID, user_no)
+                    .enqueue(object :
+                            retrofit2.Callback<ResponseBody> {
+                        override fun onResponse(
+                                call: Call<ResponseBody>,
+                                response: Response<ResponseBody>
+                        ) {
+                            var a = response.body()!!.string()
+                            var gson = Gson()
+                            Log.d("sensorList", a)
+                            var jsonObject = JSONObject(a)
+                            var jsonArray = jsonObject.getJSONArray("sensors")
+                            sensors = ArrayList()
+                            for (i in 0 until jsonArray.length()) {
+                                Log.d("sensorList", jsonArray.get(i).toString())
+                                var sensorInfo = gson.fromJson(jsonArray.get(i).toString(), SensorInfo::class.java)
+                                Log.d("LoadSensor", sensorInfo.type.toString())
+                                sensors.add(sensorInfo)
+
+                            }
+                            fitSensors()
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            Log.d("Close Account", t.message)
+                        }
+                    })
+        }.run()
+    }
+
+    fun fitSensors() {
+        sensors.add(SensorInfo(0, "뿌앵", "뿌애앵", SensorType.AddSensor, 0))
+        drawerSensorRecyclerView.removeAllViews()
+        drawerSensorRecyclerView.adapter = SensorAdaptor(this, this, sensors)
         drawerSensorRecyclerView.layoutManager = LinearLayoutManager(this)
     }
 
@@ -116,15 +159,93 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             R.id.suiteButton -> {
-                sendMessage("hihihi")
+                //sendMessage("start")
                 //suiteManager.suite()
-            }
-            R.id.drawerAddSensorButton -> {
-                showAddSensorDiagram()
+                send("0", SensorType.Car)
+//                polarSensor.connect()
+
             }
             R.id.drawerEditUserButton -> {
                 showEditUserButton()
             }
+            R.id.realtimeHeartLayout -> {
+                var intent = Intent(this, HeartActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.sensorInfoRefreshButton -> {
+                loadSensors()
+            }
+            R.id.testbutton -> {
+                send("start", SensorType.InAirSensor)
+            }
+            R.id.testbutton1 -> {
+                send("start", SensorType.OutAirSensor)
+            }
+            R.id.testbutton2->{
+                reloadMap()
+            }
+            /*R.id.heartImageView->{
+                var intent = Intent(this,HeartActivity::class.java)
+                startActivity(intent)
+            }*/
+        }
+    }
+
+    private fun reloadMap() {
+        //서버에서 가장 최근 데이터들 가져오기
+        //json 분해
+        
+    }
+
+    fun showRemoveSensorDialog(sensorInfo: SensorInfo) {
+        var dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_deregistration)
+        dialog.setCancelable(true)
+        dialog.removeSensorId.text = sensorInfo.sname
+        dialog.removeSensorMac.text = sensorInfo.mac_address
+        dialog.removeSensorType.text = sensorInfo.type.toString()
+        val user_no = SharedPreValue.getUserNo(baseContext)
+        dialog.show()
+        dialog.removeDialogRemoveButton.setOnClickListener {
+            Log.d("Remove Sensor", "Remove")
+            var retrofit = RetrofitClient.getInstnace()
+            var myApi = retrofit.create(IServer::class.java)
+
+            Runnable {
+                myApi.sensorDeRegistration(1, user_no, sensorInfo.sensor_no)
+                        .enqueue(object :
+                                retrofit2.Callback<ResponseBody> {
+                            override fun onResponse(
+                                    call: Call<ResponseBody>,
+                                    response: Response<ResponseBody>
+                            ) {
+                                var a = response.body()!!.string()
+                                var gson = Gson()
+                                Log.d("sensor DeRegistration", a)
+                                loadSensors()
+
+//                            var jsonObject = JSONObject(a)
+//                            val sensor_no=jsonObject.getInt("sensor_no")
+
+                                /*      sensors[type] = (SensorInfo(sensor_no, sensorName, sensorMac, sensorType))
+                                      drawerSensorRecyclerView.adapter!!.notifyDataSetChanged()
+                                      drawerSensorRecyclerView[type].addSensorLayout.visibility = View.GONE
+                                      drawerSensorRecyclerView[type].itemSensorLayout.visibility = View.VISIBLE
+                                      connectDevice(sensorMac, true)*/
+                                dialog.dismiss()
+                            }
+
+                            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                                Log.d("Sensor Deregistration", t.message)
+                            }
+                        })
+            }.run()
+
+            dialog.dismiss()
+        }
+        dialog.removeDialogCancelButton.setOnClickListener {
+            Log.d("Remove Sensor", "Cancel")
+            dialog.dismiss()
         }
     }
 
@@ -147,30 +268,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAddSensorDiagram() {
-        var dialog = Dialog(this)
-        nowDialog=dialog
-        dialog.setContentView(R.layout.dialog_addsensor)
-        dialog.setCancelable(true)
-        dialog.show()
-        dialog.addSensorScanButton.setOnClickListener {
-            val intent = Intent(this, DeviceListActivity::class.java)
-            startActivityForResult(intent, REQUEST_CONNECT_DEVICE_SECURE)
-        }
-        dialog.addSensorDialogAddButton.setOnClickListener {
-            val sensorId = dialog.addSensorId.text.toString()
-            val sensorMac = dialog.addSensorMac.text.toString()
-            val sensorType = dialog.addSensorRadioGroup.checkedRadioButtonId
-            sensors.add(SensorInfo(R.drawable.ic_outair, sensorId, sensorMac, sensorType))
-            drawerSensorRecyclerView.adapter!!.notifyDataSetChanged()
-            connectDevice(sensorMac, true)
-            dialog.dismiss()
-        }
-        dialog.addSensorDialogCancelButton.setOnClickListener {
-            Log.d("Add Sensor", "Cancel")
-            dialog.dismiss()
-        }
-    }
 
     private fun showCloseAccountDiagram() {
         var dialog = Dialog(this)
@@ -184,176 +281,95 @@ class MainActivity : AppCompatActivity() {
             val password = dialog.closeAccountPassword.text.toString()
             Runnable {
                 myApi.closeAccount(1, user_no, password)
-                    .enqueue(object :
-                        retrofit2.Callback<ResponseBody> {
-                        override fun onResponse(
-                            call: Call<ResponseBody>,
-                            response: Response<ResponseBody>
-                        ) {
-                            var a = response.body()!!.string()
-                            var gson = Gson()
-                            Log.d("Change Password", a)
-                            var resultData = gson.fromJson(a, ResultData::class.java)
-                            when (resultData.result) {
-                                0 -> {
-                                    Toast.makeText(
-                                        baseContext,
-                                        "I Won't let you go!!!!",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                        .enqueue(object :
+                                retrofit2.Callback<ResponseBody> {
+                            override fun onResponse(
+                                    call: Call<ResponseBody>,
+                                    response: Response<ResponseBody>
+                            ) {
+                                var a = response.body()!!.string()
+                                var gson = Gson()
+                                Log.d("Change Password", a)
+                                var resultData = gson.fromJson(a, ResultData::class.java)
+                                when (resultData.result) {
+                                    0 -> {
+                                        Toast.makeText(
+                                                baseContext,
+                                                "I Won't let you go!!!!",
+                                                Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                    1 -> {
+                                        Toast.makeText(
+                                                baseContext,
+                                                "Success to Close Account... Bye...",
+                                                Toast.LENGTH_SHORT
+                                        ).show()
+                                        var intent = Intent(baseContext, LogInActivity::class.java)
+                                        startActivity(intent)
+                                    }
                                 }
-                                1 -> {
-                                    Toast.makeText(
-                                        baseContext,
-                                        "Success to Close Account... Bye...",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    var intent = Intent(baseContext, LogInActivity::class.java)
-                                    startActivity(intent)
-                                }
+                                dialog.dismiss()
+
                             }
-                            dialog.dismiss()
 
-                        }
-
-                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                            Log.d("Close Account", t.message)
-                        }
-                    })
+                            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                                Log.d("Close Account", t.message)
+                            }
+                        })
             }.run()
             dialog.closeAccountCancelButton.setOnClickListener {
                 Log.d("Change Password", "Cancel")
                 dialog.dismiss()
             }
         }
-
     }
 
     override fun onStart() {
         super.onStart()
-        if (!mBluetoothAdapter!!.isEnabled) {
-            val enableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableIntent, REQUEST_ENABLE_BT)
-            // Otherwise, setup the chat session
-        } else if (BluetoothManager.BService == null) {
-            setupChat()
+        for (i in 1..3) {
+            if (bluetoothDevices[i].service != null)
+                bluetoothDevices[i].service!!.attach(this)
         }
+        startService(Intent(this, SerialService::class.java)) // prevents service destroy on unbind from recreated activity caused by orientation change
+        this.bindService(Intent(this, SerialService::class.java), this, Context.BIND_AUTO_CREATE)
+
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if(BluetoothManager.BService!=null) {
-            BluetoothManager.BService!!.stop()
+        polarSensor.api.shutDown()
+        for (i in 1..3) {
+            if(bluetoothDevices[i].connected!=Constants.Connected.False)
+                disconnect(SensorType.values()[i])
         }
+        stopService(Intent(this, SerialService::class.java))
+    }
 
+    public override fun onStop() {
+        for(i in 1..3){
+            if(bluetoothDevices[i].service!=null&&!this.isChangingConfigurations)
+                bluetoothDevices[i].service!!.detach()
+        }
+        super.onStop()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        polarSensor.api.backgroundEntered()
     }
 
     override fun onResume() {
         super.onResume()
-        // Performing this check in onResume() covers the case in which BT was
-        // not enabled during onStart(), so we were paused to enable it...
-        // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-         if (BluetoothManager.BService != null) {
-             // Only if the state is STATE_NONE, do we know that we haven't started already
-             if (BluetoothManager.BService!!.getState() === Constants.STATE_NONE) {
-                 // Start the Bluetooth chat services
-                 BluetoothManager.BService!!.start()
-             }
-         }
-    }
-
-    /**
-     * Set up the UI and background operations for chat.
-     */
-    private fun setupChat() {
-        // Initialize the BluetoothChatService to perform bluetooth connections
-        BluetoothManager.BService = BluetoothService(this, mHandler)
-        // Initialize the buffer for outgoing messages
-        mOutStringBuffer = StringBuffer("")
-    }
-
-    /**
-     * Makes this device discoverable for 300 seconds (5 minutes).
-     */
-    private fun ensureDiscoverable() {
-        if (mBluetoothAdapter!!.scanMode != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-            val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
-            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
-            startActivity(discoverableIntent)
-        }
-    }
-
-    /**
-     * Sends a message.
-     *
-     * @param message A string of text to send.
-     */
-    private fun sendMessage( message: String) {
-        // Check that we're actually connected before trying anything
-        if (BluetoothManager.BService!!.getState() !== Constants.STATE_CONNECTED) {
-            Toast.makeText(this, "NOP", Toast.LENGTH_SHORT).show()
-            return
-        }
-        // Check that there's actually something to send
-        if (message.isNotEmpty()) {
-            // Get the message bytes and tell the BluetoothChatService to write
-            val send = message.toByteArray()
-            BluetoothManager.BService!!.write(send)
-            // Reset out string buffer to zero and clear the edit text field
-            mOutStringBuffer!!.setLength(0)
-            Log.d("BLUE", mOutStringBuffer.toString())
-        }
-    }
-
-    private val mHandler = object : Handler() {
-        override fun handleMessage(msg: Message) {
-            val activity = this
-            when (msg.what) {
-                Constants.MESSAGE_STATE_CHANGE ->
-                    when (msg.arg1) {
-                        Constants.STATE_CONNECTED -> {
-                            //setStatus(getString(R.string.title_connected_to, mConnectedDeviceName))
-                            //  mConversationArrayAdapter!!.clear()
-                        }
-                        Constants.STATE_CONNECTING -> {
-                        }//setStatus(R.string.title_connecting)
-                        Constants.STATE_LISTEN, Constants.STATE_NONE -> {
-                        } //setStatus(R.string.title_not_connected)
-                    }
-                Constants.MESSAGE_WRITE -> {
-                    val writeBuf = msg.obj as ByteArray
-                    // construct a string from the buffer
-                    val writeMessage = String(writeBuf)
-                    // mConversationArrayAdapter!!.add("Me:  $writeMessage")
-                   logTextView.text= logTextView.text.toString() + "Me : $writeMessage"+"\n"
-                }
-                Constants.MESSAGE_READ -> {
-                    val readBuf = msg.obj as ByteArray
-                    // construct a string from the valid bytes in the buffer
-                    val readMessage = String(readBuf, 0, msg.arg1)
-                    // mConversationArrayAdapter!!.add("$mConnectedDeviceName:  $readMessage")
-                    logTextView.text= logTextView.text.toString() + "$mConnectedDeviceName : $readMessage"+"\n"
-                }
-                Constants.MESSAGE_DEVICE_NAME -> {
-                    // save the connected device's name
-                    mConnectedDeviceName = msg.data.getString(Constants.DEVICE_NAME)
-                    if (null != activity) {
-                        Toast.makeText(
-                            baseContext,
-                            "Connected to $mConnectedDeviceName",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-                Constants.MESSAGE_TOAST -> if (null != activity) {
-                    Toast.makeText(
-                        baseContext, msg.data.getString(Constants.TOAST),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+        polarSensor.api.foregroundEntered()
+        for(i in 1..3){
+            if(bluetoothDevices[i].initialStart&&bluetoothDevices[i].service!=null){
+                bluetoothDevices[i].initialStart=false
+                this.runOnUiThread { this.connect(SensorType.values()[i])}
             }
         }
     }
+
 
     private fun showChangePasswordDiagram() {
         var dialog = Dialog(this)
@@ -371,48 +387,48 @@ class MainActivity : AppCompatActivity() {
             if (newPassword == confirmPassword) {
                 Runnable {
                     myApi.changePassword(1, user_no, originalPassword, newPassword, confirmPassword)
-                        .enqueue(object :
-                            retrofit2.Callback<ResponseBody> {
-                            override fun onResponse(
-                                call: Call<ResponseBody>,
-                                response: Response<ResponseBody>
-                            ) {
-                                var a = response.body()!!.string()
-                                var gson = Gson()
-                                Log.d("Change Password", a)
-                                var resultData = gson.fromJson(a, ResultData::class.java)
-                                when (resultData.result) {
-                                    0 -> {
-                                        Toast.makeText(
-                                            baseContext,
-                                            "Check you original password",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                    1 -> {
-                                        Toast.makeText(
-                                            baseContext,
-                                            "Success to change the Password",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        SharedPreValue.setLoginFlag(baseContext, false)
-                                        var intent = Intent(baseContext, LogInActivity::class.java)
-                                        startActivity(intent)
+                            .enqueue(object :
+                                    retrofit2.Callback<ResponseBody> {
+                                override fun onResponse(
+                                        call: Call<ResponseBody>,
+                                        response: Response<ResponseBody>
+                                ) {
+                                    var a = response.body()!!.string()
+                                    var gson = Gson()
+                                    Log.d("Change Password", a)
+                                    var resultData = gson.fromJson(a, ResultData::class.java)
+                                    when (resultData.result) {
+                                        0 -> {
+                                            Toast.makeText(
+                                                    baseContext,
+                                                    "Check you original password",
+                                                    Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                        1 -> {
+                                            Toast.makeText(
+                                                    baseContext,
+                                                    "Success to change the Password",
+                                                    Toast.LENGTH_SHORT
+                                            ).show()
+                                            SharedPreValue.setLoginFlag(baseContext, false)
+                                            var intent = Intent(baseContext, LogInActivity::class.java)
+                                            startActivity(intent)
+                                        }
                                     }
                                 }
-                            }
 
-                            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                                Log.d("SignIn", "Fail : " + t.message)
-                            }
-                        })
+                                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                                    Log.d("SignIn", "Fail : " + t.message)
+                                }
+                            })
                 }.run()
                 dialog.dismiss()
             } else {
                 Toast.makeText(
-                    baseContext,
-                    "The new and confirm password are not same",
-                    Toast.LENGTH_SHORT
+                        baseContext,
+                        "The new and confirm password are not same",
+                        Toast.LENGTH_SHORT
                 ).show()
             }
 
@@ -424,25 +440,20 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    /**
-     * Establish connection with other device
-     *
-     * @param data   An [Intent] with [DeviceListActivity.EXTRA_DEVICE_ADDRESS] extra.
-     * @param secure Socket Security type - Secure (true) , Insecure (false)
-     */
-    private fun connectDevice(address: String, secure: Boolean) {
-        // Get the device MAC address
-        Log.d("Bluetooth", address)
-        // Get the BluetoothDevice object
-        val device = mBluetoothAdapter!!.getRemoteDevice(address)
-        // Attempt to connect to the device
-        BluetoothManager.BService!!.connect(device, secure)
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            REQ_CODE_SPEECH_INPUT -> {
+
+            Constants.ADD_SENSOR_REQ -> {
+                Log.d("Add sensor result", resultCode.toString())
+                if (resultCode == Constants.OKAY) {
+                    loadSensors()
+                } else if (resultCode == Constants.CANCEL) {
+
+                }
+            }
+            Constants.SPEECH_INPUT_REQ -> {
                 if (resultCode == Activity.RESULT_OK && null != data) {
                     val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                     suiteManager.command(result[0])
@@ -450,38 +461,14 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, result!![0], Toast.LENGTH_LONG).show()
                 }
             }
-            REQUEST_CONNECT_DEVICE_SECURE -> // When DeviceListActivity returns with a device to connect
-            {
-                if (resultCode == Activity.RESULT_OK) {
-                    val address = data!!.extras!!.getString("device_address")
-                    nowDialog.addSensorMac.text=address
-                    //connectDevice(address!!, true)
-                }
-            }
-            REQUEST_CONNECT_DEVICE_INSECURE -> {
-                // When DeviceListActivity returns with a device to connect
-                if (resultCode == Activity.RESULT_OK) {
-                    val address = data!!.extras!!.getString("device_address")
-                    nowDialog.addSensorMac.text=address
-                    //connectDevice(address!!, false)
-                }
-            }
-            REQUEST_ENABLE_BT -> {
-                // When the request to enable Bluetooth returns
-                if (resultCode == Activity.RESULT_OK) {
-                    // Bluetooth is now enabled, so set up a chat session
-                    setupChat()
-                }
-            }
             else -> {
                 // User did not enable Bluetooth or an error occurred
                 Toast.makeText(
-                    this, "asddas",
-                    Toast.LENGTH_SHORT
+                        this, "asddas",
+                        Toast.LENGTH_SHORT
                 ).show()
-                this.finish()
+                //this.finish()
             }
-
         }
     }
 
@@ -490,9 +477,9 @@ class MainActivity : AppCompatActivity() {
         //필요한 퍼미션들을 하나씩 끄집어내서 현재 권한을 받았는지 체크
         for (permission in requiredPermissions) {
             if (ContextCompat.checkSelfPermission(
-                    this,
-                    permission
-                ) != PackageManager.PERMISSION_GRANTED
+                            this,
+                            permission
+                    ) != PackageManager.PERMISSION_GRANTED
             ) {
                 //만약 권한이 없다면 rejectedPermissionList에 추가
                 rejectedPermissionList.add(permission)
@@ -503,17 +490,17 @@ class MainActivity : AppCompatActivity() {
             //권한 요청!
             val array = arrayOfNulls<String>(rejectedPermissionList.size)
             ActivityCompat.requestPermissions(
-                this,
-                rejectedPermissionList.toArray(array),
-                multiplePermissionsCode
+                    this,
+                    rejectedPermissionList.toArray(array),
+                    multiplePermissionsCode
             )
         }
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray
     ) {
         when (requestCode) {
             multiplePermissionsCode -> {
@@ -528,4 +515,218 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    var handler = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            when (msg.what) {
+                0 -> {
+
+                    if (PolarData.heartDatas.isEmpty()) {
+                        realtimeNotConnect.visibility = View.VISIBLE
+                        realtimeHeartLayout.visibility = View.GONE
+                    } else {
+                        realtimeNotConnect.visibility = View.GONE
+                        realtimeHeartLayout.visibility = View.VISIBLE
+                        realtimeHRTextView.text = PolarData.heartDatas.last().heart.toString()
+
+                    }
+                }
+                1 -> {
+                    Log.d("Message", msg.arg1.toString())
+                }
+            }
+        }
+    }
+
+    fun polarDataTransfer() {
+        var retrofit = RetrofitClient.getInstnace()
+        var myApi = retrofit.create(IServer::class.java)
+        val user_no = SharedPreValue.getUserNo(baseContext)
+        var dt = Date()
+        var sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+        Log.d("DATE", sdf.format(dt).toString())
+
+        if (PolarData.heartDatas.size > 0) {
+            myApi.polarDataTransfer(
+                    Constants.ANDROID,
+                    polarSensor.sensor_no,
+                    user_no,
+                    sdf.format(dt).toString(),
+                    PolarData.heartDatas.last().heart,
+                    PolarData.heartDatas.last().rr_interval,
+                    map.cur_loc.latitude.toFloat(),
+                    map.cur_loc.longitude.toFloat()
+            )
+                    .enqueue(object :
+                            retrofit2.Callback<ResponseBody> {
+                        override fun onResponse(
+                                call: Call<ResponseBody>,
+                                response: Response<ResponseBody>
+                        ) {
+                            if (response.body() != null) {
+                                var a = response.body()!!.string()
+                                var gson = Gson()
+                                Log.d("polarDataTransfer", a)
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            Log.d("Close Account", t.message)
+                        }
+                    })
+        }
+    }
+
+    var polar_flag = true
+
+    inner class HeartThread : Thread() {
+        override fun run() {
+            while (polar_flag) {
+                sleep(1000)
+                polarDataTransfer()
+                handler.sendEmptyMessage(0)
+                Log.d("transfer Thread", polar_flag.toString())
+            }
+            handler.sendEmptyMessage(0)
+        }
+    }
+
+    override fun onServiceConnected(name: ComponentName, binder: IBinder) {
+        for(i in 1..3){
+            bluetoothDevices[i].service=(binder as SerialService.SerialBinder).service
+            bluetoothDevices[i].initialStart=false
+         //   this.runOnUiThread { this.connect(SensorType.values()[i])}
+        }
+    }
+
+    override fun onServiceDisconnected(name: ComponentName) {
+        for(i in 1..3){
+            bluetoothDevices[i].service=null
+        }
+    }
+
+    fun connect(type: SensorType) {
+        try {
+            Log.w(this.javaClass.name, "connect()")
+            val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+            val device = bluetoothAdapter.getRemoteDevice(bluetoothDevices[type.ordinal].deviceAddress)
+            val deviceName = if (device.name != null) device.name else device.address
+            status("1 connecting...1")
+            bluetoothDevices[type.ordinal].connected=Constants.Connected.Pending
+            status("1 connecting...2")
+            bluetoothDevices[type.ordinal].socket= SerialSocket()
+            status("1 connecting...3")
+            bluetoothDevices[type.ordinal].service!!.connect(this,"Connected to $deviceName")
+            status("1 connecting...4")
+            bluetoothDevices[type.ordinal].socket!!.connect(this,bluetoothDevices[type.ordinal].service!!,device)
+            status("1 connecting...5")
+        } catch (e: Exception) {
+            onSerialConnectError(e)
+        }
+
+    }
+
+    fun disconnect(type: SensorType) {
+        bluetoothDevices[type.ordinal].connected=Constants.Connected.False
+        if( bluetoothDevices[type.ordinal].service!=null)
+            bluetoothDevices[type.ordinal].service!!.disconnect()
+        if(bluetoothDevices[type.ordinal].socket!=null)
+            bluetoothDevices[type.ordinal].socket!!.disconnect()
+        bluetoothDevices[type.ordinal].socket=null
+    }
+
+    private fun send(str: String, type: SensorType) {
+        Log.w(this.javaClass.name, "send()")
+        /* if (connected != Connected.True) {
+             Toast.makeText(this, "not connected", Toast.LENGTH_SHORT).show()
+             return
+         }*/
+        try {
+            val spn = SpannableStringBuilder(str + '\n')
+            spn.setSpan(ForegroundColorSpan(resources.getColor(R.color.colorSendText)), 0, spn.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            //  receiveText.append(spn);
+            val data = (str + newline).toByteArray()
+            bluetoothDevices[type.ordinal].socket!!.write(data)
+        } catch (e: Exception) {
+            onSerialIoError(e)
+        }
+
+    }
+
+    private fun receive(data: ByteArray) {
+        Log.w(this.javaClass.name, String(data))
+        val strs = String(data).split(",").toTypedArray()
+        strs[1] = strs[1].substring(1)
+        val airData = ArrayList<Double>()
+        for (i in 0..strs.size - 2) {
+            airData.add(strs[i + 1].toDouble())
+        }
+        var sensor_no: Int = 0
+        for (i in sensors) {
+            if (i.mac_address == strs[0]) {
+                sensor_no = i.sensor_no
+            }
+        }
+        //데이터 변환 및 aqi 계산
+
+        var dt = Date()
+        var sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+        sdf.format(dt).toString()
+        var retrofit = RetrofitClient.getInstnace()
+        var myApi = retrofit.create(IServer::class.java)
+        Runnable {
+            myApi.udooDataTransfer(Constants.ANDROID, sensor_no, sdf.format(dt).toString(), airData[1],
+                    airData[2], airData[3], airData[4], airData[5], airData[6],
+                    airData[2], airData[3], airData[4], airData[5], airData[6],
+                    map.cur_loc.latitude.toFloat(), map.cur_loc.longitude.toFloat())
+                    .enqueue(object :
+                            retrofit2.Callback<ResponseBody> {
+                        override fun onResponse(
+                                call: Call<ResponseBody>,
+                                response: Response<ResponseBody>
+                        ) {
+                            var a = response.body()!!.string()
+                            var gson = Gson()
+                            Log.d("udooDataTransfer", a)
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            Log.d("udooDataTransfer", t.message)
+                        }
+                    })
+        }.run()
+
+    }
+
+    private fun status(str: String) {
+        Log.d("status",str)
+        val spn = SpannableStringBuilder(str + '\n')
+        spn.setSpan(ForegroundColorSpan(resources.getColor(R.color.colorStatusText)), 0, spn.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        //receiveText.append(spn);
+    }
+
+    /*
+     * SerialListener
+     */
+    override fun onSerialConnect() {
+        status("connected")
+    }
+
+
+    override fun onSerialRead(data: ByteArray) {
+        receive(data)
+    }
+
+    override fun onSerialIoError(e: Exception) {
+        status("connection lost: " + e.message)
+        /*for(i in SensorType.values()) {
+            disconnect(i)
+        }*/
+    }
+
+    override fun onSerialConnectError(e: Exception?) {
+        status("connection failed: " + e!!.message)
+        /*for(i in SensorType.values()) {
+            disconnect(i)
+        }*/
+    }
 }

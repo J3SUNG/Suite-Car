@@ -1,6 +1,9 @@
 package com.qic.suitecar.ui.sensor
 
-class SensorInfo ( var img : Int,
-                   var id:String,
-                   var mac:String,
-                   var type:Int)
+import com.qic.suitecar.util.Constants
+
+class SensorInfo ( var sensor_no : Int,
+                   var sname:String,
+                   var mac_address:String,
+                   var type:Constants.SensorType,
+                   var status:Int)

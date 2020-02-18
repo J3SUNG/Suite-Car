@@ -5,4 +5,10 @@
     <color name="colorAccent">#D81B60</color>
     <color name="mGreen">#27AE60</color>
     <color name="mYellow">#E5D85C</color>
+
+
+    <color name="colorRecieveText">#00FF00</color>
+    <color name="colorSendText">#82CAFF</color>
+    <color name="colorStatusText">#FFDB58</color>
+
 </resources>

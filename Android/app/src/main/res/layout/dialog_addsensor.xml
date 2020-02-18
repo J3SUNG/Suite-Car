@@ -64,6 +64,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:id="@+id/addSensorScanButton"
+                android:onClick="onClick"
                 android:text="Scan"/>
         </LinearLayout>
     </LinearLayout>
@@ -85,6 +86,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:id="@+id/addSensorDialogAddButton"
+            android:onClick="onClick"
             android:text="Add" />
 
         <Button
@@ -92,6 +94,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="onClick"
             android:id="@+id/addSensorDialogCancelButton"
             android:text="Cancel" />
     </LinearLayout>

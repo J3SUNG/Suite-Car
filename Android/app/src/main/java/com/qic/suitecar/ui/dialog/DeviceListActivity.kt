@@ -1,4 +1,4 @@
-package com.qic.suitecar
+package com.qic.suitecar.ui.dialog
 
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
@@ -7,13 +7,12 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.Window
 import android.widget.*
-import com.qic.suitecar.util.Constants
+import com.qic.suitecar.R
+import com.qic.suitecar.util.Constants.OKAY
 import kotlinx.android.synthetic.main.activity_device_list.*
 
 class DeviceListActivity : Activity() {
@@ -135,9 +134,8 @@ class DeviceListActivity : Activity() {
             // Create the result Intent and include the MAC address
             val intent = Intent()
             intent.putExtra(EXTRA_DEVICE_ADDRESS, address)
-            intent.putExtra(EXTRA_DEVICE_TYPE,Constants.HEARTSENSER)
             // Set result and finish this Activity
-            setResult(Activity.RESULT_OK, intent)
+            setResult(OKAY, intent)
             finish()
         }
 
