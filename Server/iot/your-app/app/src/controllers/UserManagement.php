@@ -130,7 +130,7 @@ final class UserManagement extends BaseController
 		}
     }
 
-    public function signIn(Request $request, Response $response, $args)
+    public function signin(Request $request, Response $response, $args)
     {
 		$Pusername = $_POST['username'];
 		$Ppassword = $_POST['password'];
@@ -176,6 +176,11 @@ final class UserManagement extends BaseController
 			echo json_encode($data);
 		}
     }
+
+	public function home(Request $request, Response $response, $args)
+    {
+		$this->view->render($response, 'home.twig');	
+	}
 
 	public function signout(Request $request, Response $response, $args)
     {
