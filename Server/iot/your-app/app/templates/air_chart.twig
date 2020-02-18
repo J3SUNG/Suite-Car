@@ -144,29 +144,42 @@
                                     <div id="chart_div">
                                         <script type="text/javascript">
                                             var user_no = {{user_no}};
-                                            var sensor_no = {{sensor_no}}; // no value come
-                                            alert(sensor_no);
+                                            var sensor_no;
                                             $now = new Date();
                                             
-                                            $(function(){ 
-                                                $.ajax({
-                                                url: "/charts/receive_combobox",
-                                                    dataType:"text",
-                                                    async: false,
-                                                    type : "GET",
-                                                    data : {
-                                                        "user_no" : user_no,
-                                                        "type" : 0
-                                                    },
-                                                    success : function(data) {
-                                                        $data = JSON.parse(data);
-                                                        addOption($data);
-                                                    },
-                                                    error : function(data) {
-                                                        alert("There is something wrong@.");
-                                                    }
-                                                });
-                                            })
+                                            if({{flag}} == 0){
+                                                $(function(){ 
+                                                    $.ajax({
+                                                    url: "/charts/receive_combobox",
+                                                        dataType:"text",
+                                                        async: false,
+                                                        type : "GET",
+                                                        data : {
+                                                            "user_no" : user_no,
+                                                            "type" : 0
+                                                        },
+                                                        success : function(data) {
+                                                            $data = JSON.parse(data);
+                                                            addOption($data);
+                                                        },
+                                                        error : function(data) {
+                                                            alert("There is something wrong@.");
+                                                        }
+                                                    });
+                                                })
+                                            }
+                                            else{
+                                                var data_info = {{sensor_no}};
+
+                                                var frm = document.combobox;
+                                                var op = new Option();
+                                                op.value = data_info; // 값 설정
+                                                op.text = "Sensor_no : " + data_info; // 텍스트 설정
+                                        
+                                                op.selected = true; // 선택된 상태 설정 (기본값은 false이며 선택된 상태로 만들 경우에만 사용)
+                                        
+                                                frm.combo.options.add(op); // 옵션 추가
+                                            }
                                             function addOption(data){
                                                 for(var index in data) {
                                                     var data_info = data[index].sensor_no;
@@ -182,7 +195,6 @@
                                                 }
                                                 sensor_no = $("#combo option:selected").val();
                                             } 
-                                            addOption();
                                             
                                             google.load("visualization", "1", {packages:["corechart"]});
                                             google.setOnLoadCallback(drawChart);
