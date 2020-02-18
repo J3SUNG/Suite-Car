@@ -193,15 +193,29 @@ final class ChartsController extends BaseController
 
     public function heart_chart(Request $request, Response $response, $args) {
         $user_no = $_SESSION['user_no'];
+        $sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+
+		$username = $result['username'];
+		$email = $result['email'];
         
-        $response = $this->view->render($response, 'heart_chart.twig', ['user_no'=>$user_no]);
+        $response = $this->view->render($response, 'heart_chart.twig', ['username'=>$username, 'email'=>$email, 'user_no'=>$user_no]);
         return $response;
     }    
 
     public function air_chart(Request $request, Response $response, $args) {
         $user_no = $_SESSION['user_no'];
+        $sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+
+		$username = $result['username'];
+		$email = $result['email'];
         
-        $response = $this->view->render($response, 'air_chart.twig', ['user_no'=>$user_no, 'flag'=>0, 'sensor_no'=>1]);
+        $response = $this->view->render($response, 'air_chart.twig', ['email'=>$email, 'username'=>$username, 'user_no'=>$user_no, 'flag'=>0, 'sensor_no'=>1]);
         return $response;
     }    
 

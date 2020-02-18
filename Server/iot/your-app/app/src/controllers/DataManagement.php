@@ -22,7 +22,7 @@ final class DataManagement extends BaseController
 					GROUP BY sensor_no) AS b 
 				ON a.sensor_no = b.sensor_no AND a.time_in = b.time_in
 				WHERE STR_TO_DATE(b.time_in, '%Y-%m-%d') - STR_TO_DATE(CURRENT_DATE, '%Y-%m-%d') = 0
-				AND TIME(CURRENT_TIME) - TIME(b.time_in) < 500000
+				AND TIME(CURRENT_TIME) - TIME(b.time_in) < 5000000
 				;";
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
@@ -47,8 +47,9 @@ final class DataManagement extends BaseController
 				"O3_aqi"=>$map_data['O3_aqi'],
 				"PM25_raw"=>$map_data['PM2.5_raw'],
 				"PM25_aqi"=>$map_data['PM2.5_aqi'],
-				"center"=>array("lat"=>$map_data['latitude'],
-								"lng"=>$map_data['longtitude'])
+				"lat"=>$map_data['latitude'],
+				"lng"=>$map_data['longtitude'],
+				"sname"=>$map_data['sname']
 			);
 			}
 			return $response->withHeader('Content-type', 'application/json')
@@ -98,10 +99,17 @@ final class DataManagement extends BaseController
 	}
 
 	public function infowindow_to_chart(Request $request, Response $response, $args) {
-		$sensor_no = $_GET['sensor_no'];
+		$sensor_no = $_GET['sensor'];
 		$flag = $_GET['flag'];
 		$user_no = $_SESSION['user_no'];
+		$sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
 
-		$this->view->render($response, 'air_chart.twig', ['user_no'=>$user_no, 'flag'=>$flag, 'sensor_no'=>$sensor_no]);
+		$username = $result['username'];
+		$email = $result['email'];
+
+		$this->view->render($response, 'air_chart.twig', ['username'=>$username, 'email'=>$email, 'user_no'=>$user_no, 'flag'=>$flag, 'sensor_no'=>$sensor_no]);
 	}
 }

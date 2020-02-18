@@ -150,10 +150,13 @@
                                 var get_json_data = (function(){
                                     var json = null;
                                     $.ajax({
+                                        'type' : "POST",
                                         'async': false,
                                         'global': false,
                                         'url' : "/db_data_for_map",
                                         'dataType' : "json",
+                                        'data' : {
+                                        },
                                         'success' : function(data) {
                                             json = data;
                                         },
@@ -165,13 +168,14 @@
                                 })();
 
                                 function initMap() {
-                                    var map_center = get_json_data[0].center; // problem occur
                                     var options = {
-                                        center : map_center,
+                                        center : {lat : get_json_data[0].lat, // modify to current location
+                                        lng : get_json_data[0].lng},
                                         zoom : 5,
                                         mapTypeId : google.maps.MapTypeId.TERRAIN
                                     }
                                     map = new google.maps.Map(document.getElementById("map"), options);
+                                    
                                     create_mark(get_json_data);
                                 }
 
@@ -200,17 +204,7 @@
                                         }
                                         else {
                                             data_color = '#000000';
-                                        } 
-                                        //inserted <string> term.
-                                        /*
-                                        contents = "<div><string><h1>" + data_info.username + "\'s Sensor" + "</h1></div><br>"
-                                                               + "CO : " + data_info.CO_aqi + "<br>SO2 : " + data_info.SO2_aqi + "<br>NO2 : "
-                                                               + data_info.NO2_aqi + "<br>O3 : " + data_info.O3_aqi + "<br>PM2.5 : " + data_info.PM25_aqi
-                                                               + "</string></div>"
-                                                               + "<br>"
-                                                               + '<button type = "submit" class = "signup_button" onclick = chart_view() id = "chart_view">Chart View</button>'
-                                                               ;
-                                                               */
+                                        }
                                         contents = "<form action = \"infowindow_to_chart\" method = \"get\">"
                                                                + "<div><string><h1>" + data_info.username + "\'s Sensor" + "</h1></div><br>"
                                                                + "CO : " + data_info.CO_aqi + "<br>SO2 : " + data_info.SO2_aqi + "<br>NO2 : "
@@ -221,13 +215,13 @@
                                                                + '<button type = "submit" class = "signup_button" id = "chart_view">Chart View</button>'
                                                                + '<input class=\"input_text\" type = \"hidden\" id=\"sensor_no\" name=\"sensor_no\" value = \'data_info.sensor_no\'>'
                                                                + "</form>";
-                                        //document.getElementById("sensor_no").val() = data_info.sensor_no;
 
                                         var map_zoom = map.getZoom();
                                         var radius_with_zoom = 10000 * map_zoom * (1 / Math.pow(2, map_zoom - 5));
                                         marker[index] = new google.maps.Circle({
                                             map : map,
-                                            center : data_info.center,
+                                            center : {lat : data_info.lat,
+                                            lng : data_info.lng},
                                             radius : radius_with_zoom,
                                             strokeColor: data_color,
                                             strokeOpacity : 0.5,
@@ -245,26 +239,13 @@
                                             infowindow[index].setPosition(this.getCenter());
                                             infowindow[index].open(map, this);
                                         });
-/*
-                                        function chart_view() {
-                                            var sensor_no = data_info.sensor_no;
-                                            $.ajax({
-                                                'async': false,
-                                                'global': false,
-                                                'url' : "/infowindow_to_chart",
-                                                'dataType' : "json",
-                                                'data' : {
-                                                    "sensor_no" : data_info.sensor_no
-                                                },
-                                                'success' : function(data) {
-                                                    window.location.href = data.redirect;
-                                                },
-                                                'error' : function(data) {
-                                                    alert("chart_view() wrong. ");
-                                                }
-                                            });
+
+                                        google.maps.event.addListener(map, 'idle', function() {
+                                            var map_bounds = map.getBounds();
+                                            var ne = map_bounds.getNorthEast();
+                                            var sw = map_bounds.getSouthWest();
+                                            create_mark(get_json_data);
                                         });
-                                        */
                                     }
                                 }
 
