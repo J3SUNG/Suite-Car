@@ -76,7 +76,8 @@
                         <div class="header-wrap">
                             <div class="header-button">         
                                 <a href="maps" class="nav">MAP</a>
-                                <a href="charts" class="nav">CHART</a>
+                                <a href="air_chart" class="nav">Air Chart</a>
+                                <a href="heart_chart" class="nav">Heart Chart</a>
                                 <div class="account-wrap">
                                     <div class="account-item clearfix js-item-menu">
                                         <div class="image">
@@ -128,6 +129,18 @@
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-md-12 m-t-20">
+                                <div class="sensor_title">
+                                    <h3>Heart Sensor Data</h3>
+                                    <div class="sensor_no"> sensor_no : &nbsp </div>
+                                    <form name="combobox" class="combobox">
+                                        <select id="combo" name="combo">
+                                        </select>
+                                    </form>
+                                    <div class="sensor_button_box">
+                                        <button class="sensor_button" id="button_realtime"> realtime </button>
+                                        <button class="sensor_button" id="button_historical"> historical </button>
+                                    </div><br>
+                                </div><br>
                                 <!-- MAP DATA-->
                                 <div id="chart_div">
                                     <script type="text/javascript">
@@ -136,6 +149,43 @@
 
                                         var user_no = 1;
                                         var view_type = 0;
+                                        var sensor_no;
+                                        $now = new Date();
+                                        $(function(){ 
+                                            $.ajax({
+                                            url: "/charts/receive_combobox",
+                                                dataType:"text",
+                                                async: false,
+                                                type : "GET",
+                                                data : {
+                                                    "user_no" : user_no,
+                                                    "type" : 1
+                                                },
+                                                success : function(data) {
+                                                    $data = JSON.parse(data);
+                                                    addOption($data);
+                                                },
+                                                error : function(data) {
+                                                    alert("There is something wrong@.");
+                                                }
+                                            });
+                                        })
+                                        function addOption(data){
+                                            for(var index in data) {
+                                                var data_info = data[index].sensor_no;
+
+                                                var frm = document.combobox;
+                                                var op = new Option();
+                                                op.value = data_info; // 값 설정
+                                                op.text = "Sensor_no : " + data_info; // 텍스트 설정
+                                        
+                                                op.selected = true; // 선택된 상태 설정 (기본값은 false이며 선택된 상태로 만들 경우에만 사용)
+                                        
+                                                frm.combo.options.add(op); // 옵션 추가
+                                            }
+                                            sensor_no = $("#combo option:selected").val();
+                                        } 
+                                        addOption();
 
                                         function drawChart() {
                                             var jsonData = $.ajax({
@@ -144,33 +194,144 @@
                                                 async: false,
                                                 type : "GET",
                                                 data : {
-                                                    "type" : 1,
                                                     "user_no" : user_no,
-                                                    "view_type" : view_type
+                                                    "sensor_no" : sensor_no,
+                                                    "view_type" : view_type,
+                                                    "start_date" : start_date,
+                                                    "end_date" : end_date,
+                                                    "type" : 1
                                                 }
-
                                             }).responseText;
-                                            //alert(jsonData);
-                                            // Create our data table out of JSON data loaded from server.
-                                            var data = new google.visualization.DataTable(jsonData);
-                                            var options = {
-                                                title: 'Heart Data Chart',
-                                                series: {
-                                                    0: { color: '#ff111d' },
-                                                    1: { color: '#c784de' },
-                                                    2: { color: '#f1ca3a' },
-                                                    3: { color: '#2980b9' },
-                                                    4: { color: '#e67e22' }
+                                            if(jsonData != ""){
+                                                $json_data = JSON.parse(jsonData);
+                                            
+                                                var AVG = 0;
+                                                var MAX = 0;
+                                                var MIN = 0;
+
+                                                for(var i=0; i<$json_data.rows.length; ++i){
+                                                    AVG += $json_data.rows[i].c[1].v;
+                                                    
+                                                    if($json_data.rows[i].c[1].v > MAX){
+                                                        MAX = $json_data.rows[i].c[1].v;
+                                                    }
+                                                    else if($json_data.rows[i].c[1].v < MIN || MIN == 0) { 
+                                                        MIN = $json_data.rows[i].c[1].v;
+                                                    }
                                                 }
-                                            };
-                                            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-                                            chart.draw(data, options);
+                                                AVG /= $json_data.rows.length;
+                                                AVG = AVG.toFixed(1);
+                                                $('.AVG').text(AVG);
+                                                $('.MAX').text(MAX);
+                                                $('.MIN').text(MIN);
+
+                                                // Create our data table out of JSON data loaded from server.
+                                                var data = new google.visualization.DataTable(jsonData);
+                                                var options = {
+                                                    title: 'Heart Data Chart',
+                                                    series: {
+                                                        0: { color: '#ff111d' },
+                                                        1: { color: '#c784de' },
+                                                        2: { color: '#f1ca3a' },
+                                                        3: { color: '#2980b9' },
+                                                        4: { color: '#e67e22' }
+                                                    }
+                                                };
+                                                
+                                                var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+                                                chart.draw(data, options);
+                                            }
+                                            else{
+                                                alert("Not Found Data");
+                                            }
                                         }
 
-                                        setInterval(drawChart, 1000);
+                                        var timer = setInterval(drawChart, 1000);
+
+                                        $(function(){ 
+                                            $("#button_realtime").click(function(){ 
+                                                view_type = 0;
+                                                timer = setInterval(drawChart, 1000);
+                                                $("#button_realtime").css('background-color', '#27AE60');
+                                                $("#button_realtime").css('color', 'white');
+                                                $("#button_historical").css('background-color', 'white');
+                                                $("#button_historical").css('color', 'black');
+                                                $("#date_submit").css('visibility', 'hidden');
+                                                
+                                                drawChart();
+                                            }) 
+                                        })
+                                        $(function(){ 
+                                            $("#button_historical").click(function(){ 
+                                                view_type = 1;
+                                                clearInterval(timer);   
+                                                $("#button_historical").css('background-color', '#27AE60');
+                                                $("#button_historical").css('color', 'white');
+                                                $("#button_realtime").css('background-color', 'white');
+                                                $("#button_realtime").css('color', 'black');
+                                                $("#date_submit").css('visibility', 'visible');
+
+                                                drawChart();
+                                            }) 
+                                        })
                                     </script>
                                 </div>
+                                
+                                <div class = "text_box_div m-t-30">
+                                    <div class = "text_box">
+                                        <div class = "text_box_text">
+                                           AVG : <div class = "AVG change_text"></div>
+                                        </div>
+                                    </div>
+                                    <div class = "text_box">
+                                        <div class = "text_box_text">
+                                           MAX : <div class = "MAX change_text"></div>
+                                        </div>
+                                    </div>
+                                    <div class = "text_box">
+                                        <div class = "text_box_text">
+                                            MIN : <div class = "MIN change_text"></div>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <div id = "date_submit">
+                                    <input type="date" class = "userdate" id="userdate1" name="userdate1">
+                                    <input type="date" class = "userdate" id="userdate2" name="userdate2">
+                                    <button type = "button" class = "button_date_submit" id = "button_date_submit">Submit</button>
+                                </div>
+
+                                <script>
+                                    document.getElementById('userdate1').value = new Date().toISOString().substring(0, 10);
+                                    document.getElementById('userdate2').value = new Date().toISOString().substring(0, 10);
+
+                                    var start_date = $('#userdate1').val();
+                                    var end_date = $('#userdate2').val();
+
+                                    $(function(){ 
+                                        $("#button_date_submit").click(function(){ 
+                                            start_date = $('#userdate1').val();
+                                            end_date = $('#userdate2').val();
+
+                                            var startDate = $( "input[name='userdate1']" ).val(); //2017-12-10
+                                            var startDateArr = startDate.split('-');
+                                            
+                                            var endDate = $( "input[name='userdate2']" ).val(); //2017-12-09
+                                            var endDateArr = endDate.split('-');
+                                                    
+                                            var startDateCompare = new Date(startDateArr[0], parseInt(startDateArr[1])-1, startDateArr[2]);
+                                            var endDateCompare = new Date(endDateArr[0], parseInt(endDateArr[1])-1, endDateArr[2]);
+                                            
+                                            if(startDateCompare.getTime() > endDateCompare.getTime()) {
+                                                alert("Check start_date and end_date");
+                                                
+                                                return;
+                                            }
+                                        
+                                            drawChart();
+                                        }) 
+                                    })
+                                </script>
                                 <!-- END MAP DATA-->
                             </div>
                         </div>
@@ -179,6 +340,8 @@
             </div>
         </div>
     </div>
+    
+
     
     <!-- Map -->
     <script async defer
