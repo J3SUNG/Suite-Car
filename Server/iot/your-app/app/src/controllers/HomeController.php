@@ -41,11 +41,6 @@ final class HomeController extends BaseController
 		$this->view->render($response, 'forgotten_new_password.twig');
     }
 
-    public function home(Request $request, Response $response, $args)
-    {
-		$this->view->render($response, 'home.twig');
-    }
-
 	public function change_password_page(Request $request, Response $response, $args){
 		$this->view->render($response, 'change_password_page.twig');
 	}

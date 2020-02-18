@@ -14,15 +14,15 @@ final class DataManagement extends BaseController
 	public function db_data_for_map(Request $request, Response $response, $args)
 	{
 		//modify the value of time interval
-		$sql = "SELECT Users.username, a.* 
-				FROM Users, Air_data AS a 
+		$sql = "SELECT a.*, Sensors.sname
+				FROM Air_data AS a
+				JOIN Sensors
+				ON Sensors.sensor_no = a.sensor_no
 				JOIN( 
 					SELECT sensor_no, MAX(time_in) time_in 
 					FROM Air_data 
 					GROUP BY sensor_no) AS b 
 				ON a.sensor_no = b.sensor_no AND a.time_in = b.time_in
-				WHERE STR_TO_DATE(b.time_in, '%Y-%m-%d') - STR_TO_DATE(CURRENT_DATE, '%Y-%m-%d') = 0
-				AND TIME(CURRENT_TIME) - TIME(b.time_in) < 5000000
 				;";
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
@@ -33,8 +33,7 @@ final class DataManagement extends BaseController
 			$map_data_db = [];
 			foreach($result as $map_data) {
 				$map_data_db[] =
-				array("username"=>$map_data['username'],
-				"Air_data_no"=>$map_data['Air_data_no'],
+				array("Air_data_no"=>$map_data['Air_data_no'],
 				"sensor_no"=>$map_data['sensor_no'],
 				"time"=>$map_data['time_in'],
 				"CO_raw"=>$map_data['CO_raw'],
