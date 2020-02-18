@@ -468,73 +468,6 @@ section {
     padding-bottom: 30px;
 }
 
-/* password change, ID Cancellation */
-.signup_box {
-    margin:auto;
-    height:400px;
-    width:550px;
-    background-color: white;
-    box-shadow: 2px 2px 2px 2px;
-}
-
-.title {
-    float: left;
-    color: #27AE60;
-}
-
-.hr_w {
-    margin: auto;
-    border:solid 0.4px;
-    width: 450px;
-    margin-bottom: 30px;
-}
-.signup_info {
-    text-align: center;
-}
-.signup_button {
-    background-color: #27AE60;
-    border: none;
-    border-radius: 5px;
-    width: 130px;
-    height: 30px;
-    text-align: center;
-    color: white;
-    float: right;
-}
-.air_button {
-    background-color: #27AE60;
-    border: none;
-    border-radius: 5px;
-    width: 130px;
-    height: 30px;
-    text-align: center;
-    color: white;
-    margin-left: 20px;
-    float: left;
-}
-
-.input_text {
-    background-color: white;
-    text-align: center;
-    margin: auto;
-    border: none;
-    width: 160px;
-    font-size: 17px;
-}
-#cancel {
-    margin-right: 50px;
-}
-#submit {
-    margin-right: 20px;
-}
-.warning {
-    margin-left: 25%;
-    margin-right: 10px;
-    float: left;
-    width: auto;
-    height: 30px;
-}
-
 /*-----------------------------------------------------*/
 /*                   COMPONENTS                        */
 /*-----------------------------------------------------*/
@@ -14752,4 +14685,147 @@ section {
 
 .vue-lists ul, .vue-lists ol {
     padding-left: 30px;
+}
+
+.signup_box {
+    margin:auto;
+    height:400px;
+    width:550px;
+    background-color: white;
+    box-shadow: 2px 2px 2px 2px;
+}
+
+.title {
+    float: left;
+    color: #27AE60;
+}
+
+.hr_w {
+    margin: auto;
+    border:solid 0.4px;
+    width: 450px;
+    margin-bottom: 30px;
+}
+.signup_info {
+    text-align: center;
+}
+.signup_button {
+    background-color: #27AE60;
+    border: none;
+    border-radius: 5px;
+    width: 130px;
+    height: 30px;
+    text-align: center;
+    color: white;
+    float: right;
+}
+.air_button {
+    background-color: #27AE60;
+    border: none;
+    border-radius: 5px;
+    width: 130px;
+    height: 30px;
+    text-align: center;
+    color: white;
+    margin-top: 30px;
+    margin-right: 10%;
+    float: right;
+}
+
+.input_text {
+    background-color: white;
+    text-align: center;
+    margin: auto;
+    border: none;
+    width: 160px;
+    font-size: 17px;
+}
+#cancel {
+    margin-right: 50px;
+}
+#submit {
+    margin-right: 20px;
+}
+.warning {
+    margin-left: 25%;
+    margin-right: 10px;
+    float: left;
+    width: auto;
+    height: 30px;
+}
+
+#air_submit {
+    margin-top: 30px;
+}
+
+.sensor_title {
+    text-align: center;
+}
+
+.sensor_button_box {
+    background-color: white;
+    border: solid;
+    border-color: gray;
+    border-radius: 8px;
+    width: 208px;
+    height: 34px;
+    text-align: right;
+    margin-right: 10%;
+    float: right;
+}
+
+.sensor_button {
+    background-color: #27AE60;
+    border: none;
+    border-radius: 5px;
+    width: 49%;
+    height: 30px;
+    text-align: center;
+    color: white;
+}
+
+#button_historical {
+    background-color: white;
+    color: black;
+}
+
+#chart_div {
+    width: 75%;
+    height: 400px;
+    margin: auto;
+    float:left;
+}
+
+.sensor_no {
+    float: left;
+    margin-left: 10%;
+}
+
+.combobox {
+    float: left;
+}
+
+#date_submit {
+    width: 600px;
+    height: 100px;
+    margin: auto;
+    color: blue;
+    text-align: center;
+    visibility: hidden;
+}
+
+.userdate {
+    text-align: center;
+    border: solid;
+    margin-right: 30px;
+}
+
+#button_date_submit {
+    background-color: #27AE60;
+    border: none;
+    border-radius: 5px;
+    width: 100px;
+    height: 30px;
+    text-align: center;
+    color: white;
 }

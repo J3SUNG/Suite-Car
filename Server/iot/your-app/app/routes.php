@@ -89,5 +89,11 @@ $app->get('/charts/chart3_json', 'App\Controller\ChartsController:chart3_json')
 $app->get('/charts/chart3', 'App\Controller\ChartsController:chart3')
     ->setName('/chart3');
 
-$app->get('/chart', 'App\Controller\ChartsController:dynamic_chart_json')
-    ->setName('/chart');
+$app->get('/air_chart', 'App\Controller\ChartsController:air_chart')
+    ->setName('/air_chart');
+
+$app->get('/heart_chart', 'App\Controller\ChartsController:heart_chart')
+    ->setName('/heart_chart');
+
+$app->get('/charts/receive_combobox', 'App\Controller\ChartsController:receive_combobox')
+    ->setName('/charts/receive_combobox');

@@ -27,7 +27,7 @@ final class ChartsController extends BaseController
         {"id":"","label":"sales 10","type":"number"},
         {"id":"","label":"sales 20","type":"number"},
         {"id":"","label":"sales 50","type":"number"},
-        {"id":"","label":"expenses","type":"number"}
+        {"id":"","label":"expenses","type":"number"}192
         ],
         "rows": [
         {"c":[{"v":"2001"},{"v":3},{"v":5},{"v":150}]},
@@ -46,20 +46,54 @@ final class ChartsController extends BaseController
 
     public function chart2_json(Request $request, Response $response, $args) {
         // grab 10 most recent values, sort in asc order
-        $CO = $_GET['CO'];
-        $SO2 = $_GET['SO2'];
-        $O3 = $_GET['O3'];
-        $NO2 = $_GET['NO2'];
-        $PM25 = $_GET['PM25'];
-
-        $sql = "SELECT * from Air_data";
-        $stmt = $this->em->getConnection()->prepare($sql);
-        $stmt->execute();
-        
         try {
+            $user_no = $_GET['user_no'];
+            $sensor_no = $_GET['sensor_no'];
+            $type = $_GET['type'];
+            $view_type = $_GET['view_type'];
+            
+            if($type == 0){
+                $CO = $_GET['CO'];
+                $SO2 = $_GET['SO2'];
+                $O3 = $_GET['O3'];
+                $NO2 = $_GET['NO2'];
+                $PM25 = $_GET['PM25'];
+                if($view_type == 0){
+                    $sql = "SELECT * 
+                    from Air_data 
+                    WHERE sensor_no = :sensor_no
+                    ORDER BY time
+                    LIMIT 10";
+                    $stmt = $this->em->getConnection()->prepare($sql);
+                    $params['sensor_no'] = $sensor_no;
+                    $stmt->execute($params);
+                }
+                else{
+                    $start_date = $_GET['start_date'];
+                    $end_date = $_GET['end_date'];
+                    $sql = "SELECT * 
+                            FROM Air_data 
+                            WHERE sensor_no = :sensor_no 
+                                AND STR_TO_DATE(time, '%Y-%m-%d')
+                                BETWEEN STR_TO_DATE(:start_date, '%Y-%m-%d')
+                                    AND STR_TO_DATE(:end_date, '%Y-%m-%d')";
+                    $stmt = $this->em->getConnection()->prepare($sql);
+                    $params['sensor_no'] = $sensor_no;
+                    $params['start_date'] = $start_date;
+                    $params['end_date'] = $end_date;
+                    $stmt->execute($params);
+                }
+            }
+            else if($type == 1){
+                $sql = "SELECT * FROM Heart_data WHERE user_no = :user_no LIMIT 10";
+                $stmt = $this->em->getConnection()->prepare($sql);
+                $params['user_no'] = $user_no;
+                $stmt->execute($params);
+            }
+            
             $result = $stmt->fetchAll();
-
-            if ($result) {
+            
+            if ($result && $type == 0) {
                 // build array for Column labels
                 $json_array['cols'] = array(
                     array('id'=>'', 'label'=>'date/time', 'type'=>'string'),
@@ -67,7 +101,8 @@ final class ChartsController extends BaseController
                     array('id'=>'', 'label'=>'SO2', 'type'=>'number'),
                     array('id'=>'', 'label'=>'O3', 'type'=>'number'),
                     array('id'=>'', 'label'=>'PM2.5', 'type'=>'number'),
-                    array('id'=>'', 'label'=>'NO2', 'type'=>'number'));
+                    array('id'=>'', 'label'=>'NO2', 'type'=>'number')
+                );
 
                 // loop thru the sensor data and build sensor_array
                 foreach ($result as $row) {
@@ -96,11 +131,38 @@ final class ChartsController extends BaseController
                 // add $rows to $json_array
                 $json_array['rows'] = $rows;
                 
-              return $response->withHeader('Content-type', 'application/json')
-              ->write(json_encode($json_array, JSON_NUMERIC_CHECK))
-              ->withStatus(200);
+                return $response->withHeader('Content-type', 'application/json')
+                ->write(json_encode($json_array, JSON_NUMERIC_CHECK))
+                ->withStatus(200);
+            } 
+            else if ($result && $type == 1) {
+                $json_array['cols'] = array(
+                    array('id'=>'', 'label'=>'date/time', 'type'=>'string'),
+                    array('id'=>'', 'label'=>'heart', 'type'=>'number')
+                    // array('id'=>'', 'label'=>'SO2', 'type'=>'number'),
+                    // array('id'=>'', 'label'=>'O3', 'type'=>'number'),
+                    // array('id'=>'', 'label'=>'PM2.5', 'type'=>'number'),
+                    // array('id'=>'', 'label'=>'NO2', 'type'=>'number')
+                );
 
-            } else {
+                // loop thru the sensor data and build sensor_array
+                foreach ($result as $row) {
+                    $sensor_array = array();
+                    $sensor_array[] = array('v'=>$row['time']);
+                    $sensor_array[] = array('v'=>$row['heart']);
+                   
+                    // add current sensor_array line to $rows
+                    $rows[] = array('c'=>$sensor_array);
+                }
+            
+                // add $rows to $json_array
+                $json_array['rows'] = $rows;
+                
+                return $response->withHeader('Content-type', 'application/json')
+                ->write(json_encode($json_array, JSON_NUMERIC_CHECK))
+                ->withStatus(200);
+            }
+            else {
                 $response = $response->withStatus(404);
             }
         } catch(PDOException $e) {
@@ -108,12 +170,17 @@ final class ChartsController extends BaseController
         }
    } 
 
-    public function dynamic_chart_json(Request $request, Response $response, $args) {
+    public function heart_chart(Request $request, Response $response, $args) {
         //$response = $this->view->render($response, 'charts/dynamic-chart.phtml');
-        $response = $this->view->render($response, 'chart.twig');
+        $response = $this->view->render($response, 'heart_chart.twig');
         return $response;
     }    
 
+    public function air_chart(Request $request, Response $response, $args) {
+        //$response = $this->view->render($response, 'charts/dynamic-chart.phtml');
+        $response = $this->view->render($response, 'air_chart.twig');
+        return $response;
+    }    
 
     public function chart3(Request $request, Response $response, $args) {
         $response = $this->view->render($response, 'charts/dynamic-chart-s1.phtml');
@@ -164,6 +231,37 @@ final class ChartsController extends BaseController
 
    } 
 
+    public function receive_combobox(Request $request, Response $response, $args) {
+        $user_no = $_GET['user_no'];
+        $sql = "SELECT DISTINCT Sensors.sensor_no from Sensors LEFT OUTER JOIN Air_data ON Air_data.sensor_no = Sensors.sensor_no WHERE Sensors.user_no = :user_no AND type = 'A'";
+        $stmt = $this->em->getConnection()->prepare($sql);
+        $params['user_no'] = $user_no;
+		$stmt->execute($params);
+
+        try {
+            $result = $stmt->fetchAll();
+
+            if ($result) {
+                $combobox = [];
+				foreach ($result as $combo) {
+                    $combobox[] =
+					array(
+                        "sensor_no"=>$combo['sensor_no']
+                    );
+                }
+                
+                return $response->withHeader('Content-type', 'application/json')
+                ->write(json_encode($combobox, JSON_NUMERIC_CHECK))
+                ->withStatus(200);
+
+            } else {
+                $response = $response->withStatus(404);
+            }
+        } catch(PDOException $e) {
+            echo '{"error":{"text":'. $e->getMessage() .'}}';
+        }
+    } 
+
     public function supercoffee(Request $request, Response $response, $args) {
         $response = $this->view->render($response, 'super-coffee.phtml');
         return $response;
@@ -176,12 +274,12 @@ final class ChartsController extends BaseController
             if ($chartdata) {
                 // build array for Column labels
                 $json_array['cols'] = array(
-                        array('id'=>'data/time', 'label'=>'date/time', 'type'=>'string'),
-                        array('id'=>'CO', 'label'=>'CO2', 'type'=>'number'),
-                        array('id'=>'SO2', 'label'=>'SO2', 'type'=>'number'),
-                        array('id'=>'O3', 'label'=>'NO2', 'type'=>'number'),
-                        array('id'=>'PM2.5', 'label'=>'temp', 'type'=>'number'),
-                        array('id'=>'NO2', 'label'=>'pm25', 'type'=>'number'));
+                    array('id'=>'data/time', 'label'=>'date/time', 'type'=>'string'),
+                    array('id'=>'CO', 'label'=>'CO2', 'type'=>'number'),
+                    array('id'=>'SO2', 'label'=>'SO2', 'type'=>'number'),
+                    array('id'=>'O3', 'label'=>'NO2', 'type'=>'number'),
+                    array('id'=>'PM2.5', 'label'=>'temp', 'type'=>'number'),
+                    array('id'=>'NO2', 'label'=>'pm25', 'type'=>'number'));
 
                 // loop thru the sensor data and build sensor_array
                 foreach ($chartdata as $row) {
