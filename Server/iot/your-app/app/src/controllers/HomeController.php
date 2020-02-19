@@ -86,6 +86,6 @@ final class HomeController extends BaseController
 
 		$username = $result['username'];
 		$email = $result['email'];
-		$this->view->render($response, 'list_view.twig', ['username'=>$username, 'email'=>$email]);
+		$this->view->render($response, 'list_view.twig', ['username'=>$username, 'email'=>$email, 'user_no'=>$user_no]);
 	}
 }
