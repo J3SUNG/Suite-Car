@@ -192,14 +192,16 @@ final class ChartsController extends BaseController
    } 
 
     public function heart_chart(Request $request, Response $response, $args) {
-        //$response = $this->view->render($response, 'charts/dynamic-chart.phtml');
-        $response = $this->view->render($response, 'heart_chart.twig');
+        $user_no = $_SESSION['user_no'];
+        
+        $response = $this->view->render($response, 'heart_chart.twig', ['user_no'=>$user_no]);
         return $response;
     }    
 
     public function air_chart(Request $request, Response $response, $args) {
-        //$response = $this->view->render($response, 'charts/dynamic-chart.phtml');
-        $response = $this->view->render($response, 'air_chart.twig');
+        $user_no = $_SESSION['user_no'];
+        
+        $response = $this->view->render($response, 'air_chart.twig', ['user_no'=>$user_no, 'flag'=>0, 'sensor_no'=>1]);
         return $response;
     }    
 
