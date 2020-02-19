@@ -244,11 +244,6 @@
                                                     async: false,
                                                     type : "GET",
                                                     data : {
-                                                        "CO" : CO,
-                                                        "O3" : O3,
-                                                        "SO2" : SO2,
-                                                        "NO2" : NO2,
-                                                        "PM25" : PM25,
                                                         "user_no" : user_no,
                                                         "sensor_no" : sensor_no,
                                                         "view_type" : view_type,
@@ -264,15 +259,36 @@
                                                     title: 'Air Data Chart',
                                                     curveType: 'function',
                                                     series: {
-                                                        0: { color: '#ff111d' },
-                                                        1: { color: '#c784de' },
-                                                        2: { color: '#f1ca3a' },
-                                                        3: { color: '#2980b9' },
-                                                        4: { color: '#e67e22' }
+                                                        0: { color: '#ff111d'},
+                                                        1: { color: '#c784de'},
+                                                        2: { color: '#f1ca3a'},
+                                                        3: { color: '#2980b9'},
+                                                        4: { color: '#e67e22'}
                                                     }
                                                 };
+                                                
                                                 var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
                                                 chart.draw(data, options);
+
+                                                view = new google.visualization.DataView(data);
+                                                if(CO){
+                                                    view.hideColumns([1]); 
+                                                }
+                                                if(SO2){
+                                                    view.hideColumns([2]); 
+                                                }
+                                                if(O3){
+                                                    view.hideColumns([3]); 
+                                                }
+                                                if(PM25){
+                                                    view.hideColumns([4]); 
+                                                }
+                                                if(NO2){
+                                                    view.hideColumns([5]); 
+                                                }
+
+                                                chart.draw(view, options);
                                             }
 
                                             var timer = setInterval(drawChart, 1000);

@@ -56,4 +56,5 @@ class SuiteManager {
     fun command(s: String) {
         TTS.speech(fitting.recommand(actions[s.toInt()-1]))
     }
+
 }
