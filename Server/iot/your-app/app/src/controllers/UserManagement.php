@@ -164,12 +164,12 @@ final class UserManagement extends BaseController
 				session_start();
 				$_SESSION['user_no']=$row['user_no'];
 				echo "<script>alert(\"Welcome to suiteCar!\");</script>";
-				$this->view->render($response, 'home.twig', ['post' => $_POST]);	
+				$this->view->render($response, 'home.twig');	
 			}else if($result_code==2){
 				session_start();
 				$_SESSION['user_no']=$row['user_no'];
 				echo "<script>alert(\"you should change the password\");</script>";
-				$this->view->render($response, 'home.twig', ['post' => $_POST]);
+				$this->view->render($response, 'home.twig');
 			}	
 		}else if($Pdevice==ANDROID){
 			header('Content-type: application/json');
@@ -179,7 +179,16 @@ final class UserManagement extends BaseController
 
 	public function home(Request $request, Response $response, $args)
     {
-		$this->view->render($response, 'home.twig');	
+		$user_no = $_SESSION['user_no'];
+        $sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+
+		$username = $result['username'];
+		$email = $result['email'];
+    	
+		$this->view->render($response, 'home.twig', ['username'=>$username, 'email'=>$email]);	
 	}
 
 	public function signout(Request $request, Response $response, $args)

@@ -313,7 +313,7 @@ section {
 }
 }
 .page-container {
-    background: #e5e5e5;
+    background: white;
     
 }
 
@@ -14883,4 +14883,64 @@ section {
 
 .welcome {
     color: #27AE60;
+}
+
+.team_title {
+    background-color: white;
+    color: #27AE60;
+    text-align: center;
+}
+
+.team_box {
+    background-color: white;
+}
+
+.team_all_image {
+    margin-left: 20%;
+    margin-right: 20%;
+    width: 60%;
+    height: auto;
+}
+
+.team_introduce {
+    padding: 5% 3% 5% 3%;
+    width: 45%;
+    height: 300px;
+    border-radius: 15px;
+    margin-bottom: 50px;
+    box-shadow: 2px 2px 2px 2px;
+}
+
+.team_left {
+    float: left;
+    margin-left: 3%;
+}
+
+.team_right {
+    float: right;
+    margin-right: 3%;
+}
+
+.team_image {
+    border: solid;
+    border-radius: 100px;
+    border-color: gray;
+    float: left;
+    width: 50%;
+    height: 100%;
+}
+
+.team_image_circle {
+    height: 100%;
+    border-radius: 100px;
+}
+
+.team_text {
+    font-size: 18px;
+    text-align: center;
+    float: left;
+    width: 45%;
+    height: auto;
+    margin-left: 2%;
+    margin-right: 3%;
 }

@@ -62,4 +62,30 @@ final class HomeController extends BaseController
 		$email = $result['email'];
 		$this->view->render($response, 'maps.twig', ['username'=>$username, 'email'=>$email]);
 	}
+
+	public function team(Request $request, Response $response, $args)
+	{
+		$user_no = $_SESSION['user_no'];
+		$sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+
+		$username = $result['username'];
+		$email = $result['email'];
+		$this->view->render($response, 'team.twig', ['username'=>$username, 'email'=>$email]);
+	}
+
+	public function list_view(Request $request, Response $response, $args)
+	{
+		$user_no = $_SESSION['user_no'];
+		$sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+
+		$username = $result['username'];
+		$email = $result['email'];
+		$this->view->render($response, 'list_view.twig', ['username'=>$username, 'email'=>$email]);
+	}
 }

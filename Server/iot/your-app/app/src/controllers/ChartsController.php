@@ -74,7 +74,7 @@ final class ChartsController extends BaseController
                     $sql = "SELECT * 
                             FROM Air_data 
                             WHERE sensor_no = :sensor_no 
-                            AND STR_TO_DATE(time, '%Y-%m-%d %H:%i:%s')
+                            AND STR_TO_DATE(time_in, '%Y-%m-%d %H:%i:%s')
                                 BETWEEN STR_TO_DATE(:start_date, '%Y-%m-%d %H:%i:%s')
                                     AND STR_TO_DATE(:end_date, '%Y-%m-%d %H:%i:%s')";
                     $stmt = $this->em->getConnection()->prepare($sql);
@@ -101,7 +101,7 @@ final class ChartsController extends BaseController
                     $sql = "SELECT * 
                             FROM Heart_data 
                             WHERE sensor_no = :sensor_no 
-                                AND STR_TO_DATE(time, '%Y-%m-%d %H:%i:%s')
+                                AND STR_TO_DATE(time_in, '%Y-%m-%d %H:%i:%s')
                                 BETWEEN STR_TO_DATE(:start_date, '%Y-%m-%d %H:%i:%s')
                                     AND STR_TO_DATE(:end_date, '%Y-%m-%d %H:%i:%s')";
                     $stmt = $this->em->getConnection()->prepare($sql);

@@ -49,7 +49,7 @@ $app->get('/forgotten_check', 'App\Controller\UserManagement:forgotten_check')
 $app->post('/signin', 'App\Controller\UserManagement:signin')
     ->setName('signin');
 
-$app->post('/home', 'App\Controller\UserManagement:home')
+$app->get('/home', 'App\Controller\UserManagement:home')
     ->setName('home');
 
 $app->get('/signout', 'App\Controller\UserManagement:signout')
@@ -100,3 +100,9 @@ $app->get('/charts/receive_combobox', 'App\Controller\ChartsController:receive_c
 
 $app->get('/infowindow_to_chart', 'App\Controller\DataManagement:infowindow_to_chart')
     ->setName('/infowindow_to_chart');
+
+$app->get('/team', 'App\Controller\HomeController:team')
+    ->setName('/team');
+
+$app->get('/list_view', 'App\Controller\HomeController:list_view')
+    ->setName('/list_view');
