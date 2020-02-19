@@ -14859,3 +14859,28 @@ section {
     float: right;
     margin-left: 5px;
 }
+
+.welcome_home {
+    background-color: white;
+}
+
+.home_image {
+    border-color: gray;
+    float: left;
+    width: 40%;
+    height: auto;
+    margin-left: 8%;
+    margin-right: 2%;
+}
+
+.home_text {
+    float: right;
+    width: 40%;
+    height: auto;
+    margin-left: 2%;
+    margin-right: 8%;
+}
+
+.welcome {
+    color: #27AE60;
+}
