@@ -9,11 +9,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.os.Message
 import android.speech.RecognizerIntent
+import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
@@ -25,11 +27,16 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
+import androidx.core.view.size
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.clans.fab.FloatingActionButton
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
+import com.qic.suitecar.dataclass.AirInfoForMap
 import com.qic.suitecar.dataclass.ResultData
 import com.qic.suitecar.ui.heart.HeartActivity
 import com.qic.suitecar.ui.login.LogInActivity
@@ -51,6 +58,7 @@ import kotlinx.android.synthetic.main.dialog_closeaccount.*
 import kotlinx.android.synthetic.main.dialog_deregistration.*
 import kotlinx.android.synthetic.main.dialog_edituser.*
 import okhttp3.ResponseBody
+import org.json.JSONArray
 import org.json.JSONObject
 import polar.com.sdk.api.model.PolarOhrPPGData
 import retrofit2.Call
@@ -97,11 +105,37 @@ class MainActivity : AppCompatActivity(), ServiceConnection, SerialListener {
         suiteManager = SuiteManager(this)
         loadSensors()
         Log.d("welcome", SharedPreValue.getUserNo(this).toString())
-
-
         polarSensor = PolarSensor(this, this)
+        floatingMenu()
     }
 
+    var goneView: View? = null
+    private fun floatingMenu() {
+        coFAB.setOnClickListener(mylistener())
+        no2FAB.setOnClickListener(mylistener())
+        so2FAB.setOnClickListener(mylistener())
+        pm25FAB.setOnClickListener(mylistener())
+        o3FAB.setOnClickListener(mylistener())
+    }
+
+    inner class mylistener : View.OnClickListener {
+        override fun onClick(it: View) {
+            it.visibility = View.GONE
+            var icon: Int
+            icon = when (it.id) {
+                R.id.coFAB -> R.drawable.ic_co
+                R.id.no2FAB -> R.drawable.ic_no2
+                R.id.so2FAB -> R.drawable.ic_so2
+                R.id.pm25FAB -> R.drawable.ic_pm25
+                R.id.o3FAB -> R.drawable.ic_o3
+                else -> 0
+            }
+            searchFloatMenu.menuIconView.setImageDrawable(baseContext.getDrawable(icon))
+            searchFloatMenu.close(true)
+            if (goneView != null) goneView!!.visibility = View.VISIBLE
+            goneView = it
+        }
+    }
 
     fun loadSensors() {
         var retrofit = RetrofitClient.getInstnace()
@@ -175,15 +209,30 @@ class MainActivity : AppCompatActivity(), ServiceConnection, SerialListener {
             R.id.sensorInfoRefreshButton -> {
                 loadSensors()
             }
-            R.id.testbutton -> {
-                send("start", SensorType.InAirSensor)
+            R.id.searchButton -> {
+                var geocoder = Geocoder(this)
+                var addressList = geocoder.getFromLocationName(
+                        searchEditText.text.toString(), // 주소
+                        10) // 최대 검색 결과 개수
+                if(addressList.size==0){
+                    Toast.makeText(this,"Can't find location",Toast.LENGTH_SHORT).show()
+                }else {
+                    searchEditText.setText(addressList[0].getAddressLine(0))
+                    map.viewLocation(LatLng(addressList[0].latitude, addressList[0].longitude))
+                }
             }
-            R.id.testbutton1 -> {
-                send("start", SensorType.OutAirSensor)
+            R.id.myLocationFAB->{
+                map.viewLocation(map.cur_loc)
             }
-            R.id.testbutton2->{
-                reloadMap()
-            }
+            /*  R.id.testbutton -> {
+                  send("start", SensorType.InAirSensor)
+              }
+              R.id.testbutton1 -> {
+                  send("start", SensorType.OutAirSensor)
+              }
+              R.id.testbutton2->{
+                  reloadMap()
+              }*/
             /*R.id.heartImageView->{
                 var intent = Intent(this,HeartActivity::class.java)
                 startActivity(intent)
@@ -192,9 +241,34 @@ class MainActivity : AppCompatActivity(), ServiceConnection, SerialListener {
     }
 
     private fun reloadMap() {
-        //서버에서 가장 최근 데이터들 가져오기
+        var retrofit = RetrofitClient.getInstnace()
+        var myApi = retrofit.create(IServer::class.java)
+        Runnable {
+            myApi.db_data_for_map()
+                    .enqueue(object : retrofit2.Callback<ResponseBody> {
+                        override fun onResponse(
+                                call: Call<ResponseBody>,
+                                response: Response<ResponseBody>
+                        ) {
+                            var a = response.body()!!.string()
+                            Log.d("db_data_for_map", a)
+                            var gson = Gson()
+                            var jsonArray = JSONArray(a)
+                            var airInfoforMap = ArrayList<AirInfoForMap>()
+                            for (i in 0 until jsonArray.length()) {
+                                airInfoforMap.add(gson.fromJson(jsonArray[i].toString(), AirInfoForMap::class.java))
+                            }
+                            map.refreshMarker(airInfoforMap)
+
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            Log.d("db_data_for_map", t.message)
+                        }
+                    })
+        }.run()
         //json 분해
-        
+
     }
 
     fun showRemoveSensorDialog(sensorInfo: SensorInfo) {
@@ -340,15 +414,15 @@ class MainActivity : AppCompatActivity(), ServiceConnection, SerialListener {
         super.onDestroy()
         polarSensor.api.shutDown()
         for (i in 1..3) {
-            if(bluetoothDevices[i].connected!=Constants.Connected.False)
+            if (bluetoothDevices[i].connected != Constants.Connected.False)
                 disconnect(SensorType.values()[i])
         }
         stopService(Intent(this, SerialService::class.java))
     }
 
     public override fun onStop() {
-        for(i in 1..3){
-            if(bluetoothDevices[i].service!=null&&!this.isChangingConfigurations)
+        for (i in 1..3) {
+            if (bluetoothDevices[i].service != null && !this.isChangingConfigurations)
                 bluetoothDevices[i].service!!.detach()
         }
         super.onStop()
@@ -362,10 +436,10 @@ class MainActivity : AppCompatActivity(), ServiceConnection, SerialListener {
     override fun onResume() {
         super.onResume()
         polarSensor.api.foregroundEntered()
-        for(i in 1..3){
-            if(bluetoothDevices[i].initialStart&&bluetoothDevices[i].service!=null){
-                bluetoothDevices[i].initialStart=false
-                this.runOnUiThread { this.connect(SensorType.values()[i])}
+        for (i in 1..3) {
+            if (bluetoothDevices[i].initialStart && bluetoothDevices[i].service != null) {
+                bluetoothDevices[i].initialStart = false
+                this.runOnUiThread { this.connect(SensorType.values()[i]) }
             }
         }
     }
@@ -591,16 +665,16 @@ class MainActivity : AppCompatActivity(), ServiceConnection, SerialListener {
     }
 
     override fun onServiceConnected(name: ComponentName, binder: IBinder) {
-        for(i in 1..3){
-            bluetoothDevices[i].service=(binder as SerialService.SerialBinder).service
-            bluetoothDevices[i].initialStart=false
-         //   this.runOnUiThread { this.connect(SensorType.values()[i])}
+        for (i in 1..3) {
+            bluetoothDevices[i].service = (binder as SerialService.SerialBinder).service
+            bluetoothDevices[i].initialStart = false
+            //   this.runOnUiThread { this.connect(SensorType.values()[i])}
         }
     }
 
     override fun onServiceDisconnected(name: ComponentName) {
-        for(i in 1..3){
-            bluetoothDevices[i].service=null
+        for (i in 1..3) {
+            bluetoothDevices[i].service = null
         }
     }
 
@@ -611,13 +685,13 @@ class MainActivity : AppCompatActivity(), ServiceConnection, SerialListener {
             val device = bluetoothAdapter.getRemoteDevice(bluetoothDevices[type.ordinal].deviceAddress)
             val deviceName = if (device.name != null) device.name else device.address
             status("1 connecting...1")
-            bluetoothDevices[type.ordinal].connected=Constants.Connected.Pending
+            bluetoothDevices[type.ordinal].connected = Constants.Connected.Pending
             status("1 connecting...2")
-            bluetoothDevices[type.ordinal].socket= SerialSocket()
+            bluetoothDevices[type.ordinal].socket = SerialSocket()
             status("1 connecting...3")
-            bluetoothDevices[type.ordinal].service!!.connect(this,"Connected to $deviceName")
+            bluetoothDevices[type.ordinal].service!!.connect(this, "Connected to $deviceName")
             status("1 connecting...4")
-            bluetoothDevices[type.ordinal].socket!!.connect(this,bluetoothDevices[type.ordinal].service!!,device)
+            bluetoothDevices[type.ordinal].socket!!.connect(this, bluetoothDevices[type.ordinal].service!!, device)
             status("1 connecting...5")
         } catch (e: Exception) {
             onSerialConnectError(e)
@@ -626,12 +700,12 @@ class MainActivity : AppCompatActivity(), ServiceConnection, SerialListener {
     }
 
     fun disconnect(type: SensorType) {
-        bluetoothDevices[type.ordinal].connected=Constants.Connected.False
-        if( bluetoothDevices[type.ordinal].service!=null)
+        bluetoothDevices[type.ordinal].connected = Constants.Connected.False
+        if (bluetoothDevices[type.ordinal].service != null)
             bluetoothDevices[type.ordinal].service!!.disconnect()
-        if(bluetoothDevices[type.ordinal].socket!=null)
+        if (bluetoothDevices[type.ordinal].socket != null)
             bluetoothDevices[type.ordinal].socket!!.disconnect()
-        bluetoothDevices[type.ordinal].socket=null
+        bluetoothDevices[type.ordinal].socket = null
     }
 
     private fun send(str: String, type: SensorType) {
@@ -698,7 +772,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection, SerialListener {
     }
 
     private fun status(str: String) {
-        Log.d("status",str)
+        Log.d("status", str)
         val spn = SpannableStringBuilder(str + '\n')
         spn.setSpan(ForegroundColorSpan(resources.getColor(R.color.colorStatusText)), 0, spn.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         //receiveText.append(spn);
