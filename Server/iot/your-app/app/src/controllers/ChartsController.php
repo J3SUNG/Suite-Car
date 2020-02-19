@@ -272,6 +272,7 @@ final class ChartsController extends BaseController
         $user_no = $_GET['user_no'];
         $type = $_GET['type'];
         //air data receive
+        
         if($type == 0){
             $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND type = 'A'";
             $stmt = $this->em->getConnection()->prepare($sql);
@@ -279,8 +280,14 @@ final class ChartsController extends BaseController
             $stmt->execute($params);
         }
         //heart data receive
-        else{
+        else if($type == 1){
             $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND type = 'H' LIMIT 1";
+            $stmt = $this->em->getConnection()->prepare($sql);
+            $params['user_no'] = $user_no;
+            $stmt->execute($params);
+        }
+        else{
+            $sql = "SELECT * from Sensors WHERE user_no = :user_no ORDER BY type DESC";
             $stmt = $this->em->getConnection()->prepare($sql);
             $params['user_no'] = $user_no;
             $stmt->execute($params);
@@ -288,8 +295,22 @@ final class ChartsController extends BaseController
 
         try {
             $result = $stmt->fetchAll();
-
-            if ($result) {
+            if($type == 2){
+                $sensor_list = [];
+				foreach ($result as $sensor) {
+                    $sensor_list[] =
+					array(
+                        "sensor_no"=>$sensor['sensor_no'],
+                        "sname"=>$sensor['sname'],
+                        "type"=>$sensor['type']
+                    );
+                }
+                
+                return $response->withHeader('Content-type', 'application/json')
+                ->write(json_encode($sensor_list, JSON_NUMERIC_CHECK))
+                ->withStatus(200);
+            }
+            else if ($result) {
                 $combobox = [];
 				foreach ($result as $combo) {
                     $combobox[] =
@@ -303,6 +324,7 @@ final class ChartsController extends BaseController
                 ->withStatus(200);
 
             } else {
+                echo "ERROR";
                 $response = $response->withStatus(404);
             }
         } catch(PDOException $e) {

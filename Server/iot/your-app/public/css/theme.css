@@ -99,7 +99,7 @@ p {
     font-size: 18px;
     font-weight: bold;
     color: white;
-    margin-right: 50px;
+    margin-right: 40px;
 }
 
 .table-responsive {
@@ -14942,5 +14942,51 @@ section {
     width: 45%;
     height: auto;
     margin-left: 2%;
+    margin-right: 3%;
+}
+
+.list_view_title {
+    background-color: white;
+    color: #27AE60;
+    text-align: center;
+}
+
+.list_view_div {
+    background-color: white;
+}
+
+.list_view_box {
+    padding: 2% 3% 2% 3%;
+    width: 50%;
+    height: 250px;
+    border-radius: 15px;
+    margin-bottom: 50px;
+    margin-left: 25%;
+    margin-right: 25%;
+    box-shadow: 2px 2px 2px 2px;
+}
+
+.list_view_image {
+    border: solid;
+    border-radius: 100px;
+    border-color: gray;
+    float: left;
+    width: 40%;
+    height: 100%;
+}
+
+.list_view_image_circle {
+    height: 100%;
+    border-radius: 100px;
+}
+
+.list_view_text {
+    font-size: 18px;
+    text-align: center;
+    float: left;
+    width: 45%;
+    height: auto;
+    margin-top: 2%;
+    margin-left: 8%;
     margin-right: 3%;
 }
