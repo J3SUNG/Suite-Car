@@ -145,6 +145,14 @@
                                 <!-- MAP DATA-->
                                 <!--<p id="demo"></p>
                                 <button onclick="getLocation()">try it</button>-->
+                                <label for="air_selection">Choose Air data</label>
+                                <select id = "air_selection">
+                                    <option value="CO">CO</option>
+                                    <option value="SO2">SO2</option>
+                                    <option value="NO2">NO2</option>
+                                    <option value="O3">O3</option>
+                                    <option value="PM25">PM2.5</option>
+                                </select>
                                 <div id="map"></div>
                                 <script>
                                 var TILE_SIZE = 256;
@@ -152,6 +160,7 @@
                                 var activeInfoWindow;
                                 var marker = [];
                                 var infowindow = [];
+                                var selection_airdata = 5;
 
                                 var get_json_data = (function(){
                                     var json = null;
@@ -177,12 +186,23 @@
                                         zoom : 12,
                                         mapTypeId : google.maps.MapTypeId.TERRAIN
                                     }
-                                    alert(get_json_data[0].lat);
                                     
                                     map = new google.maps.Map(document.getElementById("map"), options);
                                     setTimeout(function(){ create_mark(get_json_data);
                                                          }, 2000);
                                 }
+
+                                $('#air_selection').change(function() {
+                                    var selection = $(this).val();
+                                    switch(selection) {
+                                        case "CO" : selection_airdata = 1; break;
+                                        case "SO2" : selection_airdata = 2; break;
+                                        case "NO2" : selection_airdata = 3; break;
+                                        case "O3" : selection_airdata = 4; break;
+                                        case "PM25" : selection_airdata = 5; break;
+                                    }
+                                    create_mark(get_json_data);
+                                });
 
                                 function create_mark(json_data) {
                                     clearOverlays();
@@ -205,27 +225,35 @@
                                             Math.floor(data_coordinate.y * scale));
 
                                         //alert("data_info.lat" + data_info.lat + '<br>' + ne.lat());
-                                        /*if((data_coordinate.x > ne_pixel_point.x) || (data_coordinate.y > ne_pixel_point.y)
-                                            || (data_coordinate.x < sw_pixel_point.x) || (data_coordinate.y < sw_pixel_point.y)) {
+                                        if((data_pixel_point.x > ne_pixel_point.x) || (data_pixel_point.y < ne_pixel_point.y)
+                                            || (data_pixel_point.x < sw_pixel_point.x) || (data_pixel_point.y > sw_pixel_point.y)) {
                                                 continue;
-                                            }*/
+                                            }
+                                        var selected_data;
+                                        switch(selection_airdata) {
+                                            case 1 : selected_data = data_info.CO_aqi; break;
+                                            case 2 : selected_data = data_info.SO2_aqi; break;
+                                            case 3 : selected_data = data_info.NO2_aqi; break;
+                                            case 4 : selected_data = data_info.O3_aqi; break;
+                                            case 5 : selected_data = data_info.PM25_aqi; break;
+                                        }
                                         var data_color;
-                                        if(data_info.PM25_aqi <= 50) {
+                                        if(selected_data <= 50) {
                                             data_color = '#00FF00';
                                         }
-                                        else if(data_info.PM25_aqi > 50 && data_info.PM25_aqi <=100) {
+                                        else if(selected_data > 50 && selected_data <=100) {
                                             data_color = '#FFFF00';
                                         }
-                                        else if(data_info.PM25_aqi > 100 && data_info.PM25_aqi <= 150) {
+                                        else if(selected_data > 100 && selected_data <= 150) {
                                             data_color = '#FF8000';
                                         }
-                                        else if(data_info.PM25_aqi > 150 && data_info.PM25_aqi <= 200) {
+                                        else if(selected_data > 150 && selected_data <= 200) {
                                             data_color = '#FF0000';
                                         }
-                                        else if(data_info.PM25_aqi > 200 && data_info.PM25_aqi <= 300) {
+                                        else if(selected_data > 200 && selected_data <= 300) {
                                             data_color = '#FF00FF';
                                         }
-                                        else if(data_info.PM25_aqi > 300 && data_info.PM25_aqi <= 500) {
+                                        else if(selected_data > 300 && selected_data <= 500) {
                                             data_color = '#800000';
                                         }
                                         else {
@@ -241,14 +269,13 @@
                                                                + '<button type = "submit" class = "signup_button" id = "chart_view">Chart View</button>'
                                                                + '<input class=\"input_text\" type = \"hidden\" id=\"sensor_no\" name=\"sensor_no\" value = \'data_info.sensor_no\'>'
                                                                + "</form>";
-
                                         //var map_zoom = map.getZoom();
                                         //var radius_with_zoom = 10000 * map_zoom * (1 / Math.pow(2, map_zoom - 5));
                                         marker[index] = new google.maps.Circle({
                                             map : map,
                                             center : {lat : data_info.lat,
                                             lng : data_info.lng},
-                                            radius : 1000,
+                                            radius : 10000,
                                             strokeColor: data_color,
                                             strokeOpacity : 0.5,
                                             strokeWeight : 2,

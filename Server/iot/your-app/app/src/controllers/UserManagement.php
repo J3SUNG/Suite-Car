@@ -107,7 +107,8 @@ final class UserManagement extends BaseController
 			$stmt->execute($params_pwd);
 			
 			echo "<script>alert(\"sent you a temporary password via email.\");</script>";
-			$this->view->render($response, 'login.twig');
+			//$this->view->render($response, 'login.twig');
+			echo "<script>location.replace('login.twig')</script>";
 		}
 		else {
 			echo "<script>alert(\"Not Found Mached Data\");</script>";
@@ -158,7 +159,7 @@ final class UserManagement extends BaseController
 
 		if($Pdevice==WEB){
 			if($result_code==0){
-				echo "<script>alert(\"Something is wrong.. You know what I'm Saying?!\");</script>";
+				echo "<script>alert(\"There is miss on ID or Password Please Enter Correctly.\");</script>";
 				$this->view->render($response, 'login.twig');
 			}else if($result_code==1){
 				session_start();
