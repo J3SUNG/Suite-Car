@@ -123,4 +123,7 @@ interface IServer {
             @Field("latitude") latitude: Float,
             @Field("longitude") longitude: Float
             ): Call<ResponseBody>
+
+    @GET("db_data_for_map")
+    fun db_data_for_map(): Call<ResponseBody>
 }
