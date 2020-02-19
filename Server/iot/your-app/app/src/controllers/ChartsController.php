@@ -62,7 +62,7 @@ final class ChartsController extends BaseController
                     $sql = "SELECT * 
                     from Air_data 
                     WHERE sensor_no = :sensor_no
-                    ORDER BY time
+                    ORDER BY time_in
                     LIMIT 10";
                     $stmt = $this->em->getConnection()->prepare($sql);
                     $params['sensor_no'] = $sensor_no;
@@ -74,7 +74,7 @@ final class ChartsController extends BaseController
                     $sql = "SELECT * 
                             FROM Air_data 
                             WHERE sensor_no = :sensor_no 
-                            AND STR_TO_DATE(time, '%Y-%m-%d %H:%i:%s')
+                            AND STR_TO_DATE(time_in, '%Y-%m-%d %H:%i:%s')
                                 BETWEEN STR_TO_DATE(:start_date, '%Y-%m-%d %H:%i:%s')
                                     AND STR_TO_DATE(:end_date, '%Y-%m-%d %H:%i:%s')";
                     $stmt = $this->em->getConnection()->prepare($sql);
@@ -90,7 +90,7 @@ final class ChartsController extends BaseController
                             FROM (SELECT * 
                                 FROM Heart_data 
                                 WHERE user_no = :user_no 
-                                ORDER BY time DESC LIMIT 10) A ORDER BY A.time";
+                                ORDER BY time_in DESC LIMIT 10) A ORDER BY A.time_in";
                     $stmt = $this->em->getConnection()->prepare($sql);
                     $params['user_no'] = $user_no;
                     $stmt->execute($params);
@@ -101,7 +101,7 @@ final class ChartsController extends BaseController
                     $sql = "SELECT * 
                             FROM Heart_data 
                             WHERE sensor_no = :sensor_no 
-                                AND STR_TO_DATE(time, '%Y-%m-%d %H:%i:%s')
+                                AND STR_TO_DATE(time_in, '%Y-%m-%d %H:%i:%s')
                                 BETWEEN STR_TO_DATE(:start_date, '%Y-%m-%d %H:%i:%s')
                                     AND STR_TO_DATE(:end_date, '%Y-%m-%d %H:%i:%s')";
                     $stmt = $this->em->getConnection()->prepare($sql);
@@ -128,7 +128,7 @@ final class ChartsController extends BaseController
                 // loop thru the sensor data and build sensor_array
                 foreach ($result as $row) {
                     $sensor_array = array();
-                    $sensor_array[] = array('v'=>$row['time']);
+                    $sensor_array[] = array('v'=>$row['time_in']);
                     if($CO == 0){
                         $sensor_array[] = array('v'=>$row['CO_aqi']);
                     }
@@ -169,7 +169,7 @@ final class ChartsController extends BaseController
                 // loop thru the sensor data and build sensor_array
                 foreach ($result as $row) {
                     $sensor_array = array();
-                    $sensor_array[] = array('v'=>$row['time']);
+                    $sensor_array[] = array('v'=>$row['time_in']);
                     $sensor_array[] = array('v'=>$row['heart']);
                    
                     // add current sensor_array line to $rows
@@ -193,15 +193,29 @@ final class ChartsController extends BaseController
 
     public function heart_chart(Request $request, Response $response, $args) {
         $user_no = $_SESSION['user_no'];
+        $sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+
+		$username = $result['username'];
+		$email = $result['email'];
         
-        $response = $this->view->render($response, 'heart_chart.twig', ['user_no'=>$user_no]);
+        $response = $this->view->render($response, 'heart_chart.twig', ['username'=>$username, 'email'=>$email, 'user_no'=>$user_no]);
         return $response;
     }    
 
     public function air_chart(Request $request, Response $response, $args) {
         $user_no = $_SESSION['user_no'];
+        $sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+
+		$username = $result['username'];
+		$email = $result['email'];
         
-        $response = $this->view->render($response, 'air_chart.twig', ['user_no'=>$user_no, 'flag'=>0, 'sensor_no'=>1]);
+        $response = $this->view->render($response, 'air_chart.twig', ['email'=>$email, 'username'=>$username, 'user_no'=>$user_no, 'flag'=>0, 'sensor_no'=>1]);
         return $response;
     }    
 
@@ -257,6 +271,7 @@ final class ChartsController extends BaseController
     public function receive_combobox(Request $request, Response $response, $args) {
         $user_no = $_GET['user_no'];
         $type = $_GET['type'];
+        //air data receive
         
         if($type == 0){
             $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND type = 'A'";
@@ -264,8 +279,15 @@ final class ChartsController extends BaseController
             $params['user_no'] = $user_no;
             $stmt->execute($params);
         }
-        else{
+        //heart data receive
+        else if($type == 1){
             $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND type = 'H' LIMIT 1";
+            $stmt = $this->em->getConnection()->prepare($sql);
+            $params['user_no'] = $user_no;
+            $stmt->execute($params);
+        }
+        else{
+            $sql = "SELECT * from Sensors WHERE user_no = :user_no ORDER BY type DESC";
             $stmt = $this->em->getConnection()->prepare($sql);
             $params['user_no'] = $user_no;
             $stmt->execute($params);
@@ -273,8 +295,22 @@ final class ChartsController extends BaseController
 
         try {
             $result = $stmt->fetchAll();
-
-            if ($result) {
+            if($type == 2){
+                $sensor_list = [];
+				foreach ($result as $sensor) {
+                    $sensor_list[] =
+					array(
+                        "sensor_no"=>$sensor['sensor_no'],
+                        "sname"=>$sensor['sname'],
+                        "type"=>$sensor['type']
+                    );
+                }
+                
+                return $response->withHeader('Content-type', 'application/json')
+                ->write(json_encode($sensor_list, JSON_NUMERIC_CHECK))
+                ->withStatus(200);
+            }
+            else if ($result) {
                 $combobox = [];
 				foreach ($result as $combo) {
                     $combobox[] =
@@ -288,6 +324,7 @@ final class ChartsController extends BaseController
                 ->withStatus(200);
 
             } else {
+                echo "ERROR";
                 $response = $response->withStatus(404);
             }
         } catch(PDOException $e) {

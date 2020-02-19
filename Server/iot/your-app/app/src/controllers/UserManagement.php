@@ -63,7 +63,7 @@ final class UserManagement extends BaseController
 			$mail->AltBody = 'Thank you . Please Click the link to activate your account.';
 			$mail->send();
 			//echo "<script>alert(\"E-mail has been sent. Check your E-mail.\");</script>";
-			echo "<script>location.replace('login')</script>";
+			echo "E-mail has been sent. Please Check your E-mail.";
 		}
 		catch (Exception $e) {
 			echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
@@ -130,7 +130,7 @@ final class UserManagement extends BaseController
 		}
     }
 
-    public function signIn(Request $request, Response $response, $args)
+    public function signin(Request $request, Response $response, $args)
     {
 		$Pusername = $_POST['username'];
 		$Ppassword = $_POST['password'];
@@ -164,18 +164,32 @@ final class UserManagement extends BaseController
 				session_start();
 				$_SESSION['user_no']=$row['user_no'];
 				echo "<script>alert(\"Welcome to suiteCar!\");</script>";
-				$this->view->render($response, 'home.twig', ['post' => $_POST]);	
+				$this->view->render($response, 'home.twig');	
 			}else if($result_code==2){
 				session_start();
 				$_SESSION['user_no']=$row['user_no'];
 				echo "<script>alert(\"you should change the password\");</script>";
-				$this->view->render($response, 'home.twig', ['post' => $_POST]);
+				$this->view->render($response, 'home.twig');
 			}	
 		}else if($Pdevice==ANDROID){
 			header('Content-type: application/json');
 			echo json_encode($data);
 		}
     }
+
+	public function home(Request $request, Response $response, $args)
+    {
+		$user_no = $_SESSION['user_no'];
+        $sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+
+		$username = $result['username'];
+		$email = $result['email'];
+    	
+		$this->view->render($response, 'home.twig', ['username'=>$username, 'email'=>$email]);	
+	}
 
 	public function signout(Request $request, Response $response, $args)
     {
@@ -345,8 +359,6 @@ final class UserManagement extends BaseController
 		$phone_number = $_POST['phone'];
 		$first_name = $_POST['first_name'];
 		$last_name = $_POST['last_name'];
-
-		//echo "$username, $email, $password, $phone_number";
 
 		//data for email phpmailer
 		$hash_password = password_hash($password, PASSWORD_DEFAULT);

@@ -73,8 +73,8 @@
                                 </a>
                             </div>
                             <div class="header-wrap">
-                                <div class="header-button">     
-                                    <a href="team" class="nav">Team</a>    
+                                <div class="header-button">         
+                                    <a href="team" class="nav">Team</a>
                                     <a href="maps" class="nav">Map</a>
                                     <a href="air_chart" class="nav">Air Chart</a>
                                     <a href="heart_chart" class="nav">Heart Chart</a>
@@ -104,15 +104,18 @@
                                                 <div class="account-dropdown__body">
                                                     <div class="account-dropdown__item">
                                                         <a href="change_password_page">
-                                                            <i class="zmdi zmdi-account"></i>Password Change</a>
+                                                            <i class="zmdi zmdi-account"></i>Password Change
+                                                        </a>
                                                     </div>
                                                     <div class="account-dropdown__item">
                                                         <a href="id_cancelation_page">
-                                                            <i class="zmdi zmdi-settings"></i>ID Cancellation</a>
+                                                            <i class="zmdi zmdi-settings"></i>ID Cancellation
+                                                        </a>
                                                     </div>
                                                     <div class="account-dropdown__item">
                                                         <a href="signout">
-                                                            <i class="zmdi zmdi-power"></i>Sign Out</a>
+                                                            <i class="zmdi zmdi-power"></i>Sign Out
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -124,23 +127,65 @@
                     </div>
                 </header>
                 <!-- END HEADER DESKTOP-->
-                <div class = "welcome_home m-t-180">
-                    <div class = "home_image">
-                        <img src="images/home.PNG" alt="Suite Car">
-                    </div><br>
-                    <div class = "home_text">
-                        <h1 class = "welcome"> Welcome, {{username}}<br><br> </h1>
-                        <h4> 
-                            Thank you for your interest in our products.<br><br>
-                            We will provide the best service when you drive by car.<br><br>
-                            I wish you a convenient and pleasant driving.
-                        </h4>
-                    </div> 
-                </div>
+                <div class = "list_view_title m-t-150">
+                    <h1>List View<h1>
+                </div><br><br>
+                {# <div class = "list_view_div">
+                    <div class = "list_view_box">
+                        <div class = "list_view_image">
+                            <img class = "list_view_image_circle" src="images/home.PNG" alt="Suite Car">
+                        </div> 
+                        <div class = "list_view_text">
+                            <div> Sensor_no :  </div>
+                            <div class = "m-t-30"> Sensor Name :  </div>
+                            <div class = "m-t-30"> type :  </div>
+                        </div>
+                    </div>
+                </div> #}
             </div>
         </div>
         
+        <script type="text/javascript">
+            var user_no = {{user_no}};
+            $now = new Date();
+            $(function(){ 
+                $.ajax({
+                url: "/charts/receive_combobox",
+                    dataType:"text",
+                    async: false,
+                    type : "GET",
+                    data : {
+                        "user_no" : user_no,
+                        "type" : 2
+                    },
+                    success : function(data) {
+                        $data = JSON.parse(data);
+                        addBox($data);
+                    },
+                    error : function(data) {
+                        alert("There is something wrong@.");
+                    }
+                });
+            })
 
+            function addBox(data){
+                for(var index in data) {
+                    var sensor_no = data[index].sensor_no;
+                    var sname = data[index].sname;
+                    var type = data[index].type;
+                    var url;
+                    if(type == 'A'){
+                        url = "images/wind.gif";
+                    }
+                    else{
+                        url = "images/heart.gif";
+                    }
+                    var newDivHtml = "<div class = \"list_view_div\"> <div class = \"list_view_box\"> <div class = \"list_view_image\"> <img class = \"list_view_image_circle\" src=\"" + url + "\" alt=\"Suite Car\"> </div> <div class = \"list_view_text\"> <div> Sensor_no : " + sensor_no + " </div> <div class = \"m-t-30\"> Sensor Name : " + sname + " </div> <div class = \"m-t-30\"> type : " + type + " </div> </div> </div> </div>";
+                    document.body.innerHTML = document.body.innerHTML + "" + newDivHtml;
+                }
+                sensor_no = $("#combo option:selected").val();
+            } 
+        </script>
         
         <!-- Map -->
         <script async defer

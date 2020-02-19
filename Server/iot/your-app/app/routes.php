@@ -14,9 +14,6 @@ $app->get('/forgotten', 'App\Controller\HomeController:forgotten')
 
 $app->get('/forgotten_auth', 'App\Controller\HomeController:forgotten_auth')
     ->setName('forgotten_auth');
-	
-$app->get('/home', 'App\Controller\HomeController:home')
-    ->setName('home');
 
 $app->get('/id_cancelation_page', 'App\Controller\HomeController:id_cancelation_page')
     ->setName('id_cancelation_page');
@@ -49,8 +46,11 @@ $app->get('/forgotten_new_password_confirm', 'App\Controller\UserManagement:forg
 $app->get('/forgotten_check', 'App\Controller\UserManagement:forgotten_check')
     ->setName('forgotten_check');
 
-$app->post('/signIn', 'App\Controller\UserManagement:signIn')
-    ->setName('signIn');
+$app->post('/signin', 'App\Controller\UserManagement:signin')
+    ->setName('signin');
+
+$app->get('/home', 'App\Controller\UserManagement:home')
+    ->setName('home');
 
 $app->get('/signout', 'App\Controller\UserManagement:signout')
     ->setName('signout');
@@ -97,3 +97,12 @@ $app->get('/heart_chart', 'App\Controller\ChartsController:heart_chart')
 
 $app->get('/charts/receive_combobox', 'App\Controller\ChartsController:receive_combobox')
     ->setName('/charts/receive_combobox');
+
+$app->get('/infowindow_to_chart', 'App\Controller\DataManagement:infowindow_to_chart')
+    ->setName('/infowindow_to_chart');
+
+$app->get('/team', 'App\Controller\HomeController:team')
+    ->setName('/team');
+
+$app->get('/list_view', 'App\Controller\HomeController:list_view')
+    ->setName('/list_view');

@@ -41,11 +41,6 @@ final class HomeController extends BaseController
 		$this->view->render($response, 'forgotten_new_password.twig');
     }
 
-    public function home(Request $request, Response $response, $args)
-    {
-		$this->view->render($response, 'home.twig');
-    }
-
 	public function change_password_page(Request $request, Response $response, $args){
 		$this->view->render($response, 'change_password_page.twig');
 	}
@@ -66,5 +61,31 @@ final class HomeController extends BaseController
 		$username = $result['username'];
 		$email = $result['email'];
 		$this->view->render($response, 'maps.twig', ['username'=>$username, 'email'=>$email]);
+	}
+
+	public function team(Request $request, Response $response, $args)
+	{
+		$user_no = $_SESSION['user_no'];
+		$sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+
+		$username = $result['username'];
+		$email = $result['email'];
+		$this->view->render($response, 'team.twig', ['username'=>$username, 'email'=>$email]);
+	}
+
+	public function list_view(Request $request, Response $response, $args)
+	{
+		$user_no = $_SESSION['user_no'];
+		$sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+
+		$username = $result['username'];
+		$email = $result['email'];
+		$this->view->render($response, 'list_view.twig', ['username'=>$username, 'email'=>$email, 'user_no'=>$user_no]);
 	}
 }

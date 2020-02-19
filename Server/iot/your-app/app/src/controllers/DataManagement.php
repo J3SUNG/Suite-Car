@@ -13,13 +13,19 @@ final class DataManagement extends BaseController
 {
 	public function db_data_for_map(Request $request, Response $response, $args)
 	{
-		$sql = "SELECT Users.username, a.*
-				FROM Users, Air_data AS a
-				JOIN(
+		//modify the value of time interval
+		$sql = "SELECT a.*, Sensors.sname
+				FROM Air_data AS a
+				JOIN Sensors
+				ON Sensors.sensor_no = a.sensor_no
+				JOIN( 
 					SELECT sensor_no, MAX(time_in) time_in 
-					FROM Air_data
-					GROUP BY sensor_no) AS b
-				ON a.sensor_no = b.sensor_no AND a.time_in = b.time_in;";
+					FROM Air_data 
+					GROUP BY sensor_no) AS b 
+				ON a.sensor_no = b.sensor_no AND a.time_in = b.time_in
+				/*WHERE STR_TO_DATE(b.time_in, '%Y-%m-%d') - STR_TO_DATE(CURRENT_DATE, '%Y-%m-%d') = 0
+				AND TIME(CURRENT_TIME) - TIME(b.time_in) < 5000000*/
+				;";
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
@@ -29,8 +35,7 @@ final class DataManagement extends BaseController
 			$map_data_db = [];
 			foreach($result as $map_data) {
 				$map_data_db[] =
-				array("username"=>$map_data['username'],
-				"Air_data_no"=>$map_data['Air_data_no'],
+				array("Air_data_no"=>$map_data['Air_data_no'],
 				"sensor_no"=>$map_data['sensor_no'],
 				"time"=>$map_data['time_in'],
 				"CO_raw"=>$map_data['CO_raw'],
@@ -43,8 +48,9 @@ final class DataManagement extends BaseController
 				"O3_aqi"=>$map_data['O3_aqi'],
 				"PM25_raw"=>$map_data['PM2.5_raw'],
 				"PM25_aqi"=>$map_data['PM2.5_aqi'],
-				"center"=>array("lat"=>$map_data['latitude'],
-								"lng"=>$map_data['longtitude'])
+				"lat"=>$map_data['latitude'],
+				"lng"=>$map_data['longitude'],
+				"sname"=>$map_data['sname']
 			);
 			}
 			return $response->withHeader('Content-type', 'application/json')
@@ -93,60 +99,18 @@ final class DataManagement extends BaseController
 		}
 	}
 
-// public function marker(double latitude, double longitude, int color)
-	// {
-	// 	switch(color){
-	// 		case green:
-	// 			//draw 해당 위도 경도
-	// 			break;
-	// 		case yellow:
-	// 			//draw 해당 위도 경도
-	// 			break;
-	// 		case orange:
-	// 			//draw 해당 위도 경도
-	// 			break;
-	// 		case red:
-	// 			//draw 해당 위도 경도
-	// 			break;
-	// 		case purple:
-	// 			//draw 해당 위도 경도
-	// 			break;
-	// 	}
-	// }
+	public function infowindow_to_chart(Request $request, Response $response, $args) {
+		$sensor_no = $_GET['sensor'];
+		$flag = $_GET['flag'];
+		$user_no = $_SESSION['user_no'];
+		$sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
 
-	// public function color(double co, double co2, double so2, double nc2, double o3)
-	// {
-	// 	//$tatal = 수식
+		$username = $result['username'];
+		$email = $result['email'];
 
-	// 	//if total = very_low return Green
-	// 	//if total = low return yellow
-	// 	//if tatal = mid return orange
-	// 	//if total = high return red
-	// 	//if total = very high return purple	
-	// }
-
-	// public function range_view(double latitude, double longitude, int level)
-	// {
-	// 	// sql문 작성 (경도와 위도가 - (level * x) 이상이면서 경도와 위도가 + (level * x) 이하인 데이터)
-	// 	// for(int i=0; i<count; ++i){
-	// 		// color(range[i]['co'], range[i]['co2'], range[i]['so2'], range[i]['nc2'], range[i]['o3']);
-	// 		// draw marker(range[i]['latitude'], range[i]['longitude], color);
-	// 	// }
-	// }
-
-	// public function map_view()	// 맵 전체 뷰
-	// {
-	// 	// latitude = 현재 구글맵 중심의 위치 위도
-	// 	// longitude = 현재 구글맵 중심의 위치 경도
-	// 	// level = 구글맵의 줌 레벨
-	// 	range_view(latitude, longitude, level);
-	// }
-
-	// public function senser_view()	// 하나의 센서를 클릭시
-	// {
-	// 	// $sql = 해당센서의 센서넘버와, 범위의 날짜에 해당하는 air데이터 값들 전부 받음
-	// 	// 프론트에 해당하는 값들 삽입, 차트 생성
-	// 	//$this->view->render($response, 'sensor_view.twig', [co, co2, ....]);	// 프론트로 value를 넘김
-	// }
-
+		$this->view->render($response, 'air_chart.twig', ['username'=>$username, 'email'=>$email, 'user_no'=>$user_no, 'flag'=>$flag, 'sensor_no'=>$sensor_no]);
+	}
 }
