@@ -19,10 +19,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
+
         <TextView
+            android:id="@+id/logTextView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/logTextView"/>
+            android:layout_height="match_parent" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -34,24 +36,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_perfect" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Heart" />
-                </LinearLayout>
 
 
                 <LinearLayout
@@ -98,9 +82,69 @@
                 style="@style/normalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
                 android:onClick="onClick"
                 android:text="Suite" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="inair"
+                android:id="@+id/testbutton"
+                android:onClick="onClick"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="outair"
+                android:id="@+id/testbutton1"
+                android:layout_toRightOf="@id/testbutton"
+                android:onClick="onClick"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:id="@+id/testbutton2"
+                android:onClick="onClick"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/realtimeNotConnect"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Not Connected"
+                    android:textSize="15sp"
+                    android:textColor="#FF0000"
+                    />
+                <LinearLayout
+                    android:id="@+id/realtimeHeartLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:onClick="onClick"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/realtimeHRTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_toLeftOf="@+id/bpm"
+                        android:text="30"
+                        android:textColor="@color/mGreen"
+                        android:textSize="30sp" />
+
+                    <TextView
+                        android:id="@+id/bpm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="bpm"
+                        android:textColor="@color/mGreen"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
         </RelativeLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -112,6 +156,8 @@
             android:backgroundTint="@color/mGreen"
             android:onClick="onClick"
             android:src="@drawable/ic_menu_black_24dp" />
+
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -188,15 +234,15 @@
                     android:text="Sensor Information"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp" />
-
                 <Button
-                    android:id="@+id/drawerAddSensorButton"
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_margin="3dp"
-                    android:background="@drawable/ic_add_black_24dp"
-                    android:onClick="onClick" />
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:onClick="onClick"
+                    android:id="@+id/sensorInfoRefreshButton"
+                    android:background="@drawable/ic_refresh_black_24dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"/>
+
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView

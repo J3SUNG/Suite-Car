@@ -27,7 +27,7 @@ class Map : OnMapReadyCallback {
     var userMaker: Marker? = null        //사용자 마커
     lateinit var userIcon: BitmapDescriptor    //사용자 이미지 아이콘(마커에 들어가는 이미지)
     val context:Context
-    
+    var sensorsMarker=ArrayList<Marker>()
     override fun onMapReady(p0: GoogleMap?) {
         Log.d("Map", "Map is ready" + p0)
         mMap = p0

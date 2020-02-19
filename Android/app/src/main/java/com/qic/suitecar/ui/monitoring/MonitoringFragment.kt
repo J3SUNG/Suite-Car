@@ -33,6 +33,7 @@ class MonitoringFragment : Fragment(), View.OnClickListener {
 
         }
     }
+
     lateinit var fitting: Fitting
     lateinit var root: View
     lateinit var actions: ArrayList<Action>

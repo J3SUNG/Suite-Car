@@ -1,27 +1,40 @@
 package com.qic.suitecar.util
 
+import com.qic.suitecar.BuildConfig
+
 object Constants {
-    // Message types sent from the BluetoothChatService Handler
-    val MESSAGE_STATE_CHANGE = 1
-    val MESSAGE_READ = 2
-    val MESSAGE_WRITE = 3
-    val MESSAGE_DEVICE_NAME = 4
-    val MESSAGE_TOAST = 5
 
-    // Constants that indicate the current connection state
-    val STATE_NONE = 0       // we're doing nothing
-    val STATE_LISTEN = 1     // now listening for incoming connections
-    val STATE_CONNECTING = 2 // now initiating an outgoing connection
-    val STATE_CONNECTED = 3  // now connected to a remote device
+    const val OKAY=0
+    const val CANCEL = 1
 
-    // Key names received from the BluetoothChatService Handler
-    val DEVICE_NAME = "device_name"
-    val TOAST = "toast"
+    const val ADD_SENSOR_REQ = 0
+    const val SCAN_SENSORS_REQ=1
+    const val SPEECH_INPUT_REQ = 2
 
-    val HEARTSENSER=0
-    val INAIRSENSER=1
-    val OUTAIRSENSER=2
+    const val EXTRA_DEVICE_ADDRESS = "device_address"
+
 
     val WEB=0
     val ANDROID=1
+
+    enum class SensorType{
+        PolarSensor,
+        InAirSensor,
+        OutAirSensor,
+        Car,
+        AddSensor
+    }
+
+
+    // values have to be globally unique
+    val INTENT_ACTION_DISCONNECT = BuildConfig.APPLICATION_ID + ".Disconnect"
+    val NOTIFICATION_CHANNEL = BuildConfig.APPLICATION_ID + ".Channel"
+    val INTENT_CLASS_MAIN_ACTIVITY = BuildConfig.APPLICATION_ID + ".MainActivity"
+
+    // values have to be unique within each app
+    val NOTIFY_MANAGER_START_FOREGROUND_SERVICE = 1001
+
+    enum class Connected {
+        False, Pending, True
+    }
 }
