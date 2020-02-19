@@ -53,11 +53,11 @@ final class ChartsController extends BaseController
             $view_type = $_GET['view_type'];
 
             if($type == 0){
-                $CO = $_GET['CO'];
-                $SO2 = $_GET['SO2'];
-                $O3 = $_GET['O3'];
-                $NO2 = $_GET['NO2'];
-                $PM25 = $_GET['PM25'];
+                // $CO = $_GET['CO'];
+                // $SO2 = $_GET['SO2'];
+                // $O3 = $_GET['O3'];
+                // $NO2 = $_GET['NO2'];
+                // $PM25 = $_GET['PM25'];
                 if($view_type == 0){
                     $sql = "SELECT * 
                     from Air_data 
@@ -129,21 +129,21 @@ final class ChartsController extends BaseController
                 foreach ($result as $row) {
                     $sensor_array = array();
                     $sensor_array[] = array('v'=>$row['time_in']);
-                    if($CO == 0){
+                    // if($CO == 0){
                         $sensor_array[] = array('v'=>$row['CO_aqi']);
-                    }
-                    if($SO2 == 0){
+                    // }
+                    // if($SO2 == 0){
                         $sensor_array[] = array('v'=>$row['SO2_aqi']);
-                    }
-                    if($O3 == 0){
+                    // }
+                    // if($O3 == 0){
                         $sensor_array[] = array('v'=>$row['O3_aqi']);
-                    }
-                    if($PM25 == 0){
+                    // }
+                    // if($PM25 == 0){
                         $sensor_array[] = array('v'=>$row['PM2.5_aqi']);
-                    }
-                    if($NO2 == 0){
+                    // }
+                    // if($NO2 == 0){
                         $sensor_array[] = array('v'=>$row['NO2_aqi']);
-                    }
+                    // }
                    
                     // add current sensor_array line to $rows
                     $rows[] = array('c'=>$sensor_array);
@@ -159,7 +159,8 @@ final class ChartsController extends BaseController
             else if ($result && $type == 1) {
                 $json_array['cols'] = array(
                     array('id'=>'', 'label'=>'date/time', 'type'=>'string'),
-                    array('id'=>'', 'label'=>'heart', 'type'=>'number')
+                    array('id'=>'', 'label'=>'heart', 'type'=>'number'),
+                    array('id'=>'', 'label'=>'rr_interval', 'type'=>'number')
                     // array('id'=>'', 'label'=>'SO2', 'type'=>'number'),
                     // array('id'=>'', 'label'=>'O3', 'type'=>'number'),
                     // array('id'=>'', 'label'=>'PM2.5', 'type'=>'number'),
@@ -171,6 +172,7 @@ final class ChartsController extends BaseController
                     $sensor_array = array();
                     $sensor_array[] = array('v'=>$row['time_in']);
                     $sensor_array[] = array('v'=>$row['heart']);
+                    $sensor_array[] = array('v'=>$row['rr_interval']);
                    
                     // add current sensor_array line to $rows
                     $rows[] = array('c'=>$sensor_array);
