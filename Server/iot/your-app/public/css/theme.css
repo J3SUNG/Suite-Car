@@ -14806,7 +14806,7 @@ section {
 }
 
 #date_submit {
-    width: 600px;
+    width: 1000px;
     height: 100px;
     margin: auto;
     color: blue;
@@ -14817,7 +14817,7 @@ section {
 .userdate {
     text-align: center;
     border: solid;
-    margin-right: 30px;
+    margin-right: 10px;
 }
 
 #button_date_submit {

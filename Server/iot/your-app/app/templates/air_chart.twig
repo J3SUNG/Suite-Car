@@ -9,7 +9,7 @@
         <meta name="description" content="au theme template">
         <meta name="author" content="Hau Nguyen">
         <meta name="keywords" content="au theme template">
-        
+    
         <!-- Title Page-->
         <title>Suite Car</title>
 
@@ -146,6 +146,7 @@
                                             var user_no = 1;
                                             var sensor_no;
                                             $now = new Date();
+                                            
                                             $(function(){ 
                                                 $.ajax({
                                                 url: "/charts/receive_combobox",
@@ -166,7 +167,6 @@
                                                 });
                                             })
                                             function addOption(data){
-                                                
                                                 for(var index in data) {
                                                     var data_info = data[index].sensor_no;
 
@@ -364,23 +364,30 @@
                                         <button type = "button" class = "air_button" id = "button_PM25">PM25</button>
                                     </div><br>
 
-                                    <div id = "date_submit">
+                                    <div class = "date_submit_box" id = "date_submit">
                                         <input type="date" class = "userdate" id="userdate1" name="userdate1">
-                                        <input type="date" class = "userdate" id="userdate2" name="userdate2">
+                                        <input type="time" class = "userdate m-r-30" id="usertime1" name="usertime1">
+                                        <input type="date" class = "userdate m-r-30" id="userdate2" name="userdate2">
+                                        <input type="time" class = "userdate" id="usertime2" name="usertime2">
                                         <button type = "button" class = "button_date_submit" id = "button_date_submit">Submit</button>
                                     </div>
                                     
                                     <script>
-                                        document.getElementById('userdate1').value = new Date().toISOString().substring(0, 10);
-                                        document.getElementById('userdate2').value = new Date().toISOString().substring(0, 10);
+                                        var today = new Date();
+                                        var month = new Date(today - 2592000000);
+                                        
+                                        document.getElementById('userdate1').value = month.toISOString().substring(0, 10);
+                                        document.getElementById('userdate2').value = today.toISOString().substring(0, 10);
+                                        document.getElementById('usertime1').value = "00:00";
+                                        document.getElementById('usertime2').value = "00:00";
 
-                                        var start_date = $('#userdate1').val();
-                                        var end_date = $('#userdate2').val();
+                                        var start_date = $('#userdate1').val() + " " + $('#usertime1').val();
+                                        var end_date = $('#userdate2').val() + " " + $('#usertime2').val();
 
                                         $(function(){ 
                                                 $("#button_date_submit").click(function(){ 
-                                                    start_date = $('#userdate1').val();
-                                                    end_date = $('#userdate2').val();
+                                                    start_date = $('#userdate1').val() + " " + $('#usertime1').val();
+                                                    end_date = $('#userdate2').val() + " " + $('#usertime2').val();
 
                                                     var startDate = $( "input[name='userdate1']" ).val(); //2017-12-10
                                                     var startDateArr = startDate.split('-');
