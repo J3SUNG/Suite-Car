@@ -142,6 +142,8 @@
                         <div class="row">
                             <div class="col-md-12 m-t-20">
                                 <!-- MAP DATA-->
+                                <p id="demo"></p>
+                                <button onclick="getLocation()">try it</button>
                                 <div id="map"></div>
                                 <script>
                                 var map;
@@ -152,13 +154,10 @@
                                 var get_json_data = (function(){
                                     var json = null;
                                     $.ajax({
-                                        //'type' : "POST",
                                         'async': false,
                                         'global': false,
                                         'url' : "/db_data_for_map",
                                         'dataType' : "json",
-                                        //'data' : {
-                                        //},
                                         'success' : function(data) {
                                             json = data;
                                         },
@@ -173,18 +172,27 @@
                                     var options = {
                                         center : {lat : get_json_data[0].lat, // modify to current location
                                         lng : get_json_data[0].lng},
-                                        zoom : 5,
+                                        zoom : 12,
                                         mapTypeId : google.maps.MapTypeId.TERRAIN
                                     }
                                     map = new google.maps.Map(document.getElementById("map"), options);
-                                    
-                                    create_mark(get_json_data);
+                                    setTimeout(function(){ create_mark(get_json_data);
+                                                         }, 1000);
                                 }
 
                                 function create_mark(json_data) {
                                     clearOverlays();
+                                    var map_bounds = map.getBounds();
+                                    var ne = map_bounds.getNorthEast();
+                                    var sw = map_bounds.getSouthWest();
                                     for(var index in json_data) {
                                         var data_info = json_data[index];
+                                        //alert("data_info.lat" + data_info.lat + '<br>' + ne.lat());
+                                        if((data_info.lat > ne.lat()) || (data_info.lng > ne.lng())
+                                            || (data_info.lat < sw.lat()) || (data_info.lng < sw.lng())) {
+                                                //alert("ABC");
+                                                continue;
+                                            }
                                         var data_color;
                                         if(data_info.PM25_aqi <= 50) {
                                             data_color = '#00FF00';
@@ -218,13 +226,13 @@
                                                                + '<input class=\"input_text\" type = \"hidden\" id=\"sensor_no\" name=\"sensor_no\" value = \'data_info.sensor_no\'>'
                                                                + "</form>";
 
-                                        var map_zoom = map.getZoom();
-                                        var radius_with_zoom = 10000 * map_zoom * (1 / Math.pow(2, map_zoom - 5));
+                                        //var map_zoom = map.getZoom();
+                                        //var radius_with_zoom = 10000 * map_zoom * (1 / Math.pow(2, map_zoom - 5));
                                         marker[index] = new google.maps.Circle({
                                             map : map,
                                             center : {lat : data_info.lat,
                                             lng : data_info.lng},
-                                            radius : radius_with_zoom,
+                                            radius : 1000,
                                             strokeColor: data_color,
                                             strokeOpacity : 0.5,
                                             strokeWeight : 2,
@@ -243,12 +251,24 @@
                                         });
 
                                         google.maps.event.addListener(map, 'idle', function() {
-                                            var map_bounds = map.getBounds();
-                                            var ne = map_bounds.getNorthEast();
-                                            var sw = map_bounds.getSouthWest();
                                             create_mark(get_json_data);
                                         });
                                     }
+                                }
+
+                                var x = document.getElementById("demo");
+
+                                function getLocation() {
+                                if (navigator.geolocation) {
+                                    navigator.geolocation.getCurrentPosition(showPosition);
+                                } else { 
+                                    x.innerHTML = "Geolocation is not supported by this browser.";
+                                }
+                                }
+
+                                function showPosition(position) {
+                                x.innerHTML = "Latitude: " + position.coords.latitude + 
+                                "<br>Longitude: " + position.coords.longitude;
                                 }
 
                                 function clearOverlays() {
@@ -258,7 +278,7 @@
                                     marker = [];
                                     infowindow = [];
                                 }
-                                setInterval(create_mark, 10000, get_json_data);
+                                setInterval(create_mark, 5000, get_json_data);
                                 </script>
                                 <!-- END MAP DATA-->
                             </div>

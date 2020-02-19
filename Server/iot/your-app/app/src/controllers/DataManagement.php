@@ -23,6 +23,8 @@ final class DataManagement extends BaseController
 					FROM Air_data 
 					GROUP BY sensor_no) AS b 
 				ON a.sensor_no = b.sensor_no AND a.time_in = b.time_in
+				/*WHERE STR_TO_DATE(b.time_in, '%Y-%m-%d') - STR_TO_DATE(CURRENT_DATE, '%Y-%m-%d') = 0
+				AND TIME(CURRENT_TIME) - TIME(b.time_in) < 5000000*/
 				;";
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
@@ -47,7 +49,7 @@ final class DataManagement extends BaseController
 				"PM25_raw"=>$map_data['PM2.5_raw'],
 				"PM25_aqi"=>$map_data['PM2.5_aqi'],
 				"lat"=>$map_data['latitude'],
-				"lng"=>$map_data['longtitude'],
+				"lng"=>$map_data['longitude'],
 				"sname"=>$map_data['sname']
 			);
 			}
