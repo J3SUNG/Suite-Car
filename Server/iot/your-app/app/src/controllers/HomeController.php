@@ -4,10 +4,6 @@ namespace App\Controller;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
-
 define('SIGN_UP', 0);
 define('FORGOTTEN', 1);
 define('INTMAX', 2147483647);
@@ -61,6 +57,14 @@ final class HomeController extends BaseController
 
 	public function maps(Request $request, Response $response, $args)
 	{
-		$this->view->render($response, 'maps.twig');
+		$user_no = $_SESSION['user_no'];
+		$sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+
+		$username = $result['username'];
+		$email = $result['email'];
+		$this->view->render($response, 'maps.twig', ['username'=>$username, 'email'=>$email]);
 	}
 }

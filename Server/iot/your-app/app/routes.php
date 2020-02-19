@@ -59,11 +59,41 @@ $app->post('/changePassword', 'App\Controller\UserManagement:changePassword')
     ->setName('changePassword');
 
 //DataManagement route (Not sure to make. If functions in DataManagement is not called from FrontEnd, This section dosen't need.)
-$app->get('/air_data_transfer', 'App\Controller\DataManagement:air_data_transfer')
-    ->setName('air_data_transfer');
+$app->get('/db_data_for_map', 'App\Controller\DataManagement:db_data_for_map')
+    ->setName('db_data_for_map');
 
 $app->get('/map_view', 'App\Controller\DataManagement:map_view')
     ->setName('map_view');
 
 $app->get('/senser_view', 'App\Controller\DataManagement:senser_view')
     ->setName('senser_view');
+
+$app->get('/fakesensors_as_json', 'App\Controller\DataManagement:fakesensors_as_json')
+    ->setName('fakesensors_as_json');
+
+$app->get('/charts/chartdata-as-json', 'App\Controller\ChartsController:chart1_json')
+    ->setName('/chart1_json');
+
+$app->get('/charts/chart1', 'App\Controller\ChartsController:chart1')
+    ->setName('/chart1');
+
+$app->get('/charts/dynamic_chart_json', 'App\Controller\ChartsController:dynamic_chart_json')
+    ->setName('/dynamic_chart_json');
+
+$app->get('/charts/chart2_json', 'App\Controller\ChartsController:chart2_json')
+    ->setName('/chart2_json');
+
+$app->get('/charts/chart3_json', 'App\Controller\ChartsController:chart3_json')
+    ->setName('/chart3_json');
+
+$app->get('/charts/chart3', 'App\Controller\ChartsController:chart3')
+    ->setName('/chart3');
+
+$app->get('/air_chart', 'App\Controller\ChartsController:air_chart')
+    ->setName('/air_chart');
+
+$app->get('/heart_chart', 'App\Controller\ChartsController:heart_chart')
+    ->setName('/heart_chart');
+
+$app->get('/charts/receive_combobox', 'App\Controller\ChartsController:receive_combobox')
+    ->setName('/charts/receive_combobox');

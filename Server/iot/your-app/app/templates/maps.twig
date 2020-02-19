@@ -1,48 +1,338 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <title>Simple Markers</title>
-    <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 80%;
-        width: 80%;
-        margin: 0px 10% 0px 10%;
-        padding: 0;
-      }
-      .img_logo {
-        float: left;
-        width: 320px;
-        height: auto;
-      }
-      .nav {
-        float: right;
-        font-weight: bold;
-        color: #27ae60;
-        margin: 0px 0px 0px 20px;
-      }
-      #map {
-        
-      }
-    </style>
-  </head>
-  <body>
-    <img class = "img_logo" src="images/logo.png" alt="logo">
-    <br><br><a href="login" class="nav">Sign Out</a>
-    <a href="id_cancelation_page" class="nav">ID Cancellation</a>
-    <a href="change_password_page" class="nav">Change Password</a><br><br><br><br>
-    
-    <div id="map"></div>
-    <script>
+<html lang="en">
 
-      function initMap() {
+<head>
+    <script type='text/javascript' src='http://code.jquery.com/jquery.min.js'></script>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="au theme template">
+    <meta name="author" content="Hau Nguyen">
+    <meta name="keywords" content="au theme template">
+    
+    <!-- Title Page-->
+    <title>Suite Car</title>
+
+    <!-- Fontfaces CSS-->
+    <link href="css/font-face.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" media="all">
+    <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+
+    <!-- Bootstrap CSS-->
+    <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
+
+    <!-- Vendor CSS-->
+    <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
+    <link href="vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
+    <link href="vendor/wow/animate.css" rel="stylesheet" media="all">
+    <link href="vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" media="all">
+    <link href="vendor/slick/slick.css" rel="stylesheet" media="all">
+    <link href="vendor/select2/select2.min.css" rel="stylesheet" media="all">
+    <link href="vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" media="all">
+    <link href="vendor/vector-map/jqvmap.min.css" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="css/theme.css" rel="stylesheet" media="all">
+
+</head>
+
+<body class="animsition">
+    <div class="page-wrapper">
+        <!-- HEADER MOBILE-->
+        <header class="header-mobile d-block d-lg-none">
+            <div class="header-mobile__bar">
+                <div class="container-fluid">
+                    <div class="header-mobile-inner">
+                        <a class="logo" href="index.html">
+                            <img src="images/icon/logo.png" alt="CoolAdmin" />
+                        </a>
+                        <button class="hamburger hamburger--slider" type="button">
+                            <span class="hamburger-box">
+                                <span class="hamburger-inner"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- END HEADER MOBILE-->
+
+        <!-- MENU SIDEBAR-->
+        <!-- END MENU SIDEBAR-->
+
+        <!-- PAGE CONTAINER-->
+        <div class="page-container">
+            <!-- HEADER DESKTOP-->
+            <header id="header-desktop">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="logo">
+                            <a href="#">
+                                <img src="images/icon/logo.png" alt="Suite Car" />
+                            </a>
+                        </div>
+                        <div class="header-wrap">
+                            <div class="header-button">         
+                                <a href="maps" class="nav">MAP</a>
+                                <a href="charts" class="nav">CHART</a>
+                                <div class="account-wrap">
+                                    <div class="account-item clearfix js-item-menu">
+                                        <div class="image">
+                                            <img src="images/icon/avatar-03.jpg" alt="J3SUNG" />
+                                        </div>
+                                        <div class="content">
+                                            <a class="js-acc-btn" href="#">{{username}}</a>
+                                        </div>
+                                        <div class="account-dropdown js-dropdown">
+                                            <div class="info clearfix">
+                                                <div class="image">
+                                                    <a href="#">
+                                                        <img src="images/icon/avatar-03.jpg" alt="J3SUNG" />
+                                                    </a>
+                                                </div>
+                                                <div class="content">
+                                                    <h5 class="name">
+                                                        <a href="#">{{username}}</a>
+                                                    </h5> 
+                                                    <span class="email">{{email}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="account-dropdown__body">
+                                                <div class="account-dropdown__item">
+                                                    <a href="change_password_page">
+                                                        <i class="zmdi zmdi-account"></i>Password Change</a>
+                                                </div>
+                                                <div class="account-dropdown__item">
+                                                    <a href="id_cancelation_page">
+                                                        <i class="zmdi zmdi-settings"></i>ID Cancellation</a>
+                                                </div>
+                                                <div class="account-dropdown__item">
+                                                    <a href="signout">
+                                                        <i class="zmdi zmdi-power"></i>Sign Out</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- END HEADER DESKTOP-->
+
+            <div class="main-content" id="back_maps">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12 m-t-20">
+                                <!-- MAP DATA-->
+                                <div id="map"></div>
+                                <script type = "text/javascript">
+                                var myLocation;
+                                var centerLocation;
+                                var array = [
+                                    {
+                                        name: "nice",
+                                            x: 25.4212, 
+                                            y: 55.4535
+                                    }
+                                ];
+
+                                $.map_update = (function(){
+                                    $.ajax({    
+                                        type : "POST",  
+                                        url : "./fakesensors_as_json",
+                                        dataType : "json",
+                                        succes : function(data) {
+                                            alert(data);
+                                            $.each(data, function (index, item){
+                                                array.append
+                                                array[index]['name'] = item.name;
+                                                array[index]['x'] = item.x;
+                                                array[index]['y'] = item.y;
+                                            })
+                                        },
+                                        error : function(data) {
+                                            alert("There is something wrong. ");
+                                        }
+                                    })();
+                                });              
+                                </script>
+                                <script>
+                                var map;
+                                var activeInfoWindow;
+
+                                var get_json_data = (function(){
+                                    var json = null;
+                                    $.ajax({
+                                        'async': false,
+                                        'global':false,
+                                        'url' : "/db_data_for_map",
+                                        'dataType' : "json",
+                                        'success' : function(data) {
+                                            json = data;
+                                        },
+                                        'error' : function(data) {
+                                            alert("There is something wrong. ");
+                                        }
+                                    });
+                                    return json;
+                                })();
+
+                                function initMap() {
+                                    var options = {
+                                        center : {
+                                            lat : 37.0000,
+                                            lng : 37.0000
+                                        },
+                                        zoom : 5,
+                                        mapTypeId : google.maps.MapTypeId.TERRAIN
+                                    }
+                                    map = new google.maps.Map(document.getElementById("map"), options);
+                                    create_mark(get_json_data);
+                                }
+
+                                function create_mark(json_data) {
+                                    for(var index in json_data) {
+                                        var data_info = json_data[index];
+                                        var data_color;
+                                        if(data_info.PM25_aqi <= 50) {
+                                            data_color = '#00FF00';
+                                        }
+                                        else if(data_info.PM25_aqi > 50 && data_info.PM25_aqi <=100) {
+                                            data_color = '#FFFF00';
+                                        }
+                                        else if(data_info.PM25_aqi > 100 && data_info.PM25_aqi <= 150) {
+                                            data_color = '#FF8000';
+                                        }
+                                        else if(data_info.PM25_aqi > 150 && data_info.PM25_aqi <= 200) {
+                                            data_color = '#FF0000';
+                                        }
+                                        else if(data_info.PM25_aqi > 200 && data_info.PM25_aqi <= 300) {
+                                            data_color = '#FF00BF';
+                                        }
+                                        else if(data_info.PM25_aqi > 300 && data_info.PM25_aqi <= 500) {
+                                            data_color = '#8A2908';
+                                        }
+                                        else {
+                                            data_color = '#000000';
+                                        }
+                                        
+                                        contents = "<div><h1>" + data_info.username + "\'s Sensor" + "</h1></div><br>"
+                                                               + "CO : " + data_info.CO_aqi + "<br>SO2 : " + data_info.SO2_aqi + "<br>NO2 : "
+                                                               + data_info.NO2_aqi + "<br>O3 : " + data_info.O3_aqi + "<br>PM2.5 : " + data_info.PM25_aqi
+                                                               + "</string></div>";
+
+                                        var marker = new google.maps.Circle({
+                                            map : map,
+                                            center : data_info.center,
+                                            radius : 70000,
+                                            strokeColor: data_color,
+                                            strokeOpacity : 0.8,
+                                            strokeWeight : 2,
+                                            fillColor : data_color,
+                                            fillOpacity : 0.5,
+                                            draggable : false
+                                        });
+                                        marker.content = contents;
+
+                                        var infowindow = new google.maps.InfoWindow();
+
+                                        google.maps.event.addListener(marker, 'click', function() {
+                                            infowindow.setContent(this.content);
+                                            infowindow.setPosition(this.getCenter());
+                                            infowindow.open(map);
+                                        });
+                                    }
+                                }
+                                </script>
+                                <!-- END MAP DATA-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Map -->
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4E2DLjl0PUtVHjQruVcL0GJgmamn4UgY&callback=initMap">
+    </script>
+    <!-- Jquery JS-->
+    <script src="vendor/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap JS-->
+    <script src="vendor/bootstrap-4.1/popper.min.js"></script>
+    <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
+    <!-- Vendor JS       -->
+    <script src="vendor/slick/slick.min.js">
+    </script>
+    <script src="vendor/wow/wow.min.js"></script>
+    <script src="vendor/animsition/animsition.min.js"></script>
+    <script src="vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
+    </script>
+    <script src="vendor/counter-up/jquery.waypoints.min.js"></script>
+    <script src="vendor/counter-up/jquery.counterup.min.js">
+    </script>
+    <script src="vendor/circle-progress/circle-progress.min.js"></script>
+    <script src="vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="vendor/chartjs/Chart.bundle.min.js"></script>
+    <script src="vendor/select2/select2.min.js">
+    </script>
+    <script src="vendor/vector-map/jquery.vmap.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.min.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.sampledata.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.world.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.brazil.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.europe.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.france.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.germany.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.russia.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.usa.js"></script>
+
+    <!-- Main JS-->
+    <script src="js/main.js"></script>
+
+    <script type = "text/javascript">
+    var myLocation = new Array();
+    var centerLocation = new Array();
+
+    $.map_update = (function(){
+        $.ajax({
+            type : "POST",
+            url : "./db_data_for_map",
+            dataType : "json",
+            succes : function(data) {
+                alert(data[0]['latitude']);
+                for(i = 0; i < data.length; i++) {
+                    myLocation = {
+                        latitude : data[i]['latitude'],
+                        longtitude : data[i]['longtitude']
+                    }
+                    
+                }
+                centerLocation = {
+                    latitude : data[0]['latitude'],
+                    longtitude : data[0]['longtitude']
+                }
+            },
+            error : function(data) {
+                alert("There is something wrong. ");
+            }
+        });
+    });
+    </script>
+
+</body>
+
+</html>
+<!-- end document-->
+<!--
+<script type='text/javascript'>
+var myLocation[];
+var currentLocation[];
+function initMap() {
         var myLatLng = {lat: -25.363, lng: 131.044};
 
         var map = new google.maps.Map(document.getElementById('map'), {
@@ -56,9 +346,26 @@
           title: 'Hello World!'
         });
       }
-    </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4E2DLjl0PUtVHjQruVcL0GJgmamn4UgY&callback=initMap">
-    </script>
-  </body>
-</html>
+
+$.map_update = (function(){
+    $.ajax({
+        type : "POST",
+        url : "./db_data_for_map",
+        dataType : "json",
+        success : function(data) {
+            myLocation = {
+                lat : data['latitude'],
+                lot : data['longitude']
+            },
+            centerLocation = {
+                lat : data['latitude'],
+                lot : data['longitude']
+            }
+        },
+        error : function(data) {
+            alert("There is something wrong.");
+        }
+    });
+});
+</script>
+-->

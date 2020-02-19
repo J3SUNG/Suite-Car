@@ -346,6 +346,8 @@ final class UserManagement extends BaseController
 		$first_name = $_POST['first_name'];
 		$last_name = $_POST['last_name'];
 
+		//echo "$username, $email, $password, $phone_number";
+
 		//data for email phpmailer
 		$hash_password = password_hash($password, PASSWORD_DEFAULT);
 		$auth_code = password_hash($username, PASSWORD_DEFAULT);
@@ -361,13 +363,10 @@ final class UserManagement extends BaseController
 		$stmt->execute();
 		$temp_result = $stmt->fetch();
 		$username_db_Auths = $temp_result['username'];
-
-		echo "Auth : $username_db_Auths<br>";
-		echo "User : $username_db_Users<br>";
 		
 		if($username_db_Users != null || $username_db_Auths != null) {
-			echo "<script>alert(\"This Username is already registered or on procedure to be authorized Try other Username.\");</script>";
-			echo "<script>location.replace('signup')</script>";
+			echo "This Username is already registered or on procedure to be authorized Try other Username.";
+			//echo "<script>location.replace('signup')</script>";
         }
 
 		//modify with java script
@@ -395,9 +394,9 @@ final class UserManagement extends BaseController
 		//fail, move to default page : login page
 		else
 		{
-			echo "<script>alert(\"Please Enter Every Information.\");</script>";
-			echo "<script>location.replace('signup')</script>";
-        }
+			echo "Please Enter Every Information.";
+			//echo "<script>location.replace('signup')</script>";
+		}
 	}
 
 	//e-mail link click : authorization function
