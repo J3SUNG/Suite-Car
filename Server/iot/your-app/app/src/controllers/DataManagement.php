@@ -26,6 +26,20 @@ final class DataManagement extends BaseController
 				/*WHERE STR_TO_DATE(b.time_in, '%Y-%m-%d') - STR_TO_DATE(CURRENT_DATE, '%Y-%m-%d') = 0
 				AND TIME(CURRENT_TIME) - TIME(b.time_in) < 5000000*/
 				;";
+		/*
+		$sql = "SELECT a.*, Sensors.sname
+				FROM Air_data AS a
+				JOIN Sensors
+				ON Sensors.sensor_no = a.sensor_no
+				JOIN( 
+					SELECT sensor_no, MAX(time_in) time_in 
+					FROM Air_data 
+					GROUP BY sensor_no) AS b 
+				ON a.sensor_no = b.sensor_no AND a.time_in = b.time_in
+				WHERE (NOT a.latitude > -165) OR (NOT a.longitude > 70)
+				OR (NOT a.latitude < 150) OR (NOT a.longitude < -20)
+				;";
+		*/
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
