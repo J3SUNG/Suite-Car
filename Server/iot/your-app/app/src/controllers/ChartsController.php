@@ -14,13 +14,29 @@ final class ChartsController extends BaseController
             $type = $_GET['type'];
             $view_type = $_GET['view_type'];
 
+            if($view_type == 0){
+                $sql = "SELECT * 
+                    FROM Air_data 
+                    WHERE sensor_no = :sensor_no 
+                    ORDER BY time_in DESC LIMIT 1";
+                $stmt = $this->em->getConnection()->prepare($sql);
+                $params['sensor_no'] = $sensor_no;
+                $stmt->execute($params);
+                $result = $stmt->fetch(); 
+
+                $current_date  = date("Y-m-d H:i:s" , strtotime($second."-10 seconds"));
+                
+                if($result['time_in'] < $current_date){
+                    return "";
+                }
+            }
             if($type == 0){
                 if($view_type == 0){
                     $sql = "SELECT * 
-                    from Air_data 
-                    WHERE sensor_no = :sensor_no
-                    ORDER BY time_in
-                    LIMIT 10";
+                    FROM (SELECT * 
+                        FROM Air_data 
+                        WHERE sensor_no = :sensor_no 
+                        ORDER BY time_in DESC LIMIT 10) A ORDER BY A.time_in";
                     $stmt = $this->em->getConnection()->prepare($sql);
                     $params['sensor_no'] = $sensor_no;
                     $stmt->execute($params);
@@ -74,6 +90,7 @@ final class ChartsController extends BaseController
             if ($result && $type == 0 && $view_type == 0) {
                 $json_array['cols'] = array(
                     array('id'=>'', 'label'=>'date/time', 'type'=>'string'),
+                    array('id'=>'', 'label'=>'Temperature', 'type'=>'number'),
                     array('id'=>'', 'label'=>'CO', 'type'=>'number'),
                     array('id'=>'', 'label'=>'SO2', 'type'=>'number'),
                     array('id'=>'', 'label'=>'O3', 'type'=>'number'),
@@ -84,6 +101,7 @@ final class ChartsController extends BaseController
                 foreach ($result as $row) {
                     $sensor_array = array();
                     $sensor_array[] = array('v'=>$row['time_in']);
+                    $sensor_array[] = array('v'=>$row['temperature']);
                     $sensor_array[] = array('v'=>$row['CO_aqi']);
                     $sensor_array[] = array('v'=>$row['SO2_aqi']);
                     $sensor_array[] = array('v'=>$row['O3_aqi']);
@@ -102,6 +120,7 @@ final class ChartsController extends BaseController
             else if ($result && $type == 0 && $view_type == 1) {
                 $json_array['cols'] = array(
                     array('id'=>'', 'label'=>'date/time', 'type'=>'string'),
+                    array('id'=>'', 'label'=>'Temperature', 'type'=>'number'),
                     array('id'=>'', 'label'=>'CO_raw', 'type'=>'number'),
                     array('id'=>'', 'label'=>'SO2_raw', 'type'=>'number'),
                     array('id'=>'', 'label'=>'O3_raw', 'type'=>'number'),
@@ -117,6 +136,7 @@ final class ChartsController extends BaseController
                 foreach ($result as $row) {
                     $sensor_array = array();
                     $sensor_array[] = array('v'=>$row['time_in']);
+                    $sensor_array[] = array('v'=>$row['temperature']);
                     $sensor_array[] = array('v'=>$row['CO_raw']);
                     $sensor_array[] = array('v'=>$row['SO2_raw']);
                     $sensor_array[] = array('v'=>$row['O3_raw']);
