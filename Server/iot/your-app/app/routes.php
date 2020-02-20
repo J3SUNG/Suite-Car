@@ -106,3 +106,21 @@ $app->get('/team', 'App\Controller\HomeController:team')
 
 $app->get('/list_view', 'App\Controller\HomeController:list_view')
     ->setName('/list_view');
+
+    //SensorManagement route
+$app->get('/sensorList', 'App\Controller\SensorManagement:sensorList')
+->setName('sensorList');
+
+$app->post('/sensorRegistration', 'App\Controller\SensorManagement:sensorRegistration')
+->setName('sensorRegistration');
+
+$app->post('/sensorDeRegistration', 'App\Controller\SensorManagement:sensorDeRegistration')
+->setName('sensorDeRegistration');
+
+$app->post('/sensorAssociation', 'App\Controller\SensorManagement:sensorAssociation')
+->setName('sensorAssociation');
+
+$app->post('/polarDataTransfer', 'App\Controller\SensorManagement:polarDataTransfer')
+->setName('polarDataTransfer');
+$app->post('/udooDataTransfer', 'App\Controller\SensorManagement:udooDataTransfer')
+->setName('udooDataTransfer');

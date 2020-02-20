@@ -31,6 +31,7 @@ class Map : OnMapReadyCallback {
     val context: Context
     var sensorsMarkers = ArrayList<Marker>()
     var sensorCircles = ArrayList<Circle>()
+    var airInfoForMaps= ArrayList<AirInfoForMap>()
     override fun onMapReady(p0: GoogleMap?) {
         Log.d("Map", "Map is ready" + p0)
         mMap = p0
@@ -131,7 +132,7 @@ class Map : OnMapReadyCallback {
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
-    fun refreshMarker(airInfoForMaps: ArrayList<AirInfoForMap>) {
+    fun refreshMarker() {
         for (i in sensorsMarkers) {
             i.remove()
         }

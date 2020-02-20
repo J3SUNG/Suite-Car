@@ -86,13 +86,13 @@
                 android:layout_centerInParent="true"
                 android:onClick="onClick"
                 android:text="Suite" />
-            <!--            <Button
+                       <Button
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="inair"
                             android:id="@+id/testbutton"
                             android:onClick="onClick"/>
-                        <Button
+            <!--             <Button
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="outair"

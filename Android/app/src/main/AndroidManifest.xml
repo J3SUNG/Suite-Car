@@ -23,10 +23,13 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ui.heart.HeartActivity"></activity>
         <activity
-            android:name=".ui.dialog.DeviceListActivity"
+            android:name=".ui.dialog.DeviceListDialog"
             android:theme="@style/myDialog" />
         <activity
-            android:name=".ui.dialog.AddSensorActivity"
+            android:name=".ui.dialog.AddSensorDialog"
+            android:theme="@style/myDialog" />
+        <activity
+            android:name=".ui.dialog.AirInfoOptionDialog"
             android:theme="@style/myDialog" />
 
         <activity android:name=".ui.airinfo.AirInfoActivity" />
