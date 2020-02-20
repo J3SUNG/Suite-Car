@@ -35,12 +35,58 @@ class Fitting {
     }
 
     fun fitting(
-        car_temp_in: Int,
-        car_temp_out: Int,
-        car_air_in: Int,
-        car_air_out: Int
+        car_temp_in_real: Int,
+        car_temp_out_real: Int,
+        car_air_in_real: Int,
+        car_air_out_real: Int
     ): ArrayList<Action> {
         //TODO:실측값으로 변경
+
+        var car_temp_in: Int
+        var car_temp_out: Int
+        var car_air_in: Int
+        var car_air_out: Int
+
+        if(car_temp_in_real > 23){
+            car_temp_in = H
+        }
+        else if(car_temp_in_real < 8){
+            car_temp_in = C
+        }
+        else{
+            car_temp_in = N
+        }
+
+        if(car_temp_out_real > 23){
+            car_temp_out = H
+        }
+        else if(car_temp_in_real < 8){
+            car_temp_out = C
+        }
+        else{
+            car_temp_out = N
+        }
+
+        if(car_air_in_real < 160){
+            car_air_in = GOOD
+        }
+        else if(car_air_in_real < 330){
+            car_air_in = NORMAL
+        }
+        else {
+            car_air_in = BAD
+        }
+
+        if(car_air_out_real < 160){
+            car_air_out = GOOD
+        }
+        else if(car_air_out_real < 330){
+            car_air_out = NORMAL
+        }
+        else{
+            car_air_out = BAD
+        }
+
         if (car_air_in == GOOD) {    // 차량 안 공기 맑음
             if (car_air_out == GOOD) {
                 for (i in 0..7) {    // 모든 경우 다 가능
