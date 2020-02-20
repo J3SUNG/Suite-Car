@@ -131,7 +131,7 @@
                             <div class="row">
                                 <div class="col-md-12 m-t-20">
                                     <div class="sensor_title">
-                                        <h3>Air Sensor Data</h3>
+                                        Air Sensor Data
                                     </div><br>
                                     <div class="sensor_no"> sensor_no : &nbsp </div>
                                     <form name="combobox" class="combobox">
@@ -229,15 +229,8 @@
                                                 var data = new google.visualization.DataTable(jsonData);
                                                 
                                                 var options = {
-                                                    title: 'Air Data Chart',
                                                     curveType: 'function',
-                                                    series: {
-                                                        0: { color: '#ff111d'},
-                                                        1: { color: '#c784de'},
-                                                        2: { color: '#f1ca3a'},
-                                                        3: { color: '#2980b9'},
-                                                        4: { color: '#e67e22'}
-                                                    }
+                                                    vAxis: {minValue:0}
                                                 };
                                                 
                                                 var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
@@ -376,9 +369,9 @@
                                     <div class = "date_submit_box" id = "date_submit">
                                         <input type="date" class = "userdate" id="userdate1" name="userdate1">
                                         <input type="time" class = "userdate m-r-30" id="usertime1" name="usertime1">
-                                        <input type="date" class = "userdate m-r-30" id="userdate2" name="userdate2">
+                                        <input type="date" class = "userdate m-r-30 m-l-30" id="userdate2" name="userdate2">
                                         <input type="time" class = "userdate" id="usertime2" name="usertime2">
-                                        <button type = "button" class = "button_date_submit" id = "button_date_submit">Submit</button>
+                                        <button type = "button" class = "button_date_submit m-l-20" id = "button_date_submit">Submit</button>
                                     </div>
                                     
                                     <script>

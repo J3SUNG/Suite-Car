@@ -128,8 +128,8 @@
                 </header>
                 <!-- END HEADER DESKTOP-->
                 <div class = "list_view_title m-t-150">
-                    <h1>List View<h1>
-                </div><br><br>
+                    List View
+                </div>
                 {# <div class = "list_view_div">
                     <div class = "list_view_box">
                         <div class = "list_view_image">
@@ -174,13 +174,29 @@
                     var sname = data[index].sname;
                     var type = data[index].type;
                     var url;
-                    if(type == 'A'){
-                        url = "images/wind.gif";
-                    }
-                    else{
+                    var sensor_type;
+                    
+                    if(type == 'POLARSENSOR'){
+                        sensor_type = "type_heart";
                         url = "images/heart.gif";
                     }
-                    var newDivHtml = "<div class = \"list_view_div\"> <div class = \"list_view_box\"> <div class = \"list_view_image\"> <img class = \"list_view_image_circle\" src=\"" + url + "\" alt=\"Suite Car\"> </div> <div class = \"list_view_text\"> <div> Sensor_no : " + sensor_no + " </div> <div class = \"m-t-30\"> Sensor Name : " + sname + " </div> <div class = \"m-t-30\"> type : " + type + " </div> </div> </div> </div>";
+                    else if(type == 'INAIRSENSOR'){
+                        sensor_type = "type_air_in";
+                        url = "images/wind.gif";
+                    }
+                    else if(type == 'OUTAIRSENSOR'){
+                        sensor_type = "type_air_out";
+                        url = "images/wind2.gif";
+                    }
+                    else if(type == 'CAR'){
+                        sensor_type = "type_car";
+                        url = "images/car.gif";
+                    }
+                    else{
+                        sensor_type = "type_addsensor";
+                        url = "images/addsensor.png";
+                    }
+                    var newDivHtml = "<div class = \"list_view_div\"> <div class = \"list_view_box " + sensor_type + "\"> <div class = \"list_view_image\"> <img class = \"list_view_image_circle\" src=\"" + url + "\" alt=\"Suite Car\"> </div> <div class = \"list_view_text\"> <div> Sensor_no : " + sensor_no + " </div> <div> Sensor Name : " + sname + " </div> <div> type : " + type + " </div> </div> </div> </div>";
                     document.body.innerHTML = document.body.innerHTML + "" + newDivHtml;
                 }
                 sensor_no = $("#combo option:selected").val();

@@ -84,12 +84,12 @@ final class ChartsController extends BaseController
                 foreach ($result as $row) {
                     $sensor_array = array();
                     $sensor_array[] = array('v'=>$row['time_in']);
-                        $sensor_array[] = array('v'=>$row['CO_aqi']);
-                        $sensor_array[] = array('v'=>$row['SO2_aqi']);
-                        $sensor_array[] = array('v'=>$row['O3_aqi']);
-                        $sensor_array[] = array('v'=>$row['PM2.5_aqi']);
-                        $sensor_array[] = array('v'=>$row['NO2_aqi']);
-                   
+                    $sensor_array[] = array('v'=>$row['CO_aqi']);
+                    $sensor_array[] = array('v'=>$row['SO2_aqi']);
+                    $sensor_array[] = array('v'=>$row['O3_aqi']);
+                    $sensor_array[] = array('v'=>$row['PM25_aqi']);
+                    $sensor_array[] = array('v'=>$row['NO2_aqi']);
+
                     $rows[] = array('c'=>$sensor_array);
                 }
             
@@ -120,12 +120,12 @@ final class ChartsController extends BaseController
                     $sensor_array[] = array('v'=>$row['CO_raw']);
                     $sensor_array[] = array('v'=>$row['SO2_raw']);
                     $sensor_array[] = array('v'=>$row['O3_raw']);
-                    $sensor_array[] = array('v'=>$row['PM2.5_raw']);
+                    $sensor_array[] = array('v'=>$row['PM25_raw']);
                     $sensor_array[] = array('v'=>$row['NO2_raw']);
                     $sensor_array[] = array('v'=>$row['CO_aqi']);
                     $sensor_array[] = array('v'=>$row['SO2_aqi']);
                     $sensor_array[] = array('v'=>$row['O3_aqi']);
-                    $sensor_array[] = array('v'=>$row['PM2.5_aqi']);
+                    $sensor_array[] = array('v'=>$row['PM25_aqi']);
                     $sensor_array[] = array('v'=>$row['NO2_aqi']);
                     $rows[] = array('c'=>$sensor_array);
                 }
@@ -200,14 +200,14 @@ final class ChartsController extends BaseController
         //air data receive
         
         if($type == 0){
-            $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND type = 'A'";
+            $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND type = 'INAIRSENSOR' OR type = 'OUTAIRSENSOR'";
             $stmt = $this->em->getConnection()->prepare($sql);
             $params['user_no'] = $user_no;
             $stmt->execute($params);
         }
         //heart data receive
         else if($type == 1){
-            $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND type = 'H' LIMIT 1";
+            $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND type = 'POLARSENSOR' LIMIT 1";
             $stmt = $this->em->getConnection()->prepare($sql);
             $params['user_no'] = $user_no;
             $stmt->execute($params);
