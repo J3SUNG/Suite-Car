@@ -17,9 +17,9 @@ interface IServer {
         @Field("phone") phone: String
     ): Call<ResponseBody>
 
-    @POST("signIn")
+    @POST("signin")
     @FormUrlEncoded
-    fun signIn(
+    fun signin(
         @Field("device") device: Int,
         @Field("username") username: String,
         @Field("password") password: String
@@ -82,14 +82,6 @@ interface IServer {
         @Field("sensor_no") sensor_no: Int
     ): Call<ResponseBody>
 
-    @POST("sensorAssociation")
-    @FormUrlEncoded
-    fun sensorAssociation(
-        @Field("device") device: Int,
-        @Field("sensor_no") sensor_no: Int,
-        @Field("status") status: Int
-    ): Call<ResponseBody>
-
     @POST("polarDataTransfer")
     @FormUrlEncoded
     fun polarDataTransfer(
@@ -126,4 +118,14 @@ interface IServer {
 
     @GET("db_data_for_map")
     fun db_data_for_map(): Call<ResponseBody>
+
+    @GET("charts/chart2_json")
+    fun chart2_json(
+        @Query("user_no") user_no: Int,
+        @Query("sensor_no") sensor_no: Int,
+        @Query("type") type: Int,
+        @Query("view_type") view_type: Int,
+        @Query("start_date") start_date: String,
+        @Query("end_date") end_date: String
+    ): Call<ResponseBody>
 }

@@ -15,11 +15,11 @@ import com.qic.suitecar.R
 import com.qic.suitecar.util.Constants.OKAY
 import kotlinx.android.synthetic.main.activity_device_list.*
 
-class DeviceListActivity : Activity() {
+class DeviceListDialog : Activity() {
     /**
      * Tag for Log
      */
-    private val TAG = "DeviceListActivity"
+    private val TAG = "DeviceListDialog"
 
     /**
      * Return Intent extra

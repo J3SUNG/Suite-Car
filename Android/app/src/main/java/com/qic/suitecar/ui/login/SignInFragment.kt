@@ -47,7 +47,7 @@ class SignInFragment : Fragment(), View.OnClickListener {
             return
         }
         Runnable {
-            myApi.signIn(1, username!!, password!!).enqueue(object :
+            myApi.signin(1, username!!, password!!).enqueue(object :
                 retrofit2.Callback<ResponseBody> {
                 override fun onResponse(
                     call: Call<ResponseBody>,

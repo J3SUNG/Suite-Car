@@ -7,11 +7,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:background="@color/mGreen"
+        android:gravity="center"
+        android:text="Chart Option"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:text="Chart Option"/>
+        android:textSize="20sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100dp">
@@ -20,10 +21,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="3dp"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <RadioGroup
+                android:id="@+id/viewTypeGroup"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center">
@@ -31,125 +32,136 @@
                 <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="In AirSensor" />
+                    android:checked="true"
+                    android:text="Realtime" />
 
                 <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="out AirSensor" />
+                    android:text="Historical" />
 
             </RadioGroup>
         </LinearLayout>
+
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/mGreen"/>
+            android:background="@color/mGreen" />
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_margin="3dp"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <RadioGroup
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <CheckBox
+                    android:id="@+id/pm25Check"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:onClick="onCheck"
+                    android:text="PM2.5" />
 
-                    <RadioButton
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="AQI" />
+                <CheckBox
+                    android:id="@+id/so2Check"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="onCheck"
+                    android:text="SO2" />
 
-                    <RadioButton
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="PM10" />
+                <CheckBox
+                    android:id="@+id/tempCheck"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="onCheck"
+                    android:text="Temp" />
+            </LinearLayout>
 
-                    <RadioButton
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="PM2.5" />
-                </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <RadioButton
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="NO2" />
-                    <RadioButton
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="O3" />
+                <CheckBox
+                    android:id="@+id/no2Check"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="onCheck"
+                    android:text="NO2" />
 
-                    <RadioButton
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="CO" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <RadioButton
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="SO2" />
-                    <RadioButton
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="NH3" />
-                    <RadioButton
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="Pb" />
-                </LinearLayout>
-            </RadioGroup>
+                <CheckBox
+                    android:id="@+id/o3Check"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="onCheck"
+                    android:text="O3" />
+
+                <CheckBox
+                    android:id="@+id/coCheck"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="onCheck"
+                    android:text="CO" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/mGreen"/>
+        android:background="@color/mGreen" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="3dp">
-        <EditText
+
+        <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
-            android:hint="YY.MM.DD.hh.mm.ss"/>
+            android:id="@+id/startDate"
+            android:hint="YY.MM.DD.hh.mm.ss"
+            android:onClick="onClick"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="~"/>
-        <EditText
+            android:text="~" />
+
+        <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
-            android:hint="YY.MM.DD.hh.mm.ss"/>
+            android:id="@+id/endDate"
+            android:hint="YY.MM.DD.hh.mm.ss"
+            android:onClick="onClick"/>
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/mGreen"/>
+        android:background="@color/mGreen" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -157,17 +169,21 @@
         android:orientation="horizontal">
 
         <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
+            android:id="@+id/airInfoOptionSubmit"
             style="@style/normalButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="onClick"
             android:text="Submit" />
 
         <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
+            android:id="@+id/airInfoOptionCancel"
             style="@style/normalButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="onClick"
             android:text="Cancel" />
     </LinearLayout>
 </LinearLayout>
