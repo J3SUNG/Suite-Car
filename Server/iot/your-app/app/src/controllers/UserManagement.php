@@ -180,6 +180,8 @@ final class UserManagement extends BaseController
 	public function home(Request $request, Response $response, $args)
     {
 		$user_no = $_SESSION['user_no'];
+
+		if($user_no != null) {
         $sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
@@ -188,7 +190,13 @@ final class UserManagement extends BaseController
 		$username = $result['username'];
 		$email = $result['email'];
     	
-		$this->view->render($response, 'home.twig', ['username'=>$username, 'email'=>$email]);	
+		$this->view->render($response, 'home.twig', ['username'=>$username, 'email'=>$email]);
+		}
+
+		else {
+			echo "<script>alert(\"Unexcepted Approach. Please login first.\");</script>";
+			echo "<script>location.replace('login')</script>";
+		}
 	}
 
 	public function signout(Request $request, Response $response, $args)
@@ -258,15 +266,17 @@ final class UserManagement extends BaseController
 	public function id_cancelation(Request $request, Response $response, $args)
     {
 		//get input data from web
-		$username = $_SESSION['username'];
+		//$username = $_SESSION['username'];
+		$user_no = $_SESSION['user_no'];
 		$password = $_POST['password'];
 
 		//check login_flag for safety
-		$sql = "SELECT login_flag FROM Users WHERE username='$username';";
+		$sql = "SELECT login_flag FROM Users WHERE user_no='$user_no';";
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
 		$temp_result = $stmt->fetch();
 		$login_flag = $temp_result['login_flag'];
+		//echo "$login_flag\n";
 
 		//actual login_flag check for safety
 		if($login_flag == 2){}
@@ -276,13 +286,13 @@ final class UserManagement extends BaseController
 		}
 
 		//get hashed password from database
-		$sql = "SELECT hashed_password FROM Users WHERE username='$username';";
+		$sql = "SELECT hashed_password FROM Users WHERE user_no=$user_no;";
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
 		$temp_result = $stmt->fetch();
 		$hashed_password = $temp_result['hashed_password'];
 
-		echo "$password  ==  $hashed_password";
+		//echo "$password  ==  $hashed_password";
 		//compare and execute the cancelation procedure
 		if(password_verify($password, $hashed_password)) // if inserted password and hashed_password in db is same, execute.
 		{
@@ -295,45 +305,52 @@ final class UserManagement extends BaseController
 			$temp_result = $stmt->fetch();
 			$user_no = $temp_result['user_no'];
 			*/
-			$user_no = $_SESSION['user_no'];
 			
 			//1. delete user_selection table
-			$sql = "DELETE FROM User_selection WHERE (user_no = '$user_no');";
+			$sql = "DELETE FROM User_selection WHERE (user_no = $user_no);";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
+			//echo "no.1 done\n";
 
 			//2. delete heart data table
-			$sql = "DELETE FROM Heart_data WHERE (user_no = '$user_no');";
+			$sql = "DELETE FROM Heart_data WHERE (user_no = $user_no);";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
+			//echo "no.2 done\n";
 
 			//3. delete inner air data
-			$sql = "DELETE Air_data FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE Sensors.type = 'I' 
+			$sql = "DELETE Air_data FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE Sensors.type = 'INAIRSENSOR' 
 					AND Sensors.user_no = $user_no";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
+			//echo "no.3 done\n";
 
 			//4. update outer air data to dummy value
 			$sql = "SET foreign_key_checks = 0;
-					UPDATE Air_data INNER JOIN Sensors ON Sensors.user_no = $user_no SET Air_data.sensor_no = 2147483647 WHERE (Sensors.type='O');";
+					UPDATE Air_data INNER JOIN Sensors ON Sensors.user_no = $user_no SET Air_data.sensor_no = 2147483647 WHERE (Sensors.type='OUTAIRSENSOR');";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
+			//echo "no.4 done\n";
 
 			//5. delete sensor table
-			$sql = "DELETE Sensors FROM Sensors INNER JOIN Users ON Users.user_no = Sensors.user_no;";
+			$sql = "DELETE Sensors FROM Sensors INNER JOIN Users ON Users.user_no = Sensors.user_no WHERE Sensors.user_no = $user_no;";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
+			//echo "no.5 done\n";
 
 			//6. delete user table
-			$sql = "DELETE Users FROM Users WHERE Users.username = '$username';";
+			$sql = "DELETE Users FROM Users WHERE Users.user_no = '$user_no';";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
+			//echo "no.6 done\n";
 
 			//id cancelation success message
+			session_destroy();
 			return "success";
 			}
 			catch(Exception $e)
 			{
+				//echo "catched Exception on DB side\n";
 				return "DB_problem";
 			}
 		}
