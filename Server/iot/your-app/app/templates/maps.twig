@@ -2,6 +2,9 @@
 
 <head>
     <script type='text/javascript' src='http://code.jquery.com/jquery.min.js'></script>
+    <script src="js/jquery-2.0.3.js"></script>
+    <script src="js/app.js"></script>
+
     <!-- Required meta tags-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -44,6 +47,22 @@
             text-align: center;
             color: white;
             float: right;
+        }
+        .input_text {
+            border:0px;
+            font-size: 18px;
+            margin-top: 5px;
+        }
+        .button {
+            background-color: #27ae60;
+            border: none;
+            border-radius: 5px;
+            width: 130px;
+            height: 30px;
+            text-align: center;
+            color: white;
+            float: right;
+            margin-left: 20px;
         }
     </style>
 
@@ -150,11 +169,11 @@
                                 <button onclick="getLocation()">try it</button>-->
                                 <label for="air_selection">Choose Air data</label>
                                 <select id = "air_selection">
-                                    <option value="CO">CO</option>
+                                    <option value="PM25">PM2.5</option>
                                     <option value="SO2">SO2</option>
                                     <option value="NO2">NO2</option>
                                     <option value="O3">O3</option>
-                                    <option value="PM25">PM2.5</option>
+                                    <option value="CO">CO</option>
                                 </select>
                                 <div id="map"></div>
                                 <script>
@@ -164,6 +183,7 @@
                                 var marker = [];
                                 var infowindow = [];
                                 var selection_airdata = 5;
+                                var geocoder;
 
                                 var get_json_data = (function(){
                                     var json = null;
@@ -332,8 +352,66 @@
                                     infowindow = [];
                                 }
                                 setInterval(create_mark, 10000, get_json_data);
+                                
+                                $('#submit').on('click', function() {
+                                    geocoder = new google.maps.Geocoder();
+                                    var address = document.getElementById('address').value;
+                                    geocoder.geocode({'address' : address}, function(results, status) {
+                                        if(status == 'OK') {
+                                            map.setCenter(results[0].geometry.location);
+                                        }
+                                        else {
+                                            alert('Geocode was not successful for the following reason: ' + status);
+                                        }
+                                    });
+                                })
+                                /*
+                                function initialize() {
+                                    geocoder = new google.maps.Geocoder();
+                                }
+
+                                function codeAddress() {
+                                    var address = document.getElementById('address').value;
+                                    geocoder.geocode( { 'address': address}, function(results, status) {
+                                    if (status == 'OK') {
+                                        map.setCenter(results[0].geometry.location);
+                                        var marker = new google.maps.Marker({
+                                            map: map,
+                                            position: results[0].geometry.location
+                                        });
+                                    } else {
+                                        alert('Geocode was not successful for the following reason: ' + status);
+                                    }
+                                    });
+                                }
+                                */
                                 </script>
                                 <!-- END MAP DATA-->
+                                <!--<input id="address" type="text" size="50">
+                                <input id="geo" type="submit" value="submit">-->
+                                <input class = "input_text" type = "text" id = "address" placeholder="Input place"> <br>
+                                <hr class = "hr_w"><br>
+                                <button type = "button" class = "button" id = "submit">Search</button>
+                                <script>
+                                /*
+                                    $(document).ready(function() {
+                                        $('#submit').on('click', function() {
+                                            var geocoder = new google.maps.Geocoder();
+                                            var address = document.getElementById('address').value;
+                                            geocoder.geocode( { 'address': address}, function(results, status) {
+                                            if (status == google.maps.GeocoderStatus.OK) {
+                                                console.log(results[0].geometry.location.lat())
+                                                console.log(results[0].geometry.location.lng())
+                                            } else {
+                                            alert('Geocode was not successful for the following reason: ' + status);
+                                            }
+                                            });
+                                        })
+                                    })
+                                */
+                                    
+
+                                </script>
                             </div>
                         </div>
                     </div>
@@ -341,10 +419,13 @@
             </div>
         </div>
     </div>
-    
+    <!--Geocode -->
+    <script
+    src="https://maps.googleapis.com/maps/api/geocode/json?address="address"&key=AIzaSyDiAPSKH-VpDLtWk9tl3pn1gaF0ZmBTfq0">
+    </script>
     <!-- Map -->
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4E2DLjl0PUtVHjQruVcL0GJgmamn4UgY&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiAPSKH-VpDLtWk9tl3pn1gaF0ZmBTfq0&callback=initMap">
     </script>
     <!-- Jquery JS-->
     <script src="vendor/jquery-3.2.1.min.js"></script>
