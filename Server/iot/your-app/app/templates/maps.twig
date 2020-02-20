@@ -123,7 +123,7 @@
                                                         <i class="zmdi zmdi-settings"></i>ID Cancellation</a>
                                                 </div>
                                                 <div class="account-dropdown__item">
-                                                    <a href="signout">
+                                                    <a id="signout">
                                                         <i class="zmdi zmdi-power"></i>Sign Out</a>
                                                 </div>
                                             </div>
@@ -218,6 +218,7 @@
                                         Math.floor(sw.y * scale));
 
                                     for(var index in json_data) {
+                                        //alert(index);
                                         var data_info = json_data[index];
                                         var data_coordinate = project(data_info.lat, data_info.lng);
                                         var data_pixel_point = new google.maps.Point(
@@ -227,6 +228,7 @@
                                         //alert("data_info.lat" + data_info.lat + '<br>' + ne.lat());
                                         if((data_pixel_point.x > ne_pixel_point.x) || (data_pixel_point.y < ne_pixel_point.y)
                                             || (data_pixel_point.x < sw_pixel_point.x) || (data_pixel_point.y > sw_pixel_point.y)) {
+                                                //alert("if entered" + data_pixel_point.x + "<br>" + data_pixel_point.y + "<br>" + index);
                                                 continue;
                                             }
                                         var selected_data;
@@ -263,6 +265,7 @@
                                                                + "<div><string><h1>" + "Sensor Name : " + data_info.sname + "</h1></div><br>"
                                                                + "CO : " + data_info.CO_aqi + "<br>SO2 : " + data_info.SO2_aqi + "<br>NO2 : "
                                                                + data_info.NO2_aqi + "<br>O3 : " + data_info.O3_aqi + "<br>PM2.5 : " + data_info.PM25_aqi
+                                                               + "<br>temperature : " + data_info.temperature
                                                                + "</string></div>"
                                                                + "<br>"
                                                                + "<a href='infowindow_to_chart?sensor=" + data_info.sensor_no + "&flag=" + 1 + "'>chart view</a>"
@@ -313,26 +316,14 @@
                                         TILE_SIZE * (0.5 - Math.log((1 + siny) / (1 - siny)) / (4 * Math.PI)));
                                 }
 
-                                /*
-                                var x = document.getElementById("demo");
-
-                                function getLocation() {
-                                if (navigator.geolocation) {
-                                    navigator.geolocation.getCurrentPosition(showPosition);
-                                } else { 
-                                    x.innerHTML = "Geolocation is not supported by this browser.";
-                                }
-                                }
-
-                                function showPosition(position) {
-                                x.innerHTML = "Latitude: " + position.coords.latitude + 
-                                "<br>Longitude: " + position.coords.longitude;
-                                }
-                                */
-
                                 function clearOverlays() {
                                     for(var i = 0; i < marker.length; i++) {
-                                        marker[i].setMap(null);
+                                        //alert(i);
+                                        //alert(marker.length + "<br>" + i + "<br>" + marker[i].center.lat() + "<br>" + marker[i].center.lng());
+                                        if(marker[i] != null) {
+                                            marker[i].setMap(null);
+                                        }
+                                        //marker[i].setMap(null);
                                     }
                                     marker = [];
                                     infowindow = [];
@@ -389,3 +380,22 @@
 </body>
 
 </html>
+
+<script type='text/javascript'>
+$("#signout").click(function(event) {
+    $.ajax({
+        url :"/signout",
+        success : function(data) {
+            if(data == "success") {
+                location.href = "login";
+            }
+            else {
+                alert("failed");
+            }
+        },
+        error : function (request, error) {
+            alert(" Email already sent to your E-mail. ");
+        }
+    });
+});
+</script>

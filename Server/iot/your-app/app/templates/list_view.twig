@@ -113,7 +113,7 @@
                                                         </a>
                                                     </div>
                                                     <div class="account-dropdown__item">
-                                                        <a href="signout">
+                                                        <a id="signout">
                                                             <i class="zmdi zmdi-power"></i>Sign Out
                                                         </a>
                                                     </div>
@@ -228,3 +228,22 @@
     </body>
 
 </html>
+
+<script type='text/javascript'>
+$("#signout").click(function(event) {
+    $.ajax({
+        url :"/signout",
+        success : function(data) {
+            if(data == "success") {
+                location.href = "login";
+            }
+            else {
+                alert("failed");
+            }
+        },
+        error : function (request, error) {
+            alert(" Email already sent to your E-mail. ");
+        }
+    });
+});
+</script>

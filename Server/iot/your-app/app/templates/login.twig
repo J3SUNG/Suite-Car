@@ -1,5 +1,6 @@
 <html>
     <head>
+        <script type='text/javascript' src='http://code.jquery.com/jquery.min.js'></script>
         <title>Suite Car</title>
         <style>
         .body {
@@ -87,16 +88,49 @@
             </div>
             <hr class = hr_h>
             <div class = "box_right">
-                <form action="signin" method="post">
-                    <input class = "input_text" type = "text" name="username" placeholder="Username"> <br>
+                <!--<form action="signin" method="post">-->
+                    <input class = "input_text" type = "text" name="username" id="username" placeholder="Username"> <br>
                     <hr class = "hr_w"><br>
-                    <input class = "input_text" type = "password" name="password" placeholder="Password">
+                    <input class = "input_text" type = "password" name="password" id="password" placeholder="Password">
                     <hr class = "hr_w"><br>
-                    <button class = "button">Sign In</button><br>
-                </form>
+                    <button class = "button" id = "submit">Sign In</button><br>
+                <!--</form>-->
                 <button type = "button" onclick = "location.href='forgotten'" class = "button">Forgotten PW</button>
                 <button type = "button" onclick = "location.href='signup'" class = "button">Sign Up</button>
             </div>
         </div>
     </body>
 </html>
+
+<script type='text/javascript'>
+$("#submit").click(function(event) {
+    $.ajax({
+        type : "POST",
+        url :"/signin",
+        data : {
+            "username" : $('#username').val(),
+            "password" : $('#password').val()
+        },
+        success : function(data) {
+            if(data == "login_fail") {
+                alert("There is miss on ID or Password Please Enter Correctly.");
+            }
+            else if(data == "login_success") {
+                alert("Welcome to suiteCar!");
+                location.href = "home";
+            }
+            else if(data == "password_change") {
+                location.href = "home";
+                alert("you should change the password");
+                alert("window done");
+            }
+            else {
+                alert("failed");
+            }
+        },
+        error : function (request, error) {
+            alert(" Email already sent to your E-mail. ");
+        }
+    });
+});
+</script>

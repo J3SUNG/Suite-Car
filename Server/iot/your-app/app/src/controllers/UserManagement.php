@@ -157,22 +157,19 @@ final class UserManagement extends BaseController
 
 		if($Pdevice==WEB){
 			if($result_code==0){
-				echo "<script>alert(\"There is miss on ID or Password Please Enter Correctly.\");</script>";
-				$this->view->render($response, 'login.twig');
+				return "login_fail";
 			}else if($result_code==1){
 				session_start();
 				$_SESSION['user_no']=$row['user_no'];
 				$_SESSION['username'] = $row['username'];
 				$_SESSION['email'] = $row['email'];
-				echo "<script>alert(\"Welcome to suiteCar!\");</script>";
-				$this->view->render($response, 'home.twig', ['username'=>$row['username'], 'email'=>$row['email']]);	
+				return "login_success";	
 			}else if($result_code==2){
 				session_start();
 				$_SESSION['user_no']=$row['user_no'];
 				$_SESSION['username'] = $row['username'];
 				$_SESSION['email'] = $row['email'];
-				echo "<script>alert(\"you should change the password\");</script>";
-				$this->view->render($response, 'home.twig', ['username'=>$row['username'], 'email'=>$row['email']]);
+				return "password_change";
 			}	
 		}else if($Pdevice==ANDROID){
 			header('Content-type: application/json');
@@ -202,9 +199,8 @@ final class UserManagement extends BaseController
 		$params['user_no'] = $user_no;
         $stmt->execute($params);
         
-        session_destroy();
-
-		$this->view->render($response, 'login.twig');
+		session_destroy();
+		return "success";
     }
 
 	public function changePassword(Request $request, Response $response, $args)

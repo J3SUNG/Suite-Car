@@ -60,11 +60,12 @@ final class DataManagement extends BaseController
 				"NO2_aqi"=>$map_data['NO2_aqi'],
 				"O3_raw"=>$map_data['O3_raw'],
 				"O3_aqi"=>$map_data['O3_aqi'],
-				"PM25_raw"=>$map_data['PM2.5_raw'],
-				"PM25_aqi"=>$map_data['PM2.5_aqi'],
+				"PM25_raw"=>$map_data['PM25_raw'],
+				"PM25_aqi"=>$map_data['PM25_aqi'],
 				"lat"=>$map_data['latitude'],
 				"lng"=>$map_data['longitude'],
-				"sname"=>$map_data['sname']
+				"sname"=>$map_data['sname'],
+				"temperature"=>$map_data['temperature']
 			);
 			}
 			return $response->withHeader('Content-type', 'application/json')
