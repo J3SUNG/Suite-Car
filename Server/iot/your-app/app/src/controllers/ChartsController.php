@@ -71,7 +71,7 @@ final class ChartsController extends BaseController
             
             $result = $stmt->fetchAll();
             
-            if ($result && $type == 0) {
+            if ($result && $type == 0 && $view_type == 0) {
                 $json_array['cols'] = array(
                     array('id'=>'', 'label'=>'date/time', 'type'=>'string'),
                     array('id'=>'', 'label'=>'CO', 'type'=>'number'),
@@ -99,6 +99,43 @@ final class ChartsController extends BaseController
                 ->write(json_encode($json_array, JSON_NUMERIC_CHECK))
                 ->withStatus(200);
             } 
+            else if ($result && $type == 0 && $view_type == 1) {
+                $json_array['cols'] = array(
+                    array('id'=>'', 'label'=>'date/time', 'type'=>'string'),
+                    array('id'=>'', 'label'=>'CO_raw', 'type'=>'number'),
+                    array('id'=>'', 'label'=>'SO2_raw', 'type'=>'number'),
+                    array('id'=>'', 'label'=>'O3_raw', 'type'=>'number'),
+                    array('id'=>'', 'label'=>'PM2.5_raw', 'type'=>'number'),
+                    array('id'=>'', 'label'=>'NO2_raw', 'type'=>'number'),
+                    array('id'=>'', 'label'=>'CO_aqi', 'type'=>'number'),
+                    array('id'=>'', 'label'=>'SO2_aqi', 'type'=>'number'),
+                    array('id'=>'', 'label'=>'O3_aqi', 'type'=>'number'),
+                    array('id'=>'', 'label'=>'PM2.5_aqi', 'type'=>'number'),
+                    array('id'=>'', 'label'=>'NO2_aqi', 'type'=>'number')
+                );
+
+                foreach ($result as $row) {
+                    $sensor_array = array();
+                    $sensor_array[] = array('v'=>$row['time_in']);
+                    $sensor_array[] = array('v'=>$row['CO_raw']);
+                    $sensor_array[] = array('v'=>$row['SO2_raw']);
+                    $sensor_array[] = array('v'=>$row['O3_raw']);
+                    $sensor_array[] = array('v'=>$row['PM2.5_raw']);
+                    $sensor_array[] = array('v'=>$row['NO2_raw']);
+                    $sensor_array[] = array('v'=>$row['CO_aqi']);
+                    $sensor_array[] = array('v'=>$row['SO2_aqi']);
+                    $sensor_array[] = array('v'=>$row['O3_aqi']);
+                    $sensor_array[] = array('v'=>$row['PM2.5_aqi']);
+                    $sensor_array[] = array('v'=>$row['NO2_aqi']);
+                    $rows[] = array('c'=>$sensor_array);
+                }
+            
+                $json_array['rows'] = $rows;
+                
+                return $response->withHeader('Content-type', 'application/json')
+                ->write(json_encode($json_array, JSON_NUMERIC_CHECK))
+                ->withStatus(200);
+            }
             else if ($result && $type == 1) {
                 $json_array['cols'] = array(
                     array('id'=>'', 'label'=>'date/time', 'type'=>'string'),

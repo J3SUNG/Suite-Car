@@ -256,7 +256,12 @@
                                                             textPosition : 'none'
                                                         },
                                                         series: {
-                                                            0: { color: '#ff111d' }
+                                                            0: { targetAxisIndex: 0, color: '#ff111d' },
+                                                            1: { targetAxisIndex: 1, color: '#f1ca3a', type: 'bars'}
+                                                        },
+                                                        vAxes: {
+                                                            0: {title: 'Heart Data'},
+                                                            1: {title: 'rr_Interval'}
                                                         }
                                                     };
                                                 }
