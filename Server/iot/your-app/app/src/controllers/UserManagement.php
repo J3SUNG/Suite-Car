@@ -208,9 +208,9 @@ final class UserManagement extends BaseController
 		//check the password and origin is same
 		//check the password and confirm is same	Do it in js
 		//$Puser_no=$_POST['user_no'];
-		$PoriginalPassword = $_POST['originalPassword'];
-		$Ppassword = $_POST['newPassword'];
-		$PpasswordConfirm = $_POST['confirmPassword'];
+		$PoriginalPassword = $_POST['originalpassword'];
+		$Ppassword = $_POST['newpassword'];
+		$PpasswordConfirm = $_POST['confirmpassword'];
 		$Pdevice=$_POST['device'];
 		if($Pdevice==WEB){
 			$Puser_no = $_SESSION['user_no'];
@@ -243,10 +243,9 @@ final class UserManagement extends BaseController
 
 		if($Pdevice==WEB){
 			if($result_code==0){
-				echo "<script>alert(\"There is wrong. Please enter correct contents.\");</script>";
-			}else if($result_code==1){
-				echo "<script>alert(\"Please log in again.\");</script>";
-				$this->view->render($response, 'login.twig');	
+				return "re_enter";
+			}else if($result_code==1){	
+				return "success";
 			}
 		}else if($Pdevice==ANDROID){
 			header('Content-type: application/json');
@@ -259,7 +258,7 @@ final class UserManagement extends BaseController
 	public function id_cancelation(Request $request, Response $response, $args)
     {
 		//get input data from web
-		$username = $_POST['username'];
+		$username = $_SESSION['username'];
 		$password = $_POST['password'];
 
 		//check login_flag for safety
@@ -272,9 +271,8 @@ final class UserManagement extends BaseController
 		//actual login_flag check for safety
 		if($login_flag == 2){}
 		else 
-		{ 
-			echo "<script>alert(\"Your Account is Not in Log-in State. Try again.\");</script>";
-			echo "<script>location.replace('login')</script>";
+		{
+			return "not_in_login_state";
 		}
 
 		//get hashed password from database
@@ -284,16 +282,20 @@ final class UserManagement extends BaseController
 		$temp_result = $stmt->fetch();
 		$hashed_password = $temp_result['hashed_password'];
 
+		echo "$password  ==  $hashed_password";
 		//compare and execute the cancelation procedure
-		if(password_verify($password, $hashed_password)) // modified / if inserted password and hashed_password in db is same, execute.
+		if(password_verify($password, $hashed_password)) // if inserted password and hashed_password in db is same, execute.
 		{
 			try {
 			//get user_no data through search of user table
+			/*
 			$sql = "SELECT user_no FROM Users WHERE (username = '$username');";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
 			$temp_result = $stmt->fetch();
 			$user_no = $temp_result['user_no'];
+			*/
+			$user_no = $_SESSION['user_no'];
 			
 			//1. delete user_selection table
 			$sql = "DELETE FROM User_selection WHERE (user_no = '$user_no');";
@@ -328,20 +330,16 @@ final class UserManagement extends BaseController
 			$stmt->execute();
 
 			//id cancelation success message
-			echo "<script>alert(\"Thank you for using SuiteCar Service. ID cancelation is done successfully.\");</script>";
-			echo "<script>location.replace('login')</script>";
+			return "success";
+			}
+			catch(Exception $e)
+			{
+				return "DB_problem";
+			}
 		}
-
-		catch(Exception $e)
-		{
-			$message = $e->getMessage();
-			echo "<script>alert(\"$messsage .\");</script>";
-		}
-	}
 		else
 		{
-			echo "<script>alert(\"passwords are not matched. Please type correct passwords.\");</script>";
-			echo "<script>location.replace('id_cancelation_page')</script>";
+			return "password_not_match";
 		}
 	}
 
