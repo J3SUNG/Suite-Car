@@ -202,6 +202,7 @@ final class UserManagement extends BaseController
 	public function signout(Request $request, Response $response, $args)
     {
 		$user_no = $_SESSION['user_no'];
+		if($user_no != null) {
 		$sql = "UPDATE Users SET login_flag = 1 WHERE user_no = :user_no";
 		$stmt = $this->em->getConnection()->prepare($sql);
 		$params['user_no'] = $user_no;
@@ -209,6 +210,12 @@ final class UserManagement extends BaseController
         
 		session_destroy();
 		return "success";
+		}
+
+		else {
+			echo "<script>alert(\"Unexcepted Approach. Please login first.\");</script>";
+			echo "<script>location.replace('login')</script>";
+		}
     }
 
 	public function changePassword(Request $request, Response $response, $args)

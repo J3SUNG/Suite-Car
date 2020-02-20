@@ -168,6 +168,7 @@ final class ChartsController extends BaseController
 
     public function heart_chart(Request $request, Response $response, $args) {
         $user_no = $_SESSION['user_no'];
+        if($user_no != null) {
         $sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
@@ -178,10 +179,17 @@ final class ChartsController extends BaseController
         
         $response = $this->view->render($response, 'heart_chart.twig', ['username'=>$username, 'email'=>$email, 'user_no'=>$user_no]);
         return $response;
+        }
+
+        else {
+			echo "<script>alert(\"Unexcepted Approach. Please login first.\");</script>";
+			echo "<script>location.replace('login')</script>";
+		}
     }    
 
     public function air_chart(Request $request, Response $response, $args) {
         $user_no = $_SESSION['user_no'];
+        if($user_no != null) {
         $sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
@@ -192,6 +200,12 @@ final class ChartsController extends BaseController
         
         $response = $this->view->render($response, 'air_chart.twig', ['email'=>$email, 'username'=>$username, 'user_no'=>$user_no, 'flag'=>0, 'sensor_no'=>1]);
         return $response;
+        }
+
+        else {
+			echo "<script>alert(\"Unexcepted Approach. Please login first.\");</script>";
+			echo "<script>location.replace('login')</script>";
+		}
     }    
 
     public function receive_combobox(Request $request, Response $response, $args) {
