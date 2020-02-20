@@ -42,12 +42,16 @@ final class HomeController extends BaseController
     }
 
 	public function change_password_page(Request $request, Response $response, $args){
-		$this->view->render($response, 'change_password_page.twig');
+		$username = $_SESSION['username'];
+		$email = $_SESSION['email'];
+		$this->view->render($response, 'change_password_page.twig', ['username'=>$username, 'email'=>$email]);
 	}
 
 	public function id_cancelation_page(Request $request, Response $response, $args)
 	{
-		$this->view->render($response, 'id_cancelation_page.twig');
+		$username = $_SESSION['username'];
+		$email = $_SESSION['email'];
+		$this->view->render($response, 'id_cancelation_page.twig', ['username'=>$username, 'email'=>$email]);
 	}
 
 	public function maps(Request $request, Response $response, $args)

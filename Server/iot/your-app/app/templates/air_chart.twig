@@ -131,7 +131,7 @@
                             <div class="row">
                                 <div class="col-md-12 m-t-20">
                                     <div class="sensor_title">
-                                        <h3>Air Sensor Data</h3>
+                                        Air Sensor Data
                                     </div><br>
                                     <div class="sensor_no"> sensor_no : &nbsp </div>
                                     <form name="combobox" class="combobox">
@@ -206,34 +206,6 @@
                                             var NO2 = 0;
                                             var PM25 = 0;
                                             var view_type = 0;
-                                            
-                                            {# function refresh() {
-                                                sensor_no = $("#combo option:selected").val();
-                                                $.ajax({
-                                                url: "/charts/chart2_json",
-                                                    dataType:"text",
-                                                    async: false,
-                                                    type : "GET",
-                                                    data : {
-                                                        "CO" : CO,
-                                                        "O3" : O3,
-                                                        "SO2" : SO2,
-                                                        "NO2" : NO2,
-                                                        "PM25" : PM25,
-                                                        "sensor_no" : sensor_no,
-                                                        "view_type" : view_type,
-                                                        "start_date" : start_date,
-                                                        "end_date" : end_date,
-                                                        "type" : 0
-                                                    },
-                                                    success : function(data) {
-                                                        drawChart();
-                                                    },
-                                                    error : function(data) {
-                                                        alert("There is something wrong!.");
-                                                    }
-                                                });
-                                            } #}
 
                                             function drawChart() {
                                                 sensor_no = $("#combo option:selected").val();
@@ -255,16 +227,10 @@
                                                 //alert(jsonData);
                                                 // Create our data table out of JSON data loaded from server.
                                                 var data = new google.visualization.DataTable(jsonData);
+                                                
                                                 var options = {
-                                                    title: 'Air Data Chart',
                                                     curveType: 'function',
-                                                    series: {
-                                                        0: { color: '#ff111d'},
-                                                        1: { color: '#c784de'},
-                                                        2: { color: '#f1ca3a'},
-                                                        3: { color: '#2980b9'},
-                                                        4: { color: '#e67e22'}
-                                                    }
+                                                    vAxis: {minValue:0}
                                                 };
                                                 
                                                 var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
@@ -274,18 +240,23 @@
                                                 view = new google.visualization.DataView(data);
                                                 if(CO){
                                                     view.hideColumns([1]); 
+                                                    view.hideColumns([6]);
                                                 }
                                                 if(SO2){
                                                     view.hideColumns([2]); 
+                                                    view.hideColumns([7]); 
                                                 }
                                                 if(O3){
                                                     view.hideColumns([3]); 
+                                                    view.hideColumns([8]);
                                                 }
                                                 if(PM25){
                                                     view.hideColumns([4]); 
+                                                    view.hideColumns([9]); 
                                                 }
                                                 if(NO2){
                                                     view.hideColumns([5]); 
+                                                    view.hideColumns([10]); 
                                                 }
 
                                                 chart.draw(view, options);
@@ -316,7 +287,7 @@
                                                         O3 = 0;
                                                         $("#button_O3").css('background-color', '#27AE60');
                                                     }
-                                                    refresh();
+                                                    drawChart();
                                                 }) 
                                             })
                                             $(function(){ 
@@ -398,9 +369,9 @@
                                     <div class = "date_submit_box" id = "date_submit">
                                         <input type="date" class = "userdate" id="userdate1" name="userdate1">
                                         <input type="time" class = "userdate m-r-30" id="usertime1" name="usertime1">
-                                        <input type="date" class = "userdate m-r-30" id="userdate2" name="userdate2">
+                                        <input type="date" class = "userdate m-r-30 m-l-30" id="userdate2" name="userdate2">
                                         <input type="time" class = "userdate" id="usertime2" name="usertime2">
-                                        <button type = "button" class = "button_date_submit" id = "button_date_submit">Submit</button>
+                                        <button type = "button" class = "button_date_submit m-l-20" id = "button_date_submit">Submit</button>
                                     </div>
                                     
                                     <script>

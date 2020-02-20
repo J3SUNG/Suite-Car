@@ -106,12 +106,11 @@ final class UserManagement extends BaseController
 			$params_pwd['username'] = $username;
 			$stmt->execute($params_pwd);
 			
-			echo "<script>alert(\"sent you a temporary password via email.\");</script>";
-			$this->view->render($response, 'login.twig');
+			echo "Sent you a temporary password via email.";
+			//$this->view->render($response, 'login.twig');
 		}
 		else {
-			echo "<script>alert(\"Not Found Mached Data\");</script>";
-			$this->view->render($response, 'forgotten.twig', ['username'=>$username, 'email'=>$email]);
+			echo "There is no matched data. Insert Correct Information";
 		}
     }
 
@@ -135,7 +134,7 @@ final class UserManagement extends BaseController
 		$Pusername = $_POST['username'];
 		$Ppassword = $_POST['password'];
 		$Pdevice=$_POST['device'];
-		$sql="SELECT user_no, hashed_password,password_date FROM Users WHERE username=:username";
+		$sql="SELECT username, email, user_no, hashed_password,password_date FROM Users WHERE username=:username";
 		$stmt=$this->em->getConnection()->prepare($sql);
 		$stmt->bindValue(":username",$Pusername);
 		$resultCount = $stmt->execute();
@@ -143,7 +142,7 @@ final class UserManagement extends BaseController
 		$str_now=strtotime(date("Y-m-d"));
 		$str_db=strtotime($row['password_date']);
 		
-		if(password_verify($Ppassword,$row[hashed_password])){
+		if(password_verify($Ppassword,$row['hashed_password'])){
 			if($str_now>=$str_db) $result_code=2;
 			else $result_code=1;
 
@@ -158,18 +157,22 @@ final class UserManagement extends BaseController
 
 		if($Pdevice==WEB){
 			if($result_code==0){
-				echo "<script>alert(\"Something is wrong.. You know what I'm Saying?!\");</script>";
+				echo "<script>alert(\"There is miss on ID or Password Please Enter Correctly.\");</script>";
 				$this->view->render($response, 'login.twig');
 			}else if($result_code==1){
 				session_start();
 				$_SESSION['user_no']=$row['user_no'];
+				$_SESSION['username'] = $row['username'];
+				$_SESSION['email'] = $row['email'];
 				echo "<script>alert(\"Welcome to suiteCar!\");</script>";
-				$this->view->render($response, 'home.twig');	
+				$this->view->render($response, 'home.twig', ['username'=>$row['username'], 'email'=>$row['email']]);	
 			}else if($result_code==2){
 				session_start();
 				$_SESSION['user_no']=$row['user_no'];
+				$_SESSION['username'] = $row['username'];
+				$_SESSION['email'] = $row['email'];
 				echo "<script>alert(\"you should change the password\");</script>";
-				$this->view->render($response, 'home.twig');
+				$this->view->render($response, 'home.twig', ['username'=>$row['username'], 'email'=>$row['email']]);
 			}	
 		}else if($Pdevice==ANDROID){
 			header('Content-type: application/json');
@@ -208,7 +211,7 @@ final class UserManagement extends BaseController
     {
 		//check the password and origin is same
 		//check the password and confirm is same	Do it in js
-		$Puser_no=$_POST['user_no'];
+		//$Puser_no=$_POST['user_no'];
 		$PoriginalPassword = $_POST['originalPassword'];
 		$Ppassword = $_POST['newPassword'];
 		$PpasswordConfirm = $_POST['confirmPassword'];
@@ -244,11 +247,10 @@ final class UserManagement extends BaseController
 
 		if($Pdevice==WEB){
 			if($result_code==0){
-				echo "<script>alert(\"Something worng with you! Check again!\");</script>";
-				$this->view->render($response, 'change_password_page.twig');
+				echo "<script>alert(\"There is wrong. Please enter correct contents.\");</script>";
 			}else if($result_code==1){
-				echo "<script>alert(\"Login agian plz$resultCount\");</script>";
-				$this->view->render($response, 'login.twig', ['post' => $_POST]);	
+				echo "<script>alert(\"Please log in again.\");</script>";
+				$this->view->render($response, 'login.twig');	
 			}
 		}else if($Pdevice==ANDROID){
 			header('Content-type: application/json');
@@ -276,7 +278,7 @@ final class UserManagement extends BaseController
 		else 
 		{ 
 			echo "<script>alert(\"Your Account is Not in Log-in State. Try again.\");</script>";
-			echo "<script>location.replace('login')</script>"; 
+			echo "<script>location.replace('login')</script>";
 		}
 
 		//get hashed password from database

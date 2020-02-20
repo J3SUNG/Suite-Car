@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>Suite Car</title>
+        <script type='text/javascript' src='http://code.jquery.com/jquery.min.js'></script>
         <style>
         .body {
             background-color: #27ae60;
@@ -65,16 +66,36 @@
             <img class = "mini_img_logo" src="images/logo.png" alt="logo"><br>
             <div class = "forgotten_info">
                 <div class = "forgotten_input">
-                    <form action = "forgotten_check">    
+                    <!--<form action = "forgotten_check"> -->   
                         <input class = "input_text" type = "text" name="username" placeholder="Username">
                         <hr class = "hr_w"><br>
                         <input class = "input_text" type = "text" name="email" placeholder="Email Address"><br>
                         <hr class = "hr_w"><br>
                         <button type="button" onclick="location.href='login'" class = "forgotten_button" id = "cancel">CANCLE</button>
                         <button type="submit" class = "forgotten_button" id = "find">FIND</button>
-                    </form>
+                    <!--</form>-->
                 </div>
             </div>
         </div>
     </body>
 </html>
+
+<script type='text/javascript'>
+$("#find").click(function(event) {
+        $.ajax({
+            type : "POST",
+            url :"/forgotten_check",
+            data : {
+                "username" : $('#username').val(),
+                "email" : $('#email').val()
+            },
+            success : function(data) {
+                alert(data);
+                //alert("E-mail has been sent. Check your E-mail.");
+            },
+            error : function (data) {
+                alert(" Email already sent to your E-mail. ");
+            }
+        });
+    });
+</script>

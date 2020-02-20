@@ -142,16 +142,29 @@
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-md-12 m-t-20">
+                                <div class="map_title">
+                                    Map
+                                </div><br>
                                 <!-- MAP DATA-->
-                                <p id="demo"></p>
-                                <button onclick="getLocation()">try it</button>
+                                <!--<p id="demo"></p>
+                                <button onclick="getLocation()">try it</button>-->
+                                <label for="air_selection">Choose Air data</label>
+                                <select id = "air_selection">
+                                    <option value="CO">CO</option>
+                                    <option value="SO2">SO2</option>
+                                    <option value="NO2">NO2</option>
+                                    <option value="O3">O3</option>
+                                    <option value="PM25">PM2.5</option>
+                                </select>
                                 <div id="map"></div>
                                 <script>
+                                var TILE_SIZE = 256;
                                 var map;
                                 var activeInfoWindow;
                                 var marker = [];
                                 var infowindow = [];
-                                
+                                var selection_airdata = 5;
+
                                 var get_json_data = (function(){
                                     var json = null;
                                     $.ajax({
@@ -176,41 +189,74 @@
                                         zoom : 12,
                                         mapTypeId : google.maps.MapTypeId.TERRAIN
                                     }
+                                    
                                     map = new google.maps.Map(document.getElementById("map"), options);
                                     setTimeout(function(){ create_mark(get_json_data);
-                                                         }, 1000);
+                                                         }, 2000);
                                 }
+
+                                $('#air_selection').change(function() {
+                                    var selection = $(this).val();
+                                    switch(selection) {
+                                        case "CO" : selection_airdata = 1; break;
+                                        case "SO2" : selection_airdata = 2; break;
+                                        case "NO2" : selection_airdata = 3; break;
+                                        case "O3" : selection_airdata = 4; break;
+                                        case "PM25" : selection_airdata = 5; break;
+                                    }
+                                    create_mark(get_json_data);
+                                });
 
                                 function create_mark(json_data) {
                                     clearOverlays();
-                                    var map_bounds = map.getBounds();
-                                    var ne = map_bounds.getNorthEast();
-                                    var sw = map_bounds.getSouthWest();
+                                    var scale = 1 << map.getZoom();
+                                    var ne = project(map.getBounds().getNorthEast().lat(), map.getBounds().getNorthEast().lng());
+                                    var sw = project(map.getBounds().getSouthWest().lat(), map.getBounds().getSouthWest().lng());
+                                    var ne_pixel_point = new google.maps.Point(
+                                        Math.floor(ne.x * scale),
+                                        Math.floor(ne.y * scale));
+                                    //alert(ne_pixel_point.x);
+                                    var sw_pixel_point = new google.maps.Point(
+                                        Math.floor(sw.x * scale),
+                                        Math.floor(sw.y * scale));
+
                                     for(var index in json_data) {
                                         var data_info = json_data[index];
+                                        var data_coordinate = project(data_info.lat, data_info.lng);
+                                        var data_pixel_point = new google.maps.Point(
+                                            Math.floor(data_coordinate.x * scale),
+                                            Math.floor(data_coordinate.y * scale));
+
                                         //alert("data_info.lat" + data_info.lat + '<br>' + ne.lat());
-                                        if((data_info.lat > ne.lat()) || (data_info.lng > ne.lng())
-                                            || (data_info.lat < sw.lat()) || (data_info.lng < sw.lng())) {
-                                                //alert("ABC");
+                                        if((data_pixel_point.x > ne_pixel_point.x) || (data_pixel_point.y < ne_pixel_point.y)
+                                            || (data_pixel_point.x < sw_pixel_point.x) || (data_pixel_point.y > sw_pixel_point.y)) {
                                                 continue;
                                             }
+                                        var selected_data;
+                                        switch(selection_airdata) {
+                                            case 1 : selected_data = data_info.CO_aqi; break;
+                                            case 2 : selected_data = data_info.SO2_aqi; break;
+                                            case 3 : selected_data = data_info.NO2_aqi; break;
+                                            case 4 : selected_data = data_info.O3_aqi; break;
+                                            case 5 : selected_data = data_info.PM25_aqi; break;
+                                        }
                                         var data_color;
-                                        if(data_info.PM25_aqi <= 50) {
+                                        if(selected_data <= 50) {
                                             data_color = '#00FF00';
                                         }
-                                        else if(data_info.PM25_aqi > 50 && data_info.PM25_aqi <=100) {
+                                        else if(selected_data > 50 && selected_data <=100) {
                                             data_color = '#FFFF00';
                                         }
-                                        else if(data_info.PM25_aqi > 100 && data_info.PM25_aqi <= 150) {
+                                        else if(selected_data > 100 && selected_data <= 150) {
                                             data_color = '#FF8000';
                                         }
-                                        else if(data_info.PM25_aqi > 150 && data_info.PM25_aqi <= 200) {
+                                        else if(selected_data > 150 && selected_data <= 200) {
                                             data_color = '#FF0000';
                                         }
-                                        else if(data_info.PM25_aqi > 200 && data_info.PM25_aqi <= 300) {
+                                        else if(selected_data > 200 && selected_data <= 300) {
                                             data_color = '#FF00FF';
                                         }
-                                        else if(data_info.PM25_aqi > 300 && data_info.PM25_aqi <= 500) {
+                                        else if(selected_data > 300 && selected_data <= 500) {
                                             data_color = '#800000';
                                         }
                                         else {
@@ -226,14 +272,13 @@
                                                                + '<button type = "submit" class = "signup_button" id = "chart_view">Chart View</button>'
                                                                + '<input class=\"input_text\" type = \"hidden\" id=\"sensor_no\" name=\"sensor_no\" value = \'data_info.sensor_no\'>'
                                                                + "</form>";
-
                                         //var map_zoom = map.getZoom();
                                         //var radius_with_zoom = 10000 * map_zoom * (1 / Math.pow(2, map_zoom - 5));
                                         marker[index] = new google.maps.Circle({
                                             map : map,
                                             center : {lat : data_info.lat,
                                             lng : data_info.lng},
-                                            radius : 1000,
+                                            radius : 10000,
                                             strokeColor: data_color,
                                             strokeOpacity : 0.5,
                                             strokeWeight : 2,
@@ -257,6 +302,21 @@
                                     }
                                 }
 
+                                // The mapping between latitude, longitude and pixels is defined by the web
+                                // mercator projection.
+                                function project(latlng_lat, latlng_lng) {
+                                    var siny = Math.sin(latlng_lat * Math.PI / 180);
+
+                                    // Truncating to 0.9999 effectively limits latitude to 89.189. This is
+                                    // about a third of a tile past the edge of the world tile.
+                                    siny = Math.min(Math.max(siny, -0.9999), 0.9999);
+
+                                    return new google.maps.Point(
+                                        TILE_SIZE * (0.5 + latlng_lng / 360),
+                                        TILE_SIZE * (0.5 - Math.log((1 + siny) / (1 - siny)) / (4 * Math.PI)));
+                                }
+
+                                /*
                                 var x = document.getElementById("demo");
 
                                 function getLocation() {
@@ -271,6 +331,7 @@
                                 x.innerHTML = "Latitude: " + position.coords.latitude + 
                                 "<br>Longitude: " + position.coords.longitude;
                                 }
+                                */
 
                                 function clearOverlays() {
                                     for(var i = 0; i < marker.length; i++) {
@@ -279,7 +340,7 @@
                                     marker = [];
                                     infowindow = [];
                                 }
-                                setInterval(create_mark, 5000, get_json_data);
+                                setInterval(create_mark, 10000, get_json_data);
                                 </script>
                                 <!-- END MAP DATA-->
                             </div>
