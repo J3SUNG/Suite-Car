@@ -5,16 +5,17 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface IServer {
-    @POST("signUp")
+    @POST("signup_check")
     @FormUrlEncoded
     fun signUp(
         @Field("device") device: Int,
-        @Field("fname") fname: String,
-        @Field("lname") lname: String,
         @Field("username") username: String,
-        @Field("password") password: String,
         @Field("email") email: String,
-        @Field("phone") phone: String
+        @Field("password") password: String,
+        @Field("password_confirm") password_confirm: String,
+        @Field("phone") phone: String,
+        @Field("first_name") first_name: String,
+        @Field("last_name") last_name: String
     ): Call<ResponseBody>
 
     @POST("signin")
@@ -42,7 +43,7 @@ interface IServer {
         @Field("confirmPassword") confirmPassword: String
     ): Call<ResponseBody>
 
-    @POST("forgottenPassword")
+    @POST("forgotten_check")
     @FormUrlEncoded
     fun forgottenPassword(
         @Field("device") device: Int,
@@ -50,7 +51,7 @@ interface IServer {
         @Field("email") email: String
     ): Call<ResponseBody>
 
-    @POST("idCancellation")
+    @POST("id_cancelation")
     @FormUrlEncoded
     fun closeAccount(
         @Field("device") device: Int,

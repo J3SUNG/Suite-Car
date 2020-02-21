@@ -115,6 +115,7 @@ class AirInfoOptionDialog : AppCompatActivity() {
                     "ViewType",
                     viewTypeGroup.indexOfChild(findViewById(viewTypeGroup.checkedRadioButtonId))
                 )
+                Log.d("ViewType",viewTypeGroup.indexOfChild(findViewById(viewTypeGroup.checkedRadioButtonId)).toString())
                 intent.putExtra("WhichData", whichData)
                 intent.putExtra("StartDate",startDate.text)
                 intent.putExtra("EndDate",endDate.text)

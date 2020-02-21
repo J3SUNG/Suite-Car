@@ -27,12 +27,13 @@
                 android:id="@+id/viewTypeGroup"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center">
+                android:gravity="center"
+                android:checkedButton="@+id/realTimeRadioButton">
 
                 <RadioButton
+                    android:id="@+id/realTimeRadioButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:checked="true"
                     android:text="Realtime" />
 
                 <RadioButton
@@ -139,7 +140,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:id="@+id/startDate"
-            android:hint="YY.MM.DD.hh.mm.ss"
+            android:text="17-03-04 03:20:00"
+            android:hint="YY-MM-dd hh:mm:ss"
             android:onClick="onClick"/>
 
         <TextView
@@ -153,7 +155,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:id="@+id/endDate"
-            android:hint="YY.MM.DD.hh.mm.ss"
+            android:text="20-03-04 03:20:00"
+            android:hint="YY-MM-dd hh:mm:ss"
             android:onClick="onClick"/>
     </LinearLayout>
 

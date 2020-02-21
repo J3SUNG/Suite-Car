@@ -77,7 +77,6 @@ class MainActivity : AppCompatActivity(), ServiceConnection, SerialListener {
     var connected=ArrayList<String>()
     var heartThread = HeartThread()
 
-
     private val newline = "\r\n"
 
     var bluetoothDevices =
@@ -421,12 +420,12 @@ class MainActivity : AppCompatActivity(), ServiceConnection, SerialListener {
             if (bluetoothDevices[i].service != null)
                 bluetoothDevices[i].service!!.attach(this)
         }
-        startService(
+       /* startService(
             Intent(
                 this,
                 SerialService::class.java
             )
-        ) // prevents service destroy on unbind from recreated activity caused by orientation change
+        ) */// prevents service destroy on unbind from recreated activity caused by orientation change
         this.bindService(
             Intent(this, SerialService::class.java),
             this,

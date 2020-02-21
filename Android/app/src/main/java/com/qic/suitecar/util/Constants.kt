@@ -38,4 +38,12 @@ object Constants {
     enum class Connected {
         False, Pending, True
     }
+
+    const val CO=0
+    const val SO2=1
+    const val NO2=2
+    const val O3=3
+    const val PM25=4
+    const val TEMP=5
+
 }

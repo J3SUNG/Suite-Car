@@ -7,6 +7,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.*
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.qic.suitecar.R
 import com.qic.suitecar.util.Constants
@@ -191,6 +192,7 @@ class SerialService : Service(), SerialListener {
                     mainLooper.post {
                         if (listener != null) {
                             listener!!.onSerialRead(data)
+                            Toast.makeText(this,"Hi",Toast.LENGTH_SHORT).show()
                         } else {
                             queue1.add(QueueItem(QueueType.Read, data, null))
                         }
