@@ -112,7 +112,7 @@
                                                         <i class="zmdi zmdi-settings"></i>ID Cancellation</a>
                                                 </div>
                                                 <div class="account-dropdown__item">
-                                                    <a href="signout">
+                                                    <a id="signout">
                                                         <i class="zmdi zmdi-power"></i>Sign Out</a>
                                                 </div>
                                             </div>
@@ -189,6 +189,7 @@
                                         } 
                                         addOption();
 
+                                        var flag = 1;
                                         function drawChart() {
                                             var jsonData = $.ajax({
                                                 url: "/charts/chart2_json",
@@ -204,6 +205,20 @@
                                                     "type" : 1
                                                 }
                                             }).responseText;
+
+                                            if(jsonData == ""){
+                                                if(flag == 1){
+                                                    flag = 0;
+                                                    alert("Not Found Current Data");
+                                                }
+                                            }
+                                            else {
+                                                if(flag == 0){
+                                                    flag = 1;
+                                                    alert("Found Current Data");
+                                                }
+                                            }
+
                                             if(jsonData != ""){
                                                 $json_data = JSON.parse(jsonData);
                                             
@@ -417,3 +432,22 @@
 </body>
 
 </html>
+
+<script type='text/javascript'>
+$("#signout").click(function(event) {
+    $.ajax({
+        url :"/signout",
+        success : function(data) {
+            if(data == "success") {
+                location.href = "login";
+            }
+            else {
+                alert("failed");
+            }
+        },
+        error : function (request, error) {
+            alert(" Email already sent to your E-mail. ");
+        }
+    });
+});
+</script>

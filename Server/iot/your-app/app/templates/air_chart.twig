@@ -111,7 +111,7 @@
                                                             <i class="zmdi zmdi-settings"></i>ID Cancellation</a>
                                                     </div>
                                                     <div class="account-dropdown__item">
-                                                        <a href="signout">
+                                                        <a id="signout">
                                                             <i class="zmdi zmdi-power"></i>Sign Out</a>
                                                     </div>
                                                 </div>
@@ -200,16 +200,16 @@
                                             
                                             google.load("visualization", "1", {packages:["corechart"]});
                                             google.setOnLoadCallback(drawChart);
+                                            var TEM = 0;
                                             var CO = 0;
                                             var O3 = 0;
                                             var SO2 = 0;
                                             var NO2 = 0;
                                             var PM25 = 0;
                                             var view_type = 0;
-
+                                            var flag = 1;
                                             function drawChart() {
                                                 sensor_no = $("#combo option:selected").val();
-                                                
                                                 var jsonData = $.ajax({
                                                     url: "/charts/chart2_json",
                                                     dataType:"text",
@@ -224,13 +224,35 @@
                                                         "type" : 0
                                                     }
                                                 }).responseText;
+
+                                                if(jsonData == ""){
+                                                    if(flag == 1){
+                                                        flag = 0;
+                                                        alert("Not Found Current Data");
+                                                    }
+                                                }
+                                                else {
+                                                    if(flag == 0){
+                                                        flag = 1;
+                                                        alert("Found Current Data");
+                                                    }
+                                                }
                                                 //alert(jsonData);
                                                 // Create our data table out of JSON data loaded from server.
                                                 var data = new google.visualization.DataTable(jsonData);
                                                 
                                                 var options = {
+                                                    hAxis: {
+                                                    title: "Air Data Realtime",
+                                                            textPosition : 'none'
+                                                    },
                                                     curveType: 'function',
-                                                    vAxis: {minValue:0}
+                                                    series: {
+                                                        0: { targetAxisIndex: 1, color: '#ff111d', type: 'line',lineDashStyle: [4, 4], lineWidth: 5}
+                                                    },
+                                                    legend: {
+                                                        align: 'top'
+                                                    }
                                                 };
                                                 
                                                 var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
@@ -238,41 +260,53 @@
                                                 chart.draw(data, options);
 
                                                 view = new google.visualization.DataView(data);
+                                                if(TEM){
+                                                    view.hideColumns([1]);
+                                                }
                                                 if(CO){
-                                                    view.hideColumns([1]); 
-                                                    view.hideColumns([6]);
+                                                    view.hideColumns([2]); 
+                                                    view.hideColumns([7]);
                                                 }
                                                 if(SO2){
-                                                    view.hideColumns([2]); 
-                                                    view.hideColumns([7]); 
+                                                    view.hideColumns([3]); 
+                                                    view.hideColumns([8]); 
                                                 }
                                                 if(O3){
-                                                    view.hideColumns([3]); 
-                                                    view.hideColumns([8]);
+                                                    view.hideColumns([4]); 
+                                                    view.hideColumns([9]);
                                                 }
                                                 if(PM25){
-                                                    view.hideColumns([4]); 
-                                                    view.hideColumns([9]); 
-                                                }
-                                                if(NO2){
                                                     view.hideColumns([5]); 
                                                     view.hideColumns([10]); 
+                                                }
+                                                if(NO2){
+                                                    view.hideColumns([6]); 
+                                                    view.hideColumns([11]); 
                                                 }
 
                                                 chart.draw(view, options);
                                             }
+
+                                            $('#combo').change(function() {
+                                                flag = 1;
+                                            });
 
                                             var timer = setInterval(drawChart, 1000);
 
                                             $(function(){ 
                                                 $("#button_CO").click(function(){ 
                                                     if(CO == 0){
-                                                        $("#button_CO").css('background-color', 'orange');
                                                         CO = 1;
+                                                        $("#button_CO").css('background-color', 'white');
+                                                        $("#button_CO").css('background-color', 'white');
+                                                        $("#button_CO").css('color', '#27AE60');
+                                                        $("#button_CO").css('border', 'solid');
                                                     }
                                                     else{
-                                                        $("#button_CO").css('background-color', '#27AE60');
                                                         CO = 0;
+                                                        $("#button_CO").css('background-color', '#27AE60');
+                                                        $("#button_CO").css('color', 'white');
+                                                        $("#button_CO").css('border', 'none');
                                                     }
                                                     drawChart();
                                                 }) 
@@ -281,11 +315,15 @@
                                                 $("#button_O3").click(function(){ 
                                                     if(O3 == 0){
                                                         O3 = 1;
-                                                        $("#button_O3").css('background-color', 'orange');
+                                                        $("#button_O3").css('background-color', 'white');
+                                                        $("#button_O3").css('color', '#27AE60');
+                                                        $("#button_O3").css('border', 'solid');
                                                     }
                                                     else{
                                                         O3 = 0;
                                                         $("#button_O3").css('background-color', '#27AE60');
+                                                        $("#button_O3").css('color', 'white');
+                                                        $("#button_O3").css('border', 'none');
                                                     }
                                                     drawChart();
                                                 }) 
@@ -294,11 +332,15 @@
                                                 $("#button_SO2").click(function(){ 
                                                     if(SO2 == 0){
                                                         SO2 = 1;
-                                                        $("#button_SO2").css('background-color', 'orange');
+                                                        $("#button_SO2").css('background-color', 'white');
+                                                        $("#button_SO2").css('color', '#27AE60');
+                                                        $("#button_SO2").css('border', 'solid');
                                                     }
                                                     else{
                                                         SO2 = 0;
                                                         $("#button_SO2").css('background-color', '#27AE60');
+                                                        $("#button_SO2").css('color', 'white');
+                                                        $("#button_SO2").css('border', 'none');
                                                     }
                                                     drawChart();
                                                 }) 
@@ -307,11 +349,15 @@
                                                 $("#button_NO2").click(function(){ 
                                                     if(NO2 == 0){
                                                         NO2 = 1;
-                                                        $("#button_NO2").css('background-color', 'orange');
+                                                        $("#button_NO2").css('background-color', 'white');
+                                                        $("#button_NO2").css('color', '#27AE60');
+                                                        $("#button_NO2").css('border', 'solid');
                                                     }
                                                     else{
                                                         NO2 = 0;
                                                         $("#button_NO2").css('background-color', '#27AE60');
+                                                        $("#button_NO2").css('color', 'white');
+                                                        $("#button_NO2").css('border', 'none');
                                                     }
                                                     drawChart();
                                                 }) 
@@ -320,11 +366,15 @@
                                                 $("#button_PM25").click(function(){ 
                                                     if(PM25 == 0){
                                                         PM25 = 1;
-                                                        $("#button_PM25").css('background-color', 'orange');
+                                                        $("#button_PM25").css('background-color', 'white');
+                                                        $("#button_PM25").css('color', '#27AE60');
+                                                        $("#button_PM25").css('border', 'solid');
                                                     }
                                                     else{
                                                         PM25 = 0;
                                                         $("#button_PM25").css('background-color', '#27AE60');
+                                                        $("#button_PM25").css('color', 'white');
+                                                        $("#button_PM25").css('border', 'none');
                                                     }
                                                     drawChart();
                                                 }) 
@@ -420,10 +470,6 @@
             </div>
         </div>
 
-        <!-- Map -->
-        <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4E2DLjl0PUtVHjQruVcL0GJgmamn4UgY&callback=initMap">
-        </script>
         <!-- Jquery JS-->
         <script src="vendor/jquery-3.2.1.min.js"></script>
         <!-- Bootstrap JS-->
@@ -459,3 +505,22 @@
         <script src="js/main.js"></script>
     </body>
 </html>
+
+<script type='text/javascript'>
+$("#signout").click(function(event) {
+    $.ajax({
+        url :"/signout",
+        success : function(data) {
+            if(data == "success") {
+                location.href = "login";
+            }
+            else {
+                alert("failed");
+            }
+        },
+        error : function (request, error) {
+            alert(" Email already sent to your E-mail. ");
+        }
+    });
+});
+</script>

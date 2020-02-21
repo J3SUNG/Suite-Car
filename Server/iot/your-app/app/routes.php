@@ -58,7 +58,7 @@ $app->get('/signout', 'App\Controller\UserManagement:signout')
 $app->post('/changePassword', 'App\Controller\UserManagement:changePassword')
     ->setName('changePassword');
 
-//DataManagement route (Not sure to make. If functions in DataManagement is not called from FrontEnd, This section dosen't need.)
+//DataManagement route
 $app->get('/db_data_for_map', 'App\Controller\DataManagement:db_data_for_map')
     ->setName('db_data_for_map');
 

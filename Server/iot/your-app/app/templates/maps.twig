@@ -2,6 +2,9 @@
 
 <head>
     <script type='text/javascript' src='http://code.jquery.com/jquery.min.js'></script>
+    <script src="js/jquery-2.0.3.js"></script>
+    <script src="js/app.js"></script>
+
     <!-- Required meta tags-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -44,6 +47,22 @@
             text-align: center;
             color: white;
             float: right;
+        }
+        .input_text {
+            border:0px;
+            font-size: 18px;
+            margin-top: 5px;
+        }
+        .button {
+            background-color: #27ae60;
+            border: none;
+            border-radius: 5px;
+            width: 130px;
+            height: 30px;
+            text-align: center;
+            color: white;
+            float: right;
+            margin-left: 20px;
         }
     </style>
 
@@ -123,7 +142,7 @@
                                                         <i class="zmdi zmdi-settings"></i>ID Cancellation</a>
                                                 </div>
                                                 <div class="account-dropdown__item">
-                                                    <a href="signout">
+                                                    <a id="signout">
                                                         <i class="zmdi zmdi-power"></i>Sign Out</a>
                                                 </div>
                                             </div>
@@ -150,11 +169,11 @@
                                 <button onclick="getLocation()">try it</button>-->
                                 <label for="air_selection">Choose Air data</label>
                                 <select id = "air_selection">
-                                    <option value="CO">CO</option>
+                                    <option value="PM25">PM2.5</option>
                                     <option value="SO2">SO2</option>
                                     <option value="NO2">NO2</option>
                                     <option value="O3">O3</option>
-                                    <option value="PM25">PM2.5</option>
+                                    <option value="CO">CO</option>
                                 </select>
                                 <div id="map"></div>
                                 <script>
@@ -164,6 +183,7 @@
                                 var marker = [];
                                 var infowindow = [];
                                 var selection_airdata = 5;
+                                var geocoder;
 
                                 var get_json_data = (function(){
                                     var json = null;
@@ -221,6 +241,7 @@
                                         Math.floor(sw.y * scale));
 
                                     for(var index in json_data) {
+                                        //alert(index);
                                         var data_info = json_data[index];
                                         var data_coordinate = project(data_info.lat, data_info.lng);
                                         var data_pixel_point = new google.maps.Point(
@@ -230,6 +251,7 @@
                                         //alert("data_info.lat" + data_info.lat + '<br>' + ne.lat());
                                         if((data_pixel_point.x > ne_pixel_point.x) || (data_pixel_point.y < ne_pixel_point.y)
                                             || (data_pixel_point.x < sw_pixel_point.x) || (data_pixel_point.y > sw_pixel_point.y)) {
+                                                //alert("if entered" + data_pixel_point.x + "<br>" + data_pixel_point.y + "<br>" + index);
                                                 continue;
                                             }
                                         var selected_data;
@@ -266,6 +288,7 @@
                                                                + "<div><string><h1>" + "Sensor Name : " + data_info.sname + "</h1></div><br>"
                                                                + "CO : " + data_info.CO_aqi + "<br>SO2 : " + data_info.SO2_aqi + "<br>NO2 : "
                                                                + data_info.NO2_aqi + "<br>O3 : " + data_info.O3_aqi + "<br>PM2.5 : " + data_info.PM25_aqi
+                                                               + "<br>temperature : " + data_info.temperature
                                                                + "</string></div>"
                                                                + "<br>"
                                                                + "<a href='infowindow_to_chart?sensor=" + data_info.sensor_no + "&flag=" + 1 + "'>chart view</a>"
@@ -316,33 +339,79 @@
                                         TILE_SIZE * (0.5 - Math.log((1 + siny) / (1 - siny)) / (4 * Math.PI)));
                                 }
 
-                                /*
-                                var x = document.getElementById("demo");
-
-                                function getLocation() {
-                                if (navigator.geolocation) {
-                                    navigator.geolocation.getCurrentPosition(showPosition);
-                                } else { 
-                                    x.innerHTML = "Geolocation is not supported by this browser.";
-                                }
-                                }
-
-                                function showPosition(position) {
-                                x.innerHTML = "Latitude: " + position.coords.latitude + 
-                                "<br>Longitude: " + position.coords.longitude;
-                                }
-                                */
-
                                 function clearOverlays() {
                                     for(var i = 0; i < marker.length; i++) {
-                                        marker[i].setMap(null);
+                                        //alert(i);
+                                        //alert(marker.length + "<br>" + i + "<br>" + marker[i].center.lat() + "<br>" + marker[i].center.lng());
+                                        if(marker[i] != null) {
+                                            marker[i].setMap(null);
+                                        }
+                                        //marker[i].setMap(null);
                                     }
                                     marker = [];
                                     infowindow = [];
                                 }
                                 setInterval(create_mark, 10000, get_json_data);
+                                
+                                $('#submit').on('click', function() {
+                                    geocoder = new google.maps.Geocoder();
+                                    var address = document.getElementById('address').value;
+                                    geocoder.geocode({'address' : address}, function(results, status) {
+                                        if(status == 'OK') {
+                                            map.setCenter(results[0].geometry.location);
+                                        }
+                                        else {
+                                            alert('Geocode was not successful for the following reason: ' + status);
+                                        }
+                                    });
+                                })
+                                /*
+                                function initialize() {
+                                    geocoder = new google.maps.Geocoder();
+                                }
+
+                                function codeAddress() {
+                                    var address = document.getElementById('address').value;
+                                    geocoder.geocode( { 'address': address}, function(results, status) {
+                                    if (status == 'OK') {
+                                        map.setCenter(results[0].geometry.location);
+                                        var marker = new google.maps.Marker({
+                                            map: map,
+                                            position: results[0].geometry.location
+                                        });
+                                    } else {
+                                        alert('Geocode was not successful for the following reason: ' + status);
+                                    }
+                                    });
+                                }
+                                */
                                 </script>
                                 <!-- END MAP DATA-->
+                                <!--<input id="address" type="text" size="50">
+                                <input id="geo" type="submit" value="submit">-->
+                                <input class = "input_text" type = "text" id = "address" placeholder="Input place"> <br>
+                                <hr class = "hr_w"><br>
+                                <button type = "button" class = "button" id = "submit">Search</button>
+                                <script>
+                                /*
+                                    $(document).ready(function() {
+                                        $('#submit').on('click', function() {
+                                            var geocoder = new google.maps.Geocoder();
+                                            var address = document.getElementById('address').value;
+                                            geocoder.geocode( { 'address': address}, function(results, status) {
+                                            if (status == google.maps.GeocoderStatus.OK) {
+                                                console.log(results[0].geometry.location.lat())
+                                                console.log(results[0].geometry.location.lng())
+                                            } else {
+                                            alert('Geocode was not successful for the following reason: ' + status);
+                                            }
+                                            });
+                                        })
+                                    })
+                                */
+                                    
+
+                                </script>
                             </div>
                         </div>
                     </div>
@@ -350,10 +419,13 @@
             </div>
         </div>
     </div>
-    
+    <!--Geocode -->
+    <script
+    src="https://maps.googleapis.com/maps/api/geocode/json?address="address"&key=AIzaSyDiAPSKH-VpDLtWk9tl3pn1gaF0ZmBTfq0">
+    </script>
     <!-- Map -->
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4E2DLjl0PUtVHjQruVcL0GJgmamn4UgY&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiAPSKH-VpDLtWk9tl3pn1gaF0ZmBTfq0&callback=initMap">
     </script>
     <!-- Jquery JS-->
     <script src="vendor/jquery-3.2.1.min.js"></script>
@@ -392,3 +464,22 @@
 </body>
 
 </html>
+
+<script type='text/javascript'>
+$("#signout").click(function(event) {
+    $.ajax({
+        url :"/signout",
+        success : function(data) {
+            if(data == "success") {
+                location.href = "login";
+            }
+            else {
+                alert("failed");
+            }
+        },
+        error : function (request, error) {
+            alert(" Email already sent to your E-mail. ");
+        }
+    });
+});
+</script>

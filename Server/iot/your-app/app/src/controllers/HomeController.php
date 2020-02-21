@@ -44,19 +44,36 @@ final class HomeController extends BaseController
 	public function change_password_page(Request $request, Response $response, $args){
 		$username = $_SESSION['username'];
 		$email = $_SESSION['email'];
+		$user_no = $_SESSION['user_no'];
+		if($user_no != null) {
 		$this->view->render($response, 'change_password_page.twig', ['username'=>$username, 'email'=>$email]);
+		}
+
+		else {
+			echo "<script>alert(\"Unexcepted Approach. Please login first.\");</script>";
+			echo "<script>location.replace('login')</script>";
+		}
 	}
 
 	public function id_cancelation_page(Request $request, Response $response, $args)
 	{
+		$user_no = $_SESSION['user_no'];
 		$username = $_SESSION['username'];
 		$email = $_SESSION['email'];
+		if($user_no != null) {
 		$this->view->render($response, 'id_cancelation_page.twig', ['username'=>$username, 'email'=>$email]);
+		}
+
+		else {
+			echo "<script>alert(\"Unexcepted Approach. Please login first.\");</script>";
+			echo "<script>location.replace('login')</script>";
+		}
 	}
 
 	public function maps(Request $request, Response $response, $args)
 	{
 		$user_no = $_SESSION['user_no'];
+		if($user_no != null) {
 		$sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
@@ -65,11 +82,18 @@ final class HomeController extends BaseController
 		$username = $result['username'];
 		$email = $result['email'];
 		$this->view->render($response, 'maps.twig', ['username'=>$username, 'email'=>$email]);
+		}
+
+		else {
+			echo "<script>alert(\"Unexcepted Approach. Please login first.\");</script>";
+			echo "<script>location.replace('login')</script>";
+		}
 	}
 
 	public function team(Request $request, Response $response, $args)
 	{
 		$user_no = $_SESSION['user_no'];
+		if($user_no != null) {
 		$sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
@@ -78,11 +102,18 @@ final class HomeController extends BaseController
 		$username = $result['username'];
 		$email = $result['email'];
 		$this->view->render($response, 'team.twig', ['username'=>$username, 'email'=>$email]);
+		}
+
+		else {
+			echo "<script>alert(\"Unexcepted Approach. Please login first.\");</script>";
+			echo "<script>location.replace('login')</script>";
+		}
 	}
 
 	public function list_view(Request $request, Response $response, $args)
 	{
 		$user_no = $_SESSION['user_no'];
+		if($user_no != null) {
 		$sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
@@ -91,5 +122,11 @@ final class HomeController extends BaseController
 		$username = $result['username'];
 		$email = $result['email'];
 		$this->view->render($response, 'list_view.twig', ['username'=>$username, 'email'=>$email, 'user_no'=>$user_no]);
+		}
+
+		else {
+			echo "<script>alert(\"Unexcepted Approach. Please login first.\");</script>";
+			echo "<script>location.replace('login')</script>";
+		}
 	}
 }

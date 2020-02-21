@@ -157,22 +157,19 @@ final class UserManagement extends BaseController
 
 		if($Pdevice==WEB){
 			if($result_code==0){
-				echo "<script>alert(\"There is miss on ID or Password Please Enter Correctly.\");</script>";
-				$this->view->render($response, 'login.twig');
+				return "login_fail";
 			}else if($result_code==1){
 				session_start();
 				$_SESSION['user_no']=$row['user_no'];
 				$_SESSION['username'] = $row['username'];
 				$_SESSION['email'] = $row['email'];
-				echo "<script>alert(\"Welcome to suiteCar!\");</script>";
-				$this->view->render($response, 'home.twig', ['username'=>$row['username'], 'email'=>$row['email']]);	
+				return "login_success";	
 			}else if($result_code==2){
 				session_start();
 				$_SESSION['user_no']=$row['user_no'];
 				$_SESSION['username'] = $row['username'];
 				$_SESSION['email'] = $row['email'];
-				echo "<script>alert(\"you should change the password\");</script>";
-				$this->view->render($response, 'home.twig', ['username'=>$row['username'], 'email'=>$row['email']]);
+				return "password_change";
 			}	
 		}else if($Pdevice==ANDROID){
 			header('Content-type: application/json');
@@ -183,6 +180,8 @@ final class UserManagement extends BaseController
 	public function home(Request $request, Response $response, $args)
     {
 		$user_no = $_SESSION['user_no'];
+
+		if($user_no != null) {
         $sql = "SELECT username, email FROM Users WHERE Users.user_no = $user_no;";
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
@@ -191,20 +190,32 @@ final class UserManagement extends BaseController
 		$username = $result['username'];
 		$email = $result['email'];
     	
-		$this->view->render($response, 'home.twig', ['username'=>$username, 'email'=>$email]);	
+		$this->view->render($response, 'home.twig', ['username'=>$username, 'email'=>$email]);
+		}
+
+		else {
+			echo "<script>alert(\"Unexcepted Approach. Please login first.\");</script>";
+			echo "<script>location.replace('login')</script>";
+		}
 	}
 
 	public function signout(Request $request, Response $response, $args)
     {
 		$user_no = $_SESSION['user_no'];
+		if($user_no != null) {
 		$sql = "UPDATE Users SET login_flag = 1 WHERE user_no = :user_no";
 		$stmt = $this->em->getConnection()->prepare($sql);
 		$params['user_no'] = $user_no;
         $stmt->execute($params);
         
-        session_destroy();
+		session_destroy();
+		return "success";
+		}
 
-		$this->view->render($response, 'login.twig');
+		else {
+			echo "<script>alert(\"Unexcepted Approach. Please login first.\");</script>";
+			echo "<script>location.replace('login')</script>";
+		}
     }
 
 	public function changePassword(Request $request, Response $response, $args)
@@ -212,9 +223,9 @@ final class UserManagement extends BaseController
 		//check the password and origin is same
 		//check the password and confirm is same	Do it in js
 		//$Puser_no=$_POST['user_no'];
-		$PoriginalPassword = $_POST['originalPassword'];
-		$Ppassword = $_POST['newPassword'];
-		$PpasswordConfirm = $_POST['confirmPassword'];
+		$PoriginalPassword = $_POST['originalpassword'];
+		$Ppassword = $_POST['newpassword'];
+		$PpasswordConfirm = $_POST['confirmpassword'];
 		$Pdevice=$_POST['device'];
 		if($Pdevice==WEB){
 			$Puser_no = $_SESSION['user_no'];
@@ -247,10 +258,9 @@ final class UserManagement extends BaseController
 
 		if($Pdevice==WEB){
 			if($result_code==0){
-				echo "<script>alert(\"There is wrong. Please enter correct contents.\");</script>";
-			}else if($result_code==1){
-				echo "<script>alert(\"Please log in again.\");</script>";
-				$this->view->render($response, 'login.twig');	
+				return "re_enter";
+			}else if($result_code==1){	
+				return "success";
 			}
 		}else if($Pdevice==ANDROID){
 			header('Content-type: application/json');
@@ -263,89 +273,97 @@ final class UserManagement extends BaseController
 	public function id_cancelation(Request $request, Response $response, $args)
     {
 		//get input data from web
-		$username = $_POST['username'];
+		//$username = $_SESSION['username'];
+		$user_no = $_SESSION['user_no'];
 		$password = $_POST['password'];
 
 		//check login_flag for safety
-		$sql = "SELECT login_flag FROM Users WHERE username='$username';";
+		$sql = "SELECT login_flag FROM Users WHERE user_no='$user_no';";
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
 		$temp_result = $stmt->fetch();
 		$login_flag = $temp_result['login_flag'];
+		//echo "$login_flag\n";
 
 		//actual login_flag check for safety
 		if($login_flag == 2){}
 		else 
-		{ 
-			echo "<script>alert(\"Your Account is Not in Log-in State. Try again.\");</script>";
-			echo "<script>location.replace('login')</script>";
+		{
+			return "not_in_login_state";
 		}
 
 		//get hashed password from database
-		$sql = "SELECT hashed_password FROM Users WHERE username='$username';";
+		$sql = "SELECT hashed_password FROM Users WHERE user_no=$user_no;";
 		$stmt= $this->em->getConnection()->prepare($sql);
 		$stmt->execute();
 		$temp_result = $stmt->fetch();
 		$hashed_password = $temp_result['hashed_password'];
 
+		//echo "$password  ==  $hashed_password";
 		//compare and execute the cancelation procedure
-		if(password_verify($password, $hashed_password)) // modified / if inserted password and hashed_password in db is same, execute.
+		if(password_verify($password, $hashed_password)) // if inserted password and hashed_password in db is same, execute.
 		{
 			try {
 			//get user_no data through search of user table
+			/*
 			$sql = "SELECT user_no FROM Users WHERE (username = '$username');";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
 			$temp_result = $stmt->fetch();
 			$user_no = $temp_result['user_no'];
+			*/
 			
 			//1. delete user_selection table
-			$sql = "DELETE FROM User_selection WHERE (user_no = '$user_no');";
+			$sql = "DELETE FROM User_selection WHERE (user_no = $user_no);";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
+			//echo "no.1 done\n";
 
 			//2. delete heart data table
-			$sql = "DELETE FROM Heart_data WHERE (user_no = '$user_no');";
+			$sql = "DELETE FROM Heart_data WHERE (user_no = $user_no);";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
+			//echo "no.2 done\n";
 
 			//3. delete inner air data
-			$sql = "DELETE Air_data FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE Sensors.type = 'I' 
+			$sql = "DELETE Air_data FROM Air_data INNER JOIN Sensors ON Air_data.sensor_no = Sensors.sensor_no WHERE Sensors.type = 'INAIRSENSOR' 
 					AND Sensors.user_no = $user_no";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
+			//echo "no.3 done\n";
 
 			//4. update outer air data to dummy value
 			$sql = "SET foreign_key_checks = 0;
-					UPDATE Air_data INNER JOIN Sensors ON Sensors.user_no = $user_no SET Air_data.sensor_no = 2147483647 WHERE (Sensors.type='O');";
+					UPDATE Air_data INNER JOIN Sensors ON Sensors.user_no = $user_no SET Air_data.sensor_no = 2147483647 WHERE (Sensors.type='OUTAIRSENSOR');";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
+			//echo "no.4 done\n";
 
 			//5. delete sensor table
-			$sql = "DELETE Sensors FROM Sensors INNER JOIN Users ON Users.user_no = Sensors.user_no;";
+			$sql = "DELETE Sensors FROM Sensors INNER JOIN Users ON Users.user_no = Sensors.user_no WHERE Sensors.user_no = $user_no;";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
+			//echo "no.5 done\n";
 
 			//6. delete user table
-			$sql = "DELETE Users FROM Users WHERE Users.username = '$username';";
+			$sql = "DELETE Users FROM Users WHERE Users.user_no = '$user_no';";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
+			//echo "no.6 done\n";
 
 			//id cancelation success message
-			echo "<script>alert(\"Thank you for using SuiteCar Service. ID cancelation is done successfully.\");</script>";
-			echo "<script>location.replace('login')</script>";
+			session_destroy();
+			return "success";
+			}
+			catch(Exception $e)
+			{
+				//echo "catched Exception on DB side\n";
+				return "DB_problem";
+			}
 		}
-
-		catch(Exception $e)
-		{
-			$message = $e->getMessage();
-			echo "<script>alert(\"$messsage .\");</script>";
-		}
-	}
 		else
 		{
-			echo "<script>alert(\"passwords are not matched. Please type correct passwords.\");</script>";
-			echo "<script>location.replace('id_cancelation_page')</script>";
+			return "password_not_match";
 		}
 	}
 
