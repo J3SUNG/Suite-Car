@@ -90,6 +90,7 @@ final class ChartsController extends BaseController
             if ($result && $type == 0 && $view_type == 0) {
                 $json_array['cols'] = array(
                     array('id'=>'', 'label'=>'date/time', 'type'=>'string'),
+                    array('id'=>'', 'label'=>'Temperature', 'type'=>'number'),
                     array('id'=>'', 'label'=>'CO', 'type'=>'number'),
                     array('id'=>'', 'label'=>'SO2', 'type'=>'number'),
                     array('id'=>'', 'label'=>'O3', 'type'=>'number'),
@@ -100,6 +101,7 @@ final class ChartsController extends BaseController
                 foreach ($result as $row) {
                     $sensor_array = array();
                     $sensor_array[] = array('v'=>$row['time_in']);
+                    $sensor_array[] = array('v'=>$row['temperature']);
                     $sensor_array[] = array('v'=>$row['CO_aqi']);
                     $sensor_array[] = array('v'=>$row['SO2_aqi']);
                     $sensor_array[] = array('v'=>$row['O3_aqi']);
@@ -118,6 +120,7 @@ final class ChartsController extends BaseController
             else if ($result && $type == 0 && $view_type == 1) {
                 $json_array['cols'] = array(
                     array('id'=>'', 'label'=>'date/time', 'type'=>'string'),
+                    array('id'=>'', 'label'=>'Temperature', 'type'=>'number'),
                     array('id'=>'', 'label'=>'CO_raw', 'type'=>'number'),
                     array('id'=>'', 'label'=>'SO2_raw', 'type'=>'number'),
                     array('id'=>'', 'label'=>'O3_raw', 'type'=>'number'),
@@ -133,6 +136,7 @@ final class ChartsController extends BaseController
                 foreach ($result as $row) {
                     $sensor_array = array();
                     $sensor_array[] = array('v'=>$row['time_in']);
+                    $sensor_array[] = array('v'=>$row['temperature']);
                     $sensor_array[] = array('v'=>$row['CO_raw']);
                     $sensor_array[] = array('v'=>$row['SO2_raw']);
                     $sensor_array[] = array('v'=>$row['O3_raw']);

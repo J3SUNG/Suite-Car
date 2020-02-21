@@ -200,6 +200,7 @@
                                             
                                             google.load("visualization", "1", {packages:["corechart"]});
                                             google.setOnLoadCallback(drawChart);
+                                            var TEM = 0;
                                             var CO = 0;
                                             var O3 = 0;
                                             var SO2 = 0;
@@ -241,8 +242,17 @@
                                                 var data = new google.visualization.DataTable(jsonData);
                                                 
                                                 var options = {
+                                                    hAxis: {
+                                                    title: "Air Data Realtime",
+                                                            textPosition : 'none'
+                                                    },
                                                     curveType: 'function',
-                                                    vAxis: {minValue:0}
+                                                    series: {
+                                                        0: { targetAxisIndex: 1, color: '#ff111d', type: 'line',lineDashStyle: [4, 4], lineWidth: 5}
+                                                    },
+                                                    legend: {
+                                                        align: 'top'
+                                                    }
                                                 };
                                                 
                                                 var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
@@ -250,41 +260,53 @@
                                                 chart.draw(data, options);
 
                                                 view = new google.visualization.DataView(data);
+                                                if(TEM){
+                                                    view.hideColumns([1]);
+                                                }
                                                 if(CO){
-                                                    view.hideColumns([1]); 
-                                                    view.hideColumns([6]);
+                                                    view.hideColumns([2]); 
+                                                    view.hideColumns([7]);
                                                 }
                                                 if(SO2){
-                                                    view.hideColumns([2]); 
-                                                    view.hideColumns([7]); 
+                                                    view.hideColumns([3]); 
+                                                    view.hideColumns([8]); 
                                                 }
                                                 if(O3){
-                                                    view.hideColumns([3]); 
-                                                    view.hideColumns([8]);
+                                                    view.hideColumns([4]); 
+                                                    view.hideColumns([9]);
                                                 }
                                                 if(PM25){
-                                                    view.hideColumns([4]); 
-                                                    view.hideColumns([9]); 
-                                                }
-                                                if(NO2){
                                                     view.hideColumns([5]); 
                                                     view.hideColumns([10]); 
+                                                }
+                                                if(NO2){
+                                                    view.hideColumns([6]); 
+                                                    view.hideColumns([11]); 
                                                 }
 
                                                 chart.draw(view, options);
                                             }
+
+                                            $('#combo').change(function() {
+                                                flag = 1;
+                                            });
 
                                             var timer = setInterval(drawChart, 1000);
 
                                             $(function(){ 
                                                 $("#button_CO").click(function(){ 
                                                     if(CO == 0){
-                                                        $("#button_CO").css('background-color', 'orange');
                                                         CO = 1;
+                                                        $("#button_CO").css('background-color', 'white');
+                                                        $("#button_CO").css('background-color', 'white');
+                                                        $("#button_CO").css('color', '#27AE60');
+                                                        $("#button_CO").css('border', 'solid');
                                                     }
                                                     else{
-                                                        $("#button_CO").css('background-color', '#27AE60');
                                                         CO = 0;
+                                                        $("#button_CO").css('background-color', '#27AE60');
+                                                        $("#button_CO").css('color', 'white');
+                                                        $("#button_CO").css('border', 'none');
                                                     }
                                                     drawChart();
                                                 }) 
@@ -293,11 +315,15 @@
                                                 $("#button_O3").click(function(){ 
                                                     if(O3 == 0){
                                                         O3 = 1;
-                                                        $("#button_O3").css('background-color', 'orange');
+                                                        $("#button_O3").css('background-color', 'white');
+                                                        $("#button_O3").css('color', '#27AE60');
+                                                        $("#button_O3").css('border', 'solid');
                                                     }
                                                     else{
                                                         O3 = 0;
                                                         $("#button_O3").css('background-color', '#27AE60');
+                                                        $("#button_O3").css('color', 'white');
+                                                        $("#button_O3").css('border', 'none');
                                                     }
                                                     drawChart();
                                                 }) 
@@ -306,11 +332,15 @@
                                                 $("#button_SO2").click(function(){ 
                                                     if(SO2 == 0){
                                                         SO2 = 1;
-                                                        $("#button_SO2").css('background-color', 'orange');
+                                                        $("#button_SO2").css('background-color', 'white');
+                                                        $("#button_SO2").css('color', '#27AE60');
+                                                        $("#button_SO2").css('border', 'solid');
                                                     }
                                                     else{
                                                         SO2 = 0;
                                                         $("#button_SO2").css('background-color', '#27AE60');
+                                                        $("#button_SO2").css('color', 'white');
+                                                        $("#button_SO2").css('border', 'none');
                                                     }
                                                     drawChart();
                                                 }) 
@@ -319,11 +349,15 @@
                                                 $("#button_NO2").click(function(){ 
                                                     if(NO2 == 0){
                                                         NO2 = 1;
-                                                        $("#button_NO2").css('background-color', 'orange');
+                                                        $("#button_NO2").css('background-color', 'white');
+                                                        $("#button_NO2").css('color', '#27AE60');
+                                                        $("#button_NO2").css('border', 'solid');
                                                     }
                                                     else{
                                                         NO2 = 0;
                                                         $("#button_NO2").css('background-color', '#27AE60');
+                                                        $("#button_NO2").css('color', 'white');
+                                                        $("#button_NO2").css('border', 'none');
                                                     }
                                                     drawChart();
                                                 }) 
@@ -332,11 +366,15 @@
                                                 $("#button_PM25").click(function(){ 
                                                     if(PM25 == 0){
                                                         PM25 = 1;
-                                                        $("#button_PM25").css('background-color', 'orange');
+                                                        $("#button_PM25").css('background-color', 'white');
+                                                        $("#button_PM25").css('color', '#27AE60');
+                                                        $("#button_PM25").css('border', 'solid');
                                                     }
                                                     else{
                                                         PM25 = 0;
                                                         $("#button_PM25").css('background-color', '#27AE60');
+                                                        $("#button_PM25").css('color', 'white');
+                                                        $("#button_PM25").css('border', 'none');
                                                     }
                                                     drawChart();
                                                 }) 
