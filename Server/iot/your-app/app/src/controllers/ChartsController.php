@@ -14,13 +14,29 @@ final class ChartsController extends BaseController
             $type = $_GET['type'];
             $view_type = $_GET['view_type'];
 
+            if($view_type == 0){
+                $sql = "SELECT * 
+                    FROM Air_data 
+                    WHERE sensor_no = :sensor_no 
+                    ORDER BY time_in DESC LIMIT 1";
+                $stmt = $this->em->getConnection()->prepare($sql);
+                $params['sensor_no'] = $sensor_no;
+                $stmt->execute($params);
+                $result = $stmt->fetch(); 
+
+                $current_date  = date("Y-m-d H:i:s" , strtotime($second."-10 seconds"));
+                
+                if($result['time_in'] < $current_date){
+                    return "";
+                }
+            }
             if($type == 0){
                 if($view_type == 0){
                     $sql = "SELECT * 
-                    from Air_data 
-                    WHERE sensor_no = :sensor_no
-                    ORDER BY time_in
-                    LIMIT 10";
+                    FROM (SELECT * 
+                        FROM Air_data 
+                        WHERE sensor_no = :sensor_no 
+                        ORDER BY time_in DESC LIMIT 10) A ORDER BY A.time_in";
                     $stmt = $this->em->getConnection()->prepare($sql);
                     $params['sensor_no'] = $sensor_no;
                     $stmt->execute($params);

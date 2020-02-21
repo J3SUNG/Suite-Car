@@ -206,10 +206,9 @@
                                             var NO2 = 0;
                                             var PM25 = 0;
                                             var view_type = 0;
-
+                                            var flag = 1;
                                             function drawChart() {
                                                 sensor_no = $("#combo option:selected").val();
-                                                
                                                 var jsonData = $.ajax({
                                                     url: "/charts/chart2_json",
                                                     dataType:"text",
@@ -224,6 +223,19 @@
                                                         "type" : 0
                                                     }
                                                 }).responseText;
+
+                                                if(jsonData == ""){
+                                                    if(flag == 1){
+                                                        flag = 0;
+                                                        alert("Not Found Current Data");
+                                                    }
+                                                }
+                                                else {
+                                                    if(flag == 0){
+                                                        flag = 1;
+                                                        alert("Found Current Data");
+                                                    }
+                                                }
                                                 //alert(jsonData);
                                                 // Create our data table out of JSON data loaded from server.
                                                 var data = new google.visualization.DataTable(jsonData);
