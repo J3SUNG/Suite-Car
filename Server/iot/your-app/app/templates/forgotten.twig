@@ -67,9 +67,9 @@
             <div class = "forgotten_info">
                 <div class = "forgotten_input">
                     <!--<form action = "forgotten_check"> -->   
-                        <input class = "input_text" type = "text" name="username" placeholder="Username">
+                        <input class = "input_text" type = "text" name="username" id = "username" placeholder="Username">
                         <hr class = "hr_w"><br>
-                        <input class = "input_text" type = "text" name="email" placeholder="Email Address"><br>
+                        <input class = "input_text" type = "text" name="email" id = "email" placeholder="Email Address"><br>
                         <hr class = "hr_w"><br>
                         <button type="button" onclick="location.href='login'" class = "forgotten_button" id = "cancel">CANCLE</button>
                         <button type="submit" class = "forgotten_button" id = "find">FIND</button>
@@ -91,6 +91,7 @@ $("#find").click(function(event) {
             },
             success : function(data) {
                 alert(data);
+                location.href = "login";
                 //alert("E-mail has been sent. Check your E-mail.");
             },
             error : function (data) {

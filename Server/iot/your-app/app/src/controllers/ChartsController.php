@@ -13,17 +13,28 @@ final class ChartsController extends BaseController
             $sensor_no = $_GET['sensor_no'];
             $type = $_GET['type'];
             $view_type = $_GET['view_type'];
-
+            
             if($view_type == 0){
-                $sql = "SELECT * 
-                    FROM Air_data 
-                    WHERE sensor_no = :sensor_no 
-                    ORDER BY time_in DESC LIMIT 1";
-                $stmt = $this->em->getConnection()->prepare($sql);
-                $params['sensor_no'] = $sensor_no;
-                $stmt->execute($params);
-                $result = $stmt->fetch(); 
-
+                if($type == 0){
+                    $sql = "SELECT * 
+                        FROM Air_data 
+                        WHERE sensor_no = :sensor_no 
+                        ORDER BY time_in DESC";
+                    $stmt = $this->em->getConnection()->prepare($sql);
+                    $params['sensor_no'] = $sensor_no;
+                    $stmt->execute($params);
+                    $result = $stmt->fetch(); 
+                }
+                else{
+                    $sql = "SELECT *
+                        FROM Heart_data 
+                        WHERE sensor_no = :sensor_no 
+                        ORDER BY time_in DESC";
+                    $stmt = $this->em->getConnection()->prepare($sql);
+                    $params['sensor_no'] = $sensor_no;
+                    $stmt->execute($params);
+                    $result = $stmt->fetch(); 
+                }
                 $current_date  = date("Y-m-d H:i:s" , strtotime($second."-10 seconds"));
                 
                 if($result['time_in'] < $current_date){
@@ -49,7 +60,8 @@ final class ChartsController extends BaseController
                             WHERE sensor_no = :sensor_no 
                             AND STR_TO_DATE(time_in, '%Y-%m-%d %H:%i:%s')
                                 BETWEEN STR_TO_DATE(:start_date, '%Y-%m-%d %H:%i:%s')
-                                    AND STR_TO_DATE(:end_date, '%Y-%m-%d %H:%i:%s')";
+                                    AND STR_TO_DATE(:end_date, '%Y-%m-%d %H:%i:%s')
+                                    ";
                     $stmt = $this->em->getConnection()->prepare($sql);
                     $params['sensor_no'] = $sensor_no;
                     $params['start_date'] = $start_date;
@@ -62,10 +74,10 @@ final class ChartsController extends BaseController
                     $sql = "SELECT * 
                             FROM (SELECT * 
                                 FROM Heart_data 
-                                WHERE user_no = :user_no 
+                                WHERE sensor_no = :sensor_no
                                 ORDER BY time_in DESC LIMIT 10) A ORDER BY A.time_in";
                     $stmt = $this->em->getConnection()->prepare($sql);
-                    $params['user_no'] = $user_no;
+                    $params['sensor_no'] = $sensor_no;
                     $stmt->execute($params);
                 }
                 else{
@@ -76,7 +88,8 @@ final class ChartsController extends BaseController
                             WHERE sensor_no = :sensor_no 
                                 AND STR_TO_DATE(time_in, '%Y-%m-%d %H:%i:%s')
                                 BETWEEN STR_TO_DATE(:start_date, '%Y-%m-%d %H:%i:%s')
-                                    AND STR_TO_DATE(:end_date, '%Y-%m-%d %H:%i:%s')";
+                                    AND STR_TO_DATE(:end_date, '%Y-%m-%d %H:%i:%s')
+                                    ";
                     $stmt = $this->em->getConnection()->prepare($sql);
                     $params['sensor_no'] = $sensor_no;
                     $params['start_date'] = $start_date;
@@ -85,8 +98,8 @@ final class ChartsController extends BaseController
                 }
             }
             
+
             $result = $stmt->fetchAll();
-            
             if ($result && $type == 0 && $view_type == 0) {
                 $json_array['cols'] = array(
                     array('id'=>'', 'label'=>'date/time', 'type'=>'string'),
@@ -234,20 +247,20 @@ final class ChartsController extends BaseController
         //air data receive
         
         if($type == 0){
-            $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND type = 'INAIRSENSOR' OR type = 'OUTAIRSENSOR'";
+            $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND (type = 'INAIRSENSOR' OR type = 'OUTAIRSENSOR')";
             $stmt = $this->em->getConnection()->prepare($sql);
             $params['user_no'] = $user_no;
             $stmt->execute($params);
         }
         //heart data receive
         else if($type == 1){
-            $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND type = 'POLARSENSOR' LIMIT 1";
+            $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND type = 'POLARSENSOR'";
             $stmt = $this->em->getConnection()->prepare($sql);
             $params['user_no'] = $user_no;
             $stmt->execute($params);
         }
         else{
-            $sql = "SELECT * from Sensors WHERE user_no = :user_no ORDER BY type DESC";
+            $sql = "SELECT * from Sensors WHERE user_no = :user_no ORDER BY type";
             $stmt = $this->em->getConnection()->prepare($sql);
             $params['user_no'] = $user_no;
             $stmt->execute($params);
@@ -291,4 +304,32 @@ final class ChartsController extends BaseController
             echo '{"error":{"text":'. $e->getMessage() .'}}';
         }
     } 
+    public function heart_data_additional_info(Request $request, Response $response, $args) {
+        $sensor_no = $_GET['sensor_no'];
+        $start_date = $_GET['start_date'];
+        $end_date = $_GET['end_date'];
+		$sql = "select round(avg(a.heart)) as avg, max(a.heart) as max, min(a.heart) as min 
+                from (select * FROM Heart_data
+                WHERE sensor_no = $sensor_no
+                AND STR_TO_DATE(time_in, '%Y-%m-%d %H:%i:%s')
+                BETWEEN STR_TO_DATE('$start_date', '%Y-%m-%d %H:%i:%s')
+                AND STR_TO_DATE('$end_date', '%Y-%m-%d %H:%i:%s')
+                )as a;";
+		$stmt= $this->em->getConnection()->prepare($sql);
+		$stmt->execute();
+		$results = $stmt->fetchAll();
+
+		if($results) {
+			$heart_additional = [];
+			foreach ($results as $heart) {
+				$heart_additional[] =
+				array("avg"=>$heart['avg'],
+				"max"=>$heart['max'],
+				"min"=>$heart['min']);
+			}
+			return $response->withHeader('Content-type', 'application/json')
+			->write(json_encode($heart_additional, JSON_NUMERIC_CHECK))
+			->withStatus(200);
+		}
+	}
 }

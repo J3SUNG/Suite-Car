@@ -182,10 +182,10 @@
                                 var activeInfoWindow;
                                 var marker = [];
                                 var infowindow = [];
+                                //var contents;
                                 var selection_airdata = 5;
-                                var geocoder;
 
-                                var get_json_data = (function(){
+                                function func_get_json_data() {
                                     var json = null;
                                     $.ajax({
                                         'async': false,
@@ -196,17 +196,18 @@
                                             json = data;
                                         },
                                         'error' : function(data) {
-                                            alert("There is something wrong. ");
+                                            alert("No sensor working currently");
                                         }
                                     });
                                     return json;
-                                })();
+                                }
 
                                 function initMap() {
+                                    var get_json_data = func_get_json_data();
                                     var options = {
                                         center : {lat : get_json_data[0].lat, // modify to current location
                                         lng : get_json_data[0].lng},
-                                        zoom : 12,
+                                        zoom : 15,
                                         mapTypeId : google.maps.MapTypeId.TERRAIN
                                     }
                                     
@@ -224,7 +225,7 @@
                                         case "O3" : selection_airdata = 4; break;
                                         case "PM25" : selection_airdata = 5; break;
                                     }
-                                    create_mark(get_json_data);
+                                    create_mark(func_get_json_data());
                                 });
 
                                 function create_mark(json_data) {
@@ -249,11 +250,13 @@
                                             Math.floor(data_coordinate.y * scale));
 
                                         //alert("data_info.lat" + data_info.lat + '<br>' + ne.lat());
+                                        /*
                                         if((data_pixel_point.x > ne_pixel_point.x) || (data_pixel_point.y < ne_pixel_point.y)
                                             || (data_pixel_point.x < sw_pixel_point.x) || (data_pixel_point.y > sw_pixel_point.y)) {
                                                 //alert("if entered" + data_pixel_point.x + "<br>" + data_pixel_point.y + "<br>" + index);
                                                 continue;
                                             }
+                                        */
                                         var selected_data;
                                         switch(selection_airdata) {
                                             case 1 : selected_data = data_info.CO_aqi; break;
@@ -284,43 +287,52 @@
                                         else {
                                             data_color = '#000000';
                                         }
-                                        contents = "<form action = \"infowindow_to_chart\" method = \"get\">"
-                                                               + "<div><string><h1>" + "Sensor Name : " + data_info.sname + "</h1></div><br>"
-                                                               + "CO : " + data_info.CO_aqi + "<br>SO2 : " + data_info.SO2_aqi + "<br>NO2 : "
-                                                               + data_info.NO2_aqi + "<br>O3 : " + data_info.O3_aqi + "<br>PM2.5 : " + data_info.PM25_aqi
-                                                               + "<br>temperature : " + data_info.temperature
-                                                               + "</string></div>"
-                                                               + "<br>"
-                                                               + "<a href='infowindow_to_chart?sensor=" + data_info.sensor_no + "&flag=" + 1 + "'>chart view</a>"
-                                                               + '<button type = "submit" class = "signup_button" id = "chart_view">Chart View</button>'
-                                                               + '<input class=\"input_text\" type = \"hidden\" id=\"sensor_no\" name=\"sensor_no\" value = \'data_info.sensor_no\'>'
-                                                               + "</form>";
+                                        var contents = "<div><string><h1>" + "Sensor Name : " + data_info.sname + "</h1></div><br>"
+                                                    + "CO : " + data_info.CO_aqi + "<br>SO2 : " + data_info.SO2_aqi + "<br>NO2 : "
+                                                    + data_info.NO2_aqi + "<br>O3 : " + data_info.O3_aqi + "<br>PM2.5 : " + data_info.PM25_aqi
+                                                    + "<br>temperature : " + data_info.temperature + "<br>Time : " + data_info.time
+                                                    + "</string></div>"
+                                                    + "<br>"
+                                                    + "<a href='infowindow_to_chart?sensor=" + data_info.sensor_no + "&flag=" + 1 + "'>chart view</a>"
+                                                    ;
+                                        //alert("contents : " + contents[index] + " \n data_info.time : " + data_info.time);
                                         //var map_zoom = map.getZoom();
                                         //var radius_with_zoom = 10000 * map_zoom * (1 / Math.pow(2, map_zoom - 5));
+                                        //alert(data_info.time);
                                         marker[index] = new google.maps.Circle({
                                             map : map,
                                             center : {lat : data_info.lat,
                                             lng : data_info.lng},
-                                            radius : 10000,
+                                            radius : 100,
                                             strokeColor: data_color,
                                             strokeOpacity : 0.5,
                                             strokeWeight : 2,
                                             fillColor : data_color,
                                             fillOpacity : 0.3,
                                             draggable : false
+                                            //content : contents[index]
                                         });
                                         marker[index].content = contents;
 
                                         infowindow[index] = new google.maps.InfoWindow();
 
                                         google.maps.event.addListener(marker[index], 'click', function() {
+                                            //alert(contents[index] + "\nindex : " + index + "\ndata_info.time : " + data_info.time);
                                             infowindow[index].setContent(this.content);
                                             infowindow[index].setPosition(this.getCenter());
                                             infowindow[index].open(map, this);
+                                            /*
+                                            if (selectedMarkerStoreId != null && selectedMarkerStoreId === marker[index].store_id) {
+                                                infoWindow.setContent(marker[index].htmlContent);
+                                            }
+
+                                            document.getElementById('infowin').innerHTML = "<p>" + obj[i]['Name'] + "<br />" + umFindroute(obj[i]['RouteID']) + "<br />" +
+                                                                                           "Speed: " + Math.round(obj[i]['GroundSpeed']) + " mph" + "</p>";
+                                            */
                                         });
 
                                         google.maps.event.addListener(map, 'idle', function() {
-                                            create_mark(get_json_data);
+                                            create_mark(func_get_json_data());
                                         });
                                     }
                                 }
@@ -344,74 +356,18 @@
                                         //alert(i);
                                         //alert(marker.length + "<br>" + i + "<br>" + marker[i].center.lat() + "<br>" + marker[i].center.lng());
                                         if(marker[i] != null) {
+                                            //infowindow[i].close();
                                             marker[i].setMap(null);
                                         }
+                                        infowindow[i] = null;
                                         //marker[i].setMap(null);
                                     }
                                     marker = [];
                                     infowindow = [];
                                 }
-                                setInterval(create_mark, 10000, get_json_data);
-                                
-                                $('#submit').on('click', function() {
-                                    geocoder = new google.maps.Geocoder();
-                                    var address = document.getElementById('address').value;
-                                    geocoder.geocode({'address' : address}, function(results, status) {
-                                        if(status == 'OK') {
-                                            map.setCenter(results[0].geometry.location);
-                                        }
-                                        else {
-                                            alert('Geocode was not successful for the following reason: ' + status);
-                                        }
-                                    });
-                                })
-                                /*
-                                function initialize() {
-                                    geocoder = new google.maps.Geocoder();
-                                }
-
-                                function codeAddress() {
-                                    var address = document.getElementById('address').value;
-                                    geocoder.geocode( { 'address': address}, function(results, status) {
-                                    if (status == 'OK') {
-                                        map.setCenter(results[0].geometry.location);
-                                        var marker = new google.maps.Marker({
-                                            map: map,
-                                            position: results[0].geometry.location
-                                        });
-                                    } else {
-                                        alert('Geocode was not successful for the following reason: ' + status);
-                                    }
-                                    });
-                                }
-                                */
+                                setInterval(function(){create_mark(func_get_json_data());}, 10000);
                                 </script>
                                 <!-- END MAP DATA-->
-                                <!--<input id="address" type="text" size="50">
-                                <input id="geo" type="submit" value="submit">-->
-                                <input class = "input_text" type = "text" id = "address" placeholder="Input place"> <br>
-                                <hr class = "hr_w"><br>
-                                <button type = "button" class = "button" id = "submit">Search</button>
-                                <script>
-                                /*
-                                    $(document).ready(function() {
-                                        $('#submit').on('click', function() {
-                                            var geocoder = new google.maps.Geocoder();
-                                            var address = document.getElementById('address').value;
-                                            geocoder.geocode( { 'address': address}, function(results, status) {
-                                            if (status == google.maps.GeocoderStatus.OK) {
-                                                console.log(results[0].geometry.location.lat())
-                                                console.log(results[0].geometry.location.lng())
-                                            } else {
-                                            alert('Geocode was not successful for the following reason: ' + status);
-                                            }
-                                            });
-                                        })
-                                    })
-                                */
-                                    
-
-                                </script>
                             </div>
                         </div>
                     </div>
@@ -419,10 +375,6 @@
             </div>
         </div>
     </div>
-    <!--Geocode -->
-    <script
-    src="https://maps.googleapis.com/maps/api/geocode/json?address="address"&key=AIzaSyDiAPSKH-VpDLtWk9tl3pn1gaF0ZmBTfq0">
-    </script>
     <!-- Map -->
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiAPSKH-VpDLtWk9tl3pn1gaF0ZmBTfq0&callback=initMap">
