@@ -34,6 +34,19 @@ class Fitting {
         }
     }
 
+    fun recommandAction(action: Action): String {
+        return when (action) {
+            WO ->  "1100"
+            WC -> "1000"
+            AIC ->  "0118"
+            AIN ->  "0123"
+            AIH ->  "0127"
+            AOC ->  "0018"
+            AON ->  "0123"
+            AOH ->  "0127"
+        }
+    }
+
     fun fitting(
         car_temp_in_real: Int,
         car_temp_out_real: Int,
@@ -50,7 +63,7 @@ class Fitting {
         if(car_temp_in_real > 23){
             car_temp_in = H
         }
-        else if(car_temp_in_real < 8){
+        else if(car_temp_in_real < 18){
             car_temp_in = C
         }
         else{
@@ -60,7 +73,7 @@ class Fitting {
         if(car_temp_out_real > 23){
             car_temp_out = H
         }
-        else if(car_temp_in_real < 8){
+        else if(car_temp_in_real < 18){
             car_temp_out = C
         }
         else{

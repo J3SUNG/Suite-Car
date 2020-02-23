@@ -1,8 +1,8 @@
 package com.qic.suitecar.dataclass
 
 data class AirInfoForMap(
-        var username:String,
         var Air_data_no:Int,
+        var sensor_no:Int,
         var time:String,
         var CO_raw:Double,
         var CO_aqi:Double,
@@ -14,6 +14,8 @@ data class AirInfoForMap(
         var O3_aqi:Double,
         var PM25_raw:Double,
         var PM25_Aqi:Double,
-        var latitude:Double,
-        var longitude:Double
+        var lat:Double,
+        var lng:Double,
+        var sname:String,
+        var temperature:String
 )

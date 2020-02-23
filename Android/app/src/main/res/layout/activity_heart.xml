@@ -4,14 +4,115 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.heart.HeartActivity">
+
+    <LinearLayout
+        android:id="@+id/airInfoTitle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/mGreen"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/airInfoUsnTextView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:gravity="left|center"
+            android:text="Realtime HeartData"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="HR_AVG : "
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:gravity="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="30"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:gravity="center"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="HR_MAX : "
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="30"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="HR_MIN : "
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:gravity="center"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="30"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:gravity="center"/>
+            </LinearLayout>
+            <Button
+                android:id="@+id/heartInfoSettingButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/ic_settings_black_24dp"
+                android:onClick="onClick" />
+        </LinearLayout>
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/heartInfoLineChart"
+
+        <com.github.mikephil.charting.charts.CombinedChart
+            android:id="@+id/heartInfoCombinedChart"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_margin="30dp" />
 
     </RelativeLayout>
 

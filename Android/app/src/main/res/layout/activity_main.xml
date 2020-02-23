@@ -50,7 +50,8 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/ic_good" />
+                        android:id="@+id/inAirFace"
+                        android:src="@drawable/ic_do_not_disturb_alt_black_24dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -68,7 +69,8 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/ic_bad" />
+                        android:id="@+id/outAirFace"
+                        android:src="@drawable/ic_do_not_disturb_alt_black_24dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -86,32 +88,33 @@
                 android:layout_centerInParent="true"
                 android:onClick="onClick"
                 android:text="Suite" />
-                       <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="inair"
-                            android:id="@+id/testbutton"
-                            android:onClick="onClick"/>
-            <!--             <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="outair"
-                            android:id="@+id/testbutton1"
-                            android:layout_toRightOf="@id/testbutton"
-                            android:onClick="onClick"/>
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:id="@+id/testbutton2"
-                            android:onClick="onClick"/>
-            -->
+            <!--         <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="inair"
+                        android:id="@+id/testbutton"
+                        android:onClick="onClick"/>
+                   <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="outair"
+                        android:id="@+id/testbutton1"
+                        android:layout_toRightOf="@id/testbutton"
+                        android:onClick="onClick"/>
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:id="@+id/testbutton2"
+                        android:onClick="onClick"/>
+        -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_margin="10dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                >
 
                 <TextView
                     android:id="@+id/realtimeNotConnect"
@@ -119,14 +122,15 @@
                     android:layout_height="match_parent"
                     android:text="Not Connected"
                     android:textColor="#FF0000"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:visibility="gone"/>
 
                 <LinearLayout
                     android:id="@+id/realtimeHeartLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:onClick="onClick"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:id="@+id/realtimeHRTextView"
@@ -197,14 +201,20 @@
             fab:menu_icon="@drawable/ic_aqi"
             fab:menu_labels_ellipsize="end"
             fab:menu_labels_maxLines="2">
-
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/cancelFAB"
+                style="@style/MenuButtonsSmall.White"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_cancel_black_24dp"
+                fab:fab_label="cancel"
+                android:visibility="gone"/>
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/coFAB"
                 style="@style/MenuButtonsSmall.White"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:src="@drawable/ic_co"
+                android:src="@drawable/ic_co_unselected"
                 fab:fab_label="CO" />
 
             <com.github.clans.fab.FloatingActionButton
@@ -228,7 +238,7 @@
                 style="@style/MenuButtonsSmall.White"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_o3"
+                android:src="@drawable/ic_o3_unselected"
                 fab:fab_label="O3" />
 
             <com.github.clans.fab.FloatingActionButton
@@ -236,7 +246,7 @@
                 style="@style/MenuButtonsSmall.White"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_pm25"
+                android:src="@drawable/ic_pm25_unselected"
                 fab:fab_label="PM25" />
         </com.github.clans.fab.FloatingActionMenu>
         <com.google.android.material.floatingactionbutton.FloatingActionButton

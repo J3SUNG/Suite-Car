@@ -15,104 +15,32 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="3dp"
-            android:orientation="vertical">
+        android:layout_height="wrap_content">
 
             <RadioGroup
                 android:id="@+id/viewTypeGroup"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:checkedButton="@+id/realTimeRadioButton">
+                android:checkedButton="@+id/realTimeRadioButton"
+                android:orientation="horizontal">
 
                 <RadioButton
+                    android:gravity=""
                     android:id="@+id/realTimeRadioButton"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="Realtime" />
 
                 <RadioButton
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="Historical" />
 
             </RadioGroup>
         </LinearLayout>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/mGreen" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="3dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <CheckBox
-                    android:id="@+id/coCheck"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="onCheck"
-                    android:text="CO" />
-                <CheckBox
-                    android:id="@+id/so2Check"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="onCheck"
-                    android:text="SO2" />
-
-
-                <CheckBox
-                    android:id="@+id/no2Check"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="onCheck"
-                    android:text="NO2" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <CheckBox
-                    android:id="@+id/o3Check"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="onCheck"
-                    android:text="O3" />
-                <CheckBox
-                    android:id="@+id/pm25Check"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:checked="true"
-                    android:onClick="onCheck"
-                    android:text="PM2.5" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

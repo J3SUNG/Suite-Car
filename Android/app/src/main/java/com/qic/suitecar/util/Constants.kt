@@ -11,7 +11,7 @@ object Constants {
     const val SCAN_SENSORS_REQ=1
     const val SPEECH_INPUT_REQ = 2
     const val AIR_INFO_OPTION_REQ = 3
-
+    const val HEART_INFO_OPTION_REQ = 3
     const val EXTRA_DEVICE_ADDRESS = "device_address"
 
 

@@ -2,12 +2,15 @@ package com.qic.suitecar.ui.airinfo
 
 import android.app.Dialog
 import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import com.github.mikephil.charting.data.Entry
 import kotlinx.android.synthetic.main.activity_air_info.*
 import com.github.mikephil.charting.data.LineDataSet
@@ -36,55 +39,65 @@ import kotlin.collections.ArrayList
 
 class AirInfoActivity : AppCompatActivity() {
     var sensor_no = 0
-    var whichData = arrayOf(true, false, false, false, false, false)
+    var whichData = BooleanArray(5)
+    var data = ArrayList<aqiData>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_air_info)
-        sensor_no = intent.getIntExtra("SensorNo", 10)
+        requestedOrientation=ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        sensor_no = intent.getStringExtra("SensorNo").toInt()
+        var tlqkf=intent.getStringExtra("SensorName")
+        Log.d("AirInfoActivity",sensor_no.toString())
         //realTimeAqi()
-        var data = ArrayList<aqiData>()
-        data.add(aqiData(R.drawable.test, "AQI", 30.0F))
-        data.add(aqiData(R.drawable.test, "PM10", 30.0F))
-        data.add(aqiData(R.drawable.test, "PM2.5", 30.0F))
-        data.add(aqiData(R.drawable.test, "CO", 30.0F))
-        data.add(aqiData(R.drawable.test, "O3", 30.0F))
-        data.add(aqiData(R.drawable.test, "SO2", 30.0F))
-        data.add(aqiData(R.drawable.test, "NO2", 30.0F))
+        whichData[0]=true
+        whichData[1]=true
+        whichData[2]=true
+        whichData[3]=true
+        whichData[4]=true
+        data.add(aqiData("PM2.5", 30.0F))
+        data.add(aqiData("CO", 30.0F))
+        data.add(aqiData("O3", 30.0F))
+        data.add(aqiData( "SO2", 30.0F))
+        data.add(aqiData( "NO2", 30.0F))
         airInfoViewPager.adapter = AirInfoPageAdapter(data, this)
         airInfoViewPager.startAutoScroll()
-        var sensorList = arrayOf("Sensor1", "Sensor2", "Sensor3")
-        /*var array_adapter=ArrayAdapter(this,R.layout.item_spinner_sensor,sensorList)
-        array_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
-        airInfoSpinner.adapter=array_adapter*/
-
         chartInit()
+        airInfoSpinner.text=tlqkf
     }
 
     var aqiDataSets = ArrayList<LineDataSet>()
-    var entriesList=ArrayList<ArrayList<Entry>>()
+    var entriesList = ArrayList<ArrayList<Entry>>()
+    lateinit var lineData: LineData
     private fun chartInit() {
         airInfoLineChart.isAutoScaleMinMaxEnabled = true
-        for(i in 0..5){
+        for (i in 0..5) {
             entriesList.add(ArrayList())
         }
         aqiDataSets.add(LineDataSet(entriesList[0], "co"))
         aqiDataSets.add(LineDataSet(entriesList[1], "so2"))
         aqiDataSets.add(LineDataSet(entriesList[2], "no2s"))
         aqiDataSets.add(LineDataSet(entriesList[3], "o3"))
-        aqiDataSets.add( LineDataSet(entriesList[4], "pm25"))
+        aqiDataSets.add(LineDataSet(entriesList[4], "pm25"))
         aqiDataSets.add(LineDataSet(entriesList[5], "temperature"))
 
+        aqiDataSets[0].color= Color.RED
+        aqiDataSets[1].color=Color.DKGRAY
+        aqiDataSets[2].color=Color.GREEN
+        aqiDataSets[3].color=Color.BLUE
+        aqiDataSets[4].color=Color.CYAN
+        aqiDataSets[5].color=Color.MAGENTA
         //TODO : Dataset visible로 해보자
 
-        var linedata = LineData(aqiDataSets.toList())
-        airInfoLineChart.data = linedata
+        lineData = LineData(aqiDataSets.toList())
+        airInfoLineChart.data = lineData
         var LYAxis = airInfoLineChart.axisLeft
         // LYAxis.setAxisMaxValue(200F)
         //    LYAxis.setAxisMinValue(0F)
         airInfoLineChart.axisRight.isEnabled = false
-        airInfoLineChart.isAutoScaleMinMaxEnabled=true
+        airInfoLineChart.isAutoScaleMinMaxEnabled = true
         var chartUpdateThread = ChartUpdateThread()
         chartUpdateThread.start()
+
     }
 
     fun onClick(view: View) {
@@ -103,6 +116,7 @@ class AirInfoActivity : AppCompatActivity() {
 
     private fun showDialog() {
         var intent = Intent(this, AirInfoOptionDialog::class.java)
+        intent.putExtra("WhichData",whichData)
         startActivityForResult(intent, Constants.AIR_INFO_OPTION_REQ)
     }
 
@@ -112,7 +126,11 @@ class AirInfoActivity : AppCompatActivity() {
             Constants.AIR_INFO_OPTION_REQ -> {
                 when (resultCode) {
                     OKAY -> {
-                        val whichData = data!!.getBooleanArrayExtra("WhichData")
+                        //if(!intent.hasExtra("WhichData")) return
+                         var z = data!!.getBooleanArrayExtra("WhichData")
+                        Log.d("whichData",z[0].toString()+z[1].toString()+z[2].toString()+z[3].toString()+z[4].toString())
+
+                        whichData=z
                         if (data!!.getIntExtra("ViewType", 0) == 0) {
                             realTimeAqi()
                         } else {
@@ -188,23 +206,13 @@ class AirInfoActivity : AppCompatActivity() {
 
     var chartUpdateThread: ChartUpdateThread? = null
     private fun realTimeAqi() {
+        for(i in entriesList){
+           // i.removeAll()
+        }
         if (chartUpdateThread == null) {
             tFlag = true
             chartUpdateThread = ChartUpdateThread()
             chartUpdateThread!!.start()
-        }
-    }
-
-
-    var handler = object : Handler() {
-        override fun handleMessage(msg: Message) {
-            when (msg.what) {
-                1 -> {
-                    Log.d("handler","Chart Update!!")
-                    chartUpdate()
-
-                }
-            }
         }
     }
     var X_RANGE = 20
@@ -213,10 +221,11 @@ class AirInfoActivity : AppCompatActivity() {
 
         tFlag = false
     }
-    var count=0
+
+    var count = 0
     private fun chartUpdate() {
-        if(realTimeEntry[0].isNotEmpty()) {
-            if(entriesList[0].size==1) tFlag=true
+        if (realTimeEntry[0].isNotEmpty()) {
+            if (entriesList[0].size == 1) tFlag = true
             for (i in 0..4) {
                 if (entriesList[i].size > X_RANGE) {
                     entriesList[i].removeAt(0)
@@ -225,33 +234,42 @@ class AirInfoActivity : AppCompatActivity() {
                     }
                 }
                 entriesList[i].add(Entry(entriesList[i].size.toFloat(), realTimeEntry[i][0]))
-                realTimeEntry[i].removeAt(0)
+                data[i].data=realTimeEntry[i][0]
 
-                var a=Collections.sort(entriesList[i],EntryXComparator())
-                //  airInfoLineChart.data.notifyDataChanged()
-                //   airInfoLineChart.notifyDataSetChanged()
-                airInfoLineChart.invalidate()
+                realTimeEntry[i].removeAt(0)
+                //var a = Collections.sort(entriesList[i], EntryXComparator())
+                aqiDataSets[i].notifyDataSetChanged()
+                aqiDataSets[i].isVisible=whichData[i]
             }
+
+            airInfoLineChart.data.notifyDataChanged()
+            airInfoLineChart.notifyDataSetChanged()
+            airInfoLineChart.invalidate()
+
         }
+
+
     }
 
     var tFlag = true
-    lateinit var realTimeEntry:ArrayList<ArrayList<Float>>
+    lateinit var realTimeEntry: ArrayList<ArrayList<Float>>
+
     inner class ChartUpdateThread : Thread() {
         override fun run() {
-            realTimeEntry=ArrayList()
-            var waitFlag=false
-            for(i in 0..5) realTimeEntry.add(ArrayList())
+            realTimeEntry = ArrayList()
+            var waitFlag = false
+            for (i in 0..5) realTimeEntry.add(ArrayList())
             while (tFlag) {
                 sleep(1000)
                 var retrofit = RetrofitClient.getInstnace()
                 var myApi = retrofit.create(IServer::class.java)
                 if (realTimeEntry[0].isEmpty()) {
-                    if(!waitFlag) {
+                    if (!waitFlag) {
                         waitFlag = true
+                        Log.d("realTimeEntry",sensor_no.toString())
                         Runnable {
                             myApi.chart2_json(
-                                0, 12, 0, 0, "", ""
+                               0, sensor_no, 0, 0, "", ""
                             )
                                 .enqueue(object :
                                     retrofit2.Callback<ResponseBody> {
@@ -259,10 +277,15 @@ class AirInfoActivity : AppCompatActivity() {
                                         call: Call<ResponseBody>,
                                         response: Response<ResponseBody>
                                     ) {
+                                        Log.d("tlqkf","뒤지고싶다")
                                         waitFlag = false
                                         var a = response.body()!!.string()
                                         var gson = Gson()
                                         Log.d("chart2_json", a)
+                                        if(a.isEmpty()){
+                                            tFlag=false
+                                            return
+                                        }
                                         var jsonObject = JSONObject(a)
                                         var cols = jsonObject.getJSONArray("cols")
                                         var rows = jsonObject.getJSONArray("rows")
@@ -289,9 +312,8 @@ class AirInfoActivity : AppCompatActivity() {
                                 })
                         }.run()
                     }
-                }else{
-                    var msg = handler.obtainMessage(1)
-                    handler.sendMessage(msg)
+                } else {
+                    chartUpdate()
                 }
             }
         }

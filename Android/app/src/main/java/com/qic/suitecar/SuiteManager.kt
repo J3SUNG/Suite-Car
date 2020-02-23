@@ -12,26 +12,28 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat.startActivityForResult
 import com.qic.suitecar.util.Action
+import com.qic.suitecar.util.Constants
+import com.qic.suitecar.util.Constants.SPEECH_INPUT_REQ
 import com.qic.suitecar.util.Fitting
 import com.qic.suitecar.util.TTS
 import kotlinx.android.synthetic.main.fragment_monitoring.view.*
 import java.util.*
 
 class SuiteManager {
-    var activity:Activity
+    var activity:MainActivity
     constructor(activity: Activity){
-        this.activity=activity
+        this.activity=activity as MainActivity
     }
     val REQ_CODE_SPEECH_INPUT = 0
     lateinit var fitting: Fitting
     lateinit var actions: ArrayList<Action>
 
-    fun suite(){
+    fun suite(ia:Double,it:Double,oa:Double,ot:Double){
         fitting= Fitting(activity)
-        var it=1
-        var ot=1
-        var ia=1
-        var oa=1
+        var it=it.toInt()
+        var ot=ot.toInt()
+        var ia=ia.toInt()
+        var oa=oa.toInt()
         Log.d("FFM","data : "+it+ot+ia+oa)
         actions = fitting.fitting(it,ot ,ia ,oa )
         var actionsString = String()
@@ -50,11 +52,13 @@ class SuiteManager {
         )
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, actionList)
-        activity.startActivityForResult(intent,REQ_CODE_SPEECH_INPUT)
+        activity.startActivityForResult(intent,SPEECH_INPUT_REQ)
 
     }
     fun command(s: String) {
+        activity.send(fitting.recommandAction(actions[s.toInt()-1]),Constants.SensorType.CAR)
         TTS.speech(fitting.recommand(actions[s.toInt()-1]))
+
     }
 
 }

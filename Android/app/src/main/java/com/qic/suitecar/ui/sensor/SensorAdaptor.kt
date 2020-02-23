@@ -136,8 +136,8 @@ class SensorAdaptor(val context: Context, val activity: MainActivity, val sensor
                     }
                     itemView.addSensorLayout.visibility = View.GONE
                     itemView.itemSensorLayout.visibility = View.VISIBLE
-                    itemView.sensorImageView.setImageDrawable(context.getDrawable(R.drawable.ic_outair))
-                    itemView.sensorTypeTextView.text = "Air Sensor"
+                    itemView.sensorImageView.setImageDrawable(context.getDrawable(R.drawable.ic_directions_car_black_24dp))
+                    itemView.sensorTypeTextView.text = "Car"
                 }
             }
         }

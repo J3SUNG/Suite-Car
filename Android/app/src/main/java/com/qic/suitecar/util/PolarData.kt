@@ -4,4 +4,5 @@ import com.qic.suitecar.dataclass.heartData
 
 object PolarData {
     var heartDatas=ArrayList<heartData>()
+
 }
