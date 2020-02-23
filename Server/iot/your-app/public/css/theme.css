@@ -14702,7 +14702,7 @@ section {
 
 .hr_w {
     margin: auto;
-    border:solid 0.4px;
+    border:solid 1px;
     width: 450px;
     margin-bottom: 30px;
 }
@@ -15083,4 +15083,9 @@ section {
     text-align: center;
     margin-left: 39%;
     box-shadow: 2px 2px 2px 2px;
+}
+
+.text_heart {
+    font-weight: bold;
+    text-align: center;
 }
