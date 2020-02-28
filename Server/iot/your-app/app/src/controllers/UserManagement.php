@@ -22,7 +22,7 @@ final class UserManagement extends BaseController
 		//data for email phpmailer
 		if($temp == SIGN_UP)
 		{
-			$message = "<a href=http://192.168.33.99/signup_authorization?link=$auth_code&user=$username&temp=$temp>
+			$message = "<a href=http://teamc-iot.calit2.net/signup_authorization?link=$auth_code&user=$username&temp=$temp>
 						<img src='cid:Logoimage'></a><h1>THANK YOU</h1><h2>Please Click the image above to activate your account.</h2>
 						<br>";
 		}
@@ -73,10 +73,10 @@ final class UserManagement extends BaseController
 	
     public function forgotten_check(Request $request, Response $response, $args)
     {
-		$username = $_GET['username'];
-		$email = $_GET['email'];
+		$username = $_POST['username'];
+		$email = $_POST['email'];
 
-		$data = $request->getParsedBody();
+		//$data = $request->getParsedBody();
 		
 		$sql = "select username from Users where (username = :username AND email = :email)";
 		$stmt = $this->em->getConnection()->prepare($sql);
@@ -223,9 +223,9 @@ final class UserManagement extends BaseController
 		//check the password and origin is same
 		//check the password and confirm is same	Do it in js
 		//$Puser_no=$_POST['user_no'];
-		$PoriginalPassword = $_POST['originalpassword'];
-		$Ppassword = $_POST['newpassword'];
-		$PpasswordConfirm = $_POST['confirmpassword'];
+		$PoriginalPassword = $_POST['originalPassword'];
+		$Ppassword = $_POST['newPassword'];
+		$PpasswordConfirm = $_POST['confirmPassword'];
 		$Pdevice=$_POST['device'];
 		if($Pdevice==WEB){
 			$Puser_no = $_SESSION['user_no'];
@@ -273,8 +273,13 @@ final class UserManagement extends BaseController
 	public function id_cancelation(Request $request, Response $response, $args)
     {
 		//get input data from web
-		//$username = $_SESSION['username'];
-		$user_no = $_SESSION['user_no'];
+		$device_category = $_POST['device'];
+		if($device_category == WEB) {
+			$user_no = $_SESSION['user_no'];
+		}
+		else if($device_category == ANDROID) {
+			$user_no = $_POST['user_no'];
+		}
 		$password = $_POST['password'];
 
 		//check login_flag for safety
@@ -289,7 +294,12 @@ final class UserManagement extends BaseController
 		if($login_flag == 2){}
 		else 
 		{
-			return "not_in_login_state";
+			if($device_category == WEB) {
+				return "not_in_login_state";
+			}
+			else if($device_category == ANDROID) {
+				echo "0";
+			}
 		}
 
 		//get hashed password from database
@@ -314,13 +324,13 @@ final class UserManagement extends BaseController
 			*/
 			
 			//1. delete user_selection table
-			$sql = "DELETE FROM User_selection WHERE (user_no = $user_no);";
+			$sql = "DELETE FROM User_selection WHERE user_no = $user_no;";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
 			//echo "no.1 done\n";
 
 			//2. delete heart data table
-			$sql = "DELETE FROM Heart_data WHERE (user_no = $user_no);";
+			$sql = "DELETE FROM Heart_data WHERE user_no = $user_no;";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
 			//echo "no.2 done\n";
@@ -334,7 +344,8 @@ final class UserManagement extends BaseController
 
 			//4. update outer air data to dummy value
 			$sql = "SET foreign_key_checks = 0;
-					UPDATE Air_data INNER JOIN Sensors ON Sensors.user_no = $user_no SET Air_data.sensor_no = 2147483647 WHERE (Sensors.type='OUTAIRSENSOR');";
+					UPDATE Air_data INNER JOIN Sensors ON Sensors.sensor_no = Air_data.sensor_no SET Air_data.sensor_no = 0 WHERE Sensors.type='OUTAIRSENSOR'
+					AND Sensors.user_no = $user_no;";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
 			//echo "no.4 done\n";
@@ -346,24 +357,38 @@ final class UserManagement extends BaseController
 			//echo "no.5 done\n";
 
 			//6. delete user table
-			$sql = "DELETE Users FROM Users WHERE Users.user_no = '$user_no';";
+			$sql = "DELETE Users FROM Users WHERE Users.user_no = $user_no;";
 			$stmt= $this->em->getConnection()->prepare($sql);
 			$stmt->execute();
 			//echo "no.6 done\n";
 
 			//id cancelation success message
 			session_destroy();
-			return "success";
+			if($device_category == WEB) {
+				return "success";
+			}
+			else if($device_category == ANDROID) {
+				echo "1";
+			}
 			}
 			catch(Exception $e)
 			{
-				//echo "catched Exception on DB side\n";
-				return "DB_problem";
+				if($device_category == WEB) {
+					return "DB_problem";
+				}
+				else if($device_category == ANDROID) {
+					echo "0";
+				}
 			}
 		}
 		else
 		{
-			return "password_not_match";
+			if($device_category == WEB) {
+				return "password_not_match";
+			}
+			else if($device_category == ANDROID) {
+				echo "0";
+			}
 		}
 	}
 
@@ -379,7 +404,6 @@ final class UserManagement extends BaseController
 		$phone_number = $_POST['phone'];
 		$first_name = $_POST['first_name'];
 		$last_name = $_POST['last_name'];
-
 		//data for email phpmailer
 		$hash_password = password_hash($password, PASSWORD_DEFAULT);
 		$auth_code = password_hash($username, PASSWORD_DEFAULT);
@@ -419,7 +443,6 @@ final class UserManagement extends BaseController
 			$stmt->execute();
 
 			//move to sendMail
-
 			$this->sendMail($email, $username, $auth_code, SIGN_UP);
 		}
 

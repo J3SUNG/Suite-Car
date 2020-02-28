@@ -31,7 +31,9 @@
         <activity
             android:name=".ui.dialog.AirInfoOptionDialog"
             android:theme="@style/myDialog" />
-
+        <activity
+            android:name=".ui.dialog.HeartInfoOptionDialog"
+            android:theme="@style/myDialog" />
         <activity android:name=".ui.airinfo.AirInfoActivity" />
 
         <meta-data

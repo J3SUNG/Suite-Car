@@ -92,8 +92,8 @@ interface IServer {
         @Field("time") time: String,
         @Field("heart") heart: Int,
         @Field("rr_interval") rr_interval: Int,
-        @Field("latitude") latitude: Float,
-        @Field("longitude") longitude: Float
+        @Field("latitude") latitude: Double,
+        @Field("longitude") longitude: Double
     ): Call<ResponseBody>
 
     @POST("udooDataTransfer")
@@ -113,9 +113,30 @@ interface IServer {
             @Field("CO_AQI") CO_AQI: Double,
             @Field("SO2_AQI") SO2_AQI: Double,
             @Field("PM25_AQI") PM25_AQI: Double,
-            @Field("latitude") latitude: Float,
-            @Field("longitude") longitude: Float
+            @Field("latitude") latitude: Double,
+            @Field("longitude") longitude: Double
             ): Call<ResponseBody>
+
+    @POST("test_function")
+    @FormUrlEncoded
+    fun test_function(
+        @Field("device") device: Int,
+        @Field("sensor_no") sensor_no: Int,
+        @Field("time") time: String,
+        @Field("temperature") temperature: Double,
+        @Field("NO2") NO: Double,
+        @Field("O3") O3: Double,
+        @Field("CO") CO: Double,
+        @Field("SO2") SO2: Double,
+        @Field("PM25") PM25: Double,
+        @Field("NO2_AQI") NO2_AQI: Double,
+        @Field("O3_AQI") O3_AQI: Double,
+        @Field("CO_AQI") CO_AQI: Double,
+        @Field("SO2_AQI") SO2_AQI: Double,
+        @Field("PM25_AQI") PM25_AQI: Double,
+        @Field("latitude") latitude: Double,
+        @Field("longitude") longitude: Double
+    ): Call<ResponseBody>
 
     @GET("db_data_for_map")
     fun db_data_for_map(): Call<ResponseBody>

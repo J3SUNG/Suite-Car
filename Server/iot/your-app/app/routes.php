@@ -24,6 +24,12 @@ $app->get('/change_password_page', 'App\Controller\HomeController:change_passwor
 $app->get('/maps', 'App\Controller\HomeController:maps')
 ->setName('maps');
 
+$app->get('/team', 'App\Controller\HomeController:team')
+    ->setName('/team');
+
+$app->get('/list_view', 'App\Controller\HomeController:list_view')
+    ->setName('/list_view');
+
 //UserManagement Route
 $app->get('/sendmail', 'App\Controller\UserManagement:sendMail')
     ->setName('sendmail');
@@ -43,7 +49,7 @@ $app->get('/forgotten_new_password', 'App\Controller\UserManagement:forgotten_ne
 $app->get('/forgotten_new_password_confirm', 'App\Controller\UserManagement:forgotten_new_password_confirm')
     ->setName('forgotten_new_password_confirm');
 
-$app->get('/forgotten_check', 'App\Controller\UserManagement:forgotten_check')
+$app->post('/forgotten_check', 'App\Controller\UserManagement:forgotten_check')
     ->setName('forgotten_check');
 
 $app->post('/signin', 'App\Controller\UserManagement:signin')
@@ -71,6 +77,10 @@ $app->get('/senser_view', 'App\Controller\DataManagement:senser_view')
 $app->get('/fakesensors_as_json', 'App\Controller\DataManagement:fakesensors_as_json')
     ->setName('fakesensors_as_json');
 
+$app->get('/infowindow_to_chart', 'App\Controller\DataManagement:infowindow_to_chart')
+    ->setName('/infowindow_to_chart');
+
+//ChartsController route
 $app->get('/charts/chartdata-as-json', 'App\Controller\ChartsController:chart1_json')
     ->setName('/chart1_json');
 
@@ -98,14 +108,8 @@ $app->get('/heart_chart', 'App\Controller\ChartsController:heart_chart')
 $app->get('/charts/receive_combobox', 'App\Controller\ChartsController:receive_combobox')
     ->setName('/charts/receive_combobox');
 
-$app->get('/infowindow_to_chart', 'App\Controller\DataManagement:infowindow_to_chart')
-    ->setName('/infowindow_to_chart');
-
-$app->get('/team', 'App\Controller\HomeController:team')
-    ->setName('/team');
-
-$app->get('/list_view', 'App\Controller\HomeController:list_view')
-    ->setName('/list_view');
+$app->get('/heart_data_additional_info', 'App\Controller\ChartsController:heart_data_additional_info')
+    ->setName('/heart_data_additional_info');
 
     //SensorManagement route
 $app->get('/sensorList', 'App\Controller\SensorManagement:sensorList')
@@ -122,5 +126,9 @@ $app->post('/sensorAssociation', 'App\Controller\SensorManagement:sensorAssociat
 
 $app->post('/polarDataTransfer', 'App\Controller\SensorManagement:polarDataTransfer')
 ->setName('polarDataTransfer');
+
 $app->post('/udooDataTransfer', 'App\Controller\SensorManagement:udooDataTransfer')
 ->setName('udooDataTransfer');
+
+$app->post('/test_function', 'App\Controller\SensorManagement:test_function')
+->setName('test_function');

@@ -123,10 +123,11 @@ $(function(){
             },
             success : function(data) {
                 alert(data);
+                location.href = "login";
                 //alert("E-mail has been sent. Check your E-mail.");
             },
             error : function (request, error) {
-                alert(" Email already sent to your E-mail. ");
+                alert("Error occured.");
             }
         });
     });

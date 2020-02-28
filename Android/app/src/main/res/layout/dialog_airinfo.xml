@@ -60,16 +60,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
                 <CheckBox
-                    android:id="@+id/pm25Check"
+                    android:id="@+id/coCheck"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:checked="true"
                     android:onClick="onCheck"
-                    android:text="PM2.5" />
-
+                    android:text="CO" />
                 <CheckBox
                     android:id="@+id/so2Check"
                     android:layout_width="0dp"
@@ -78,18 +75,6 @@
                     android:onClick="onCheck"
                     android:text="SO2" />
 
-                <CheckBox
-                    android:id="@+id/tempCheck"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="onCheck"
-                    android:text="Temp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
                 <CheckBox
                     android:id="@+id/no2Check"
@@ -98,7 +83,11 @@
                     android:layout_weight="1"
                     android:onClick="onCheck"
                     android:text="NO2" />
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
                 <CheckBox
                     android:id="@+id/o3Check"
                     android:layout_width="0dp"
@@ -106,14 +95,14 @@
                     android:layout_weight="1"
                     android:onClick="onCheck"
                     android:text="O3" />
-
                 <CheckBox
-                    android:id="@+id/coCheck"
+                    android:id="@+id/pm25Check"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:checked="true"
                     android:onClick="onCheck"
-                    android:text="CO" />
+                    android:text="PM2.5" />
             </LinearLayout>
 
             <LinearLayout

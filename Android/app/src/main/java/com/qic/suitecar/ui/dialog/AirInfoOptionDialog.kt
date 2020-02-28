@@ -23,13 +23,18 @@ import java.util.*
 class AirInfoOptionDialog : AppCompatActivity() {
 
     private val TAG = "AirInfoOptionDialog"
-    var whichData = arrayOf(true, false, false, false, false, false).toBooleanArray()
+    lateinit var whichData:BooleanArray
     lateinit var dateTimeDialogFragment:SwitchDateTimeDialogFragment
     var whichDate=0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_airinfo)
-
+        whichData=intent.getBooleanArrayExtra("WhichData")
+        coCheck.isChecked=whichData[0]
+        so2Check.isChecked=whichData[1]
+        no2Check.isChecked=whichData[2]
+        o3Check.isChecked=whichData[3]
+        pm25Check.isChecked=whichData[4]
         // Initialize
         dateTimeDialogFragment = SwitchDateTimeDialogFragment.newInstance(
             "Date",
@@ -86,16 +91,14 @@ class AirInfoOptionDialog : AppCompatActivity() {
     }
 
     fun onCheck(view: View) {
-        var no = when (view.id) {
-            R.id.pm25Check -> 0
-            R.id.so2Check -> 1
-            R.id.tempCheck -> 2
-            R.id.no2Check -> 3
-            R.id.o3Check -> 4
-            R.id.coCheck -> 5
-            else -> 6
+        when (view.id) {
+            R.id.coCheck -> whichData[0]=coCheck.isChecked
+            R.id.so2Check -> whichData[1]=coCheck.isChecked
+            R.id.no2Check -> whichData[2]=coCheck.isChecked
+            R.id.o3Check -> whichData[3]=coCheck.isChecked
+            R.id.pm25Check -> whichData[4]=coCheck.isChecked
         }
-        whichData[no] = !whichData[no]
+
     }
 
     fun onClick(view: View) {
@@ -117,6 +120,7 @@ class AirInfoOptionDialog : AppCompatActivity() {
                 )
                 Log.d("ViewType",viewTypeGroup.indexOfChild(findViewById(viewTypeGroup.checkedRadioButtonId)).toString())
                 intent.putExtra("WhichData", whichData)
+                Log.d("whichData",whichData[0].toString()+whichData[1].toString()+whichData[2].toString()+whichData[3].toString()+whichData[4].toString())
                 intent.putExtra("StartDate",startDate.text)
                 intent.putExtra("EndDate",endDate.text)
                 setResult(OKAY,intent)

@@ -45,6 +45,7 @@ class Map : OnMapReadyCallback {
     constructor(smf: SupportMapFragment, context: Context) {
         this.context = context
         smf.getMapAsync(this)
+
         init()
     }
 
@@ -56,12 +57,12 @@ class Map : OnMapReadyCallback {
                 .addOnSuccessListener { location ->
                     if (location == null) {
                     } else {
-                        prev_loc = LatLng(location.latitude, location.longitude)    //초기위치 저장
+                     /*   prev_loc = LatLng(location.latitude, location.longitude)    //초기위치 저장
                         val markerOptions = MarkerOptions()
                         markerOptions.position(prev_loc)
                         markerOptions.title("Me")
                         markerOptions.icon(userIcon)
-                        userMaker = mMap?.addMarker(markerOptions)       //현재위치에 marker를 그림
+                        userMaker = mMap?.addMarker(markerOptions)       //현재위치에 marker를 그림*/
                     }
                 }
                 .addOnFailureListener {
@@ -85,17 +86,20 @@ class Map : OnMapReadyCallback {
                         var speed = location.speed
                         cur_loc = LatLng(lat, lng)             //새로받은 정보로 현재위치 설정
 
-                        if (userMaker != null) userMaker!!.remove()     //이미 그려진 마커가 있으면 지우고 재생성
+                       /* if (userMaker != null) userMaker!!.remove()     //이미 그려진 마커가 있으면 지우고 재생성
                         val markerOptions = MarkerOptions()
                         markerOptions.position(cur_loc)
                         markerOptions.title("Me")
                         markerOptions.icon(userIcon)
 
-                        userMaker = mMap?.addMarker(markerOptions)
+                        userMaker = mMap?.addMarker(markerOptions)*/
                         mMap!!.setOnMarkerClickListener {
                             var intent = Intent(context, AirInfoActivity::class.java)
-                            intent.putExtra("Title", it.title)
-                            startActivity(context, intent, null)
+                            Log.d("marker Click",it.title)
+                            var a = it.title.split(",")
+                            intent.putExtra("SensorNo",a[0])
+                            intent.putExtra("SensorName",a[1])
+                            context.startActivity(intent)
                             true
                         }
 
@@ -132,28 +136,44 @@ class Map : OnMapReadyCallback {
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
-    fun refreshMarker() {
+    fun refreshMarker(whichAQI:Int) {
         for (i in sensorsMarkers) {
             i.remove()
         }
         for (i in sensorCircles) {
             i.remove()
         }
-
         for (i in airInfoForMaps) {
             var icon = makingIcon(R.drawable.ic_maker_marker, context)
             val markerOptions = MarkerOptions()
-            markerOptions.position(LatLng(i.latitude, i.longitude))
-            markerOptions.title(i.username) //TODO:sensor name로 바꾸기
+            markerOptions.position(LatLng(i.lat, i.lng))
+            markerOptions.title(i.sensor_no.toString()+","+i.sname)
             markerOptions.icon(icon)
-            sensorsMarkers.add(mMap?.addMarker(markerOptions)!!)       //현재위치에 marker를 그림
+            sensorsMarkers.add(mMap?.addMarker(markerOptions)!!)
             Log.d("refreshMarker", markerOptions.position.toString())
+            if(whichAQI==0) return
+            var aqiValue:Double=when(whichAQI){
+                1->i.CO_aqi
+                2->i.NO2_aqi
+                3->i.SO2_aqi
+                4->i.O3_aqi
+                5->i.PM25_Aqi
+                0->0.0
+                else->0.0
+            }
+            var color=0
+            if(aqiValue<50) color=Color.argb(126,0,255,0)
+            else if(aqiValue<100) color=Color.argb(126,255,255,0)
+            else if(aqiValue<150) color=Color.argb(126,255,126,0)
+            else if(aqiValue<200) color=Color.argb(126,255,0,0)
+            else if(aqiValue<300) color=Color.argb(126,148,0,164)
+            else if(aqiValue<500) color=Color.argb(126,154,8,8)
             //태그달기, 값에따라 색바꾸기
             val circleOptions = CircleOptions()
-                    .center(LatLng(i.latitude, i.longitude))
-                    .radius(10000.0).strokeWidth(10F)
-                    .strokeColor(Color.GREEN)
-                    .fillColor(Color.argb(128, 255, 0, 0))
+                    .center(LatLng(i.lat, i.lng))
+                    .radius(100.0).strokeWidth(10F)
+                    .strokeColor(color)
+                    .fillColor(color)
                     .clickable(true)
             sensorCircles.add(mMap?.addCircle(circleOptions)!!)
         }

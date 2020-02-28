@@ -153,6 +153,7 @@
                                         var view_type = 0;
                                         var sensor_no;
                                         $now = new Date();
+
                                         $(function(){ 
                                             $.ajax({
                                             url: "/charts/receive_combobox",
@@ -218,29 +219,37 @@
                                                     alert("Found Current Data");
                                                 }
                                             }
-
                                             if(jsonData != ""){
                                                 $json_data = JSON.parse(jsonData);
-                                            
+                                                
                                                 var AVG = 0;
                                                 var MAX = 0;
                                                 var MIN = 0;
 
-                                                for(var i=0; i<$json_data.rows.length; ++i){
-                                                    AVG += $json_data.rows[i].c[1].v;
-                                                    
-                                                    if($json_data.rows[i].c[1].v > MAX){
-                                                        MAX = $json_data.rows[i].c[1].v;
+                                                $.ajax({
+                                                url: "/heart_data_additional_info",
+                                                    dataType:"json",
+                                                    async: false,
+                                                    type : "GET",
+                                                    data : {
+                                                        "sensor_no" : sensor_no,
+                                                        "start_date" : start_date,
+                                                        "end_date" : end_date
+                                                    },
+                                                    success : function(data) {
+                                                        AVG = data[0].avg;
+                                                        MAX = data[0].max;
+                                                        MIN = data[0].min;
+
+                                                        
+                                                        $('.AVG').text(AVG);
+                                                        $('.MAX').text(MAX);
+                                                        $('.MIN').text(MIN);
+                                                    },
+                                                    error : function(data) {
+                                                        alert("There is something wrong@.");
                                                     }
-                                                    if($json_data.rows[i].c[1].v < MIN || MIN == 0) { 
-                                                        MIN = $json_data.rows[i].c[1].v;
-                                                    }
-                                                }
-                                                AVG /= $json_data.rows.length;
-                                                AVG = AVG.toFixed(1);
-                                                $('.AVG').text(AVG);
-                                                $('.MAX').text(MAX);
-                                                $('.MIN').text(MIN);
+                                                });
 
                                                 // Create our data table out of JSON data loaded from server.
                                                 var data = new google.visualization.DataTable(jsonData);
@@ -256,8 +265,8 @@
                                                             1: { targetAxisIndex: 1, color: '#f1ca3a', type: 'bars'}
                                                         },
                                                         vAxes: {
-                                                            0: {title: 'Heart Data', titleTextStyle: {italic: false}},
-                                                            1: {title: 'rr_Interval', titleTextStyle: {italic: false}}
+                                                            0: {title: 'Heart Data', titleTextStyle: {italic: false}, viewWindow: { min: 50, max: 150}},
+                                                            1: {title: 'rr_Interval', titleTextStyle: {italic: false}, viewWindow: { min: 500, max: 1000}}
                                                         }
                                                     };
                                                 }
@@ -273,8 +282,8 @@
                                                             1: { targetAxisIndex: 1, color: '#f1ca3a', type: 'bars'}
                                                         },
                                                         vAxes: {
-                                                            0: {title: 'Heart Data', titleTextStyle: {italic: false}},
-                                                            1: {title: 'rr_Interval', titleTextStyle: {italic: false}}
+                                                            0: {title: 'Heart Data', titleTextStyle: {italic: false}, viewWindow: { min: 50, max: 150}},
+                                                            1: {title: 'rr_Interval', titleTextStyle: {italic: false}, viewWindow: { min: 500, max: 1000}}
                                                         }
                                                     };
                                                 }
@@ -319,6 +328,9 @@
                                 </div>
                                 
                                 <div class = "text_box_div">
+                                    <div class = "text_heart">
+                                        - Heart Data -
+                                    </div>
                                     <div class = "text_box">
                                         <div class = "text_box_text">
                                            AVG : <div class = "AVG change_text"></div>
@@ -351,15 +363,15 @@
                                     document.getElementById('userdate1').value = month.toISOString().substring(0, 10);
                                     document.getElementById('userdate2').value = today.toISOString().substring(0, 10);
                                     document.getElementById('usertime1').value = "00:00";
-                                    document.getElementById('usertime2').value = "00:00";
+                                    document.getElementById('usertime2').value = "23:59";
 
                                     var start_date = $('#userdate1').val() + " " + $('#usertime1').val();
                                     var end_date = $('#userdate2').val() + " " + $('#usertime2').val();
 
                                     $(function(){ 
                                         $("#button_date_submit").click(function(){ 
-                                            start_date = $('#userdate1').val() + $('#usertime1').val();
-                                            end_date = $('#userdate2').val() + $('#usertime2').val();
+                                            start_date = $('#userdate1').val() + " " + $('#usertime1').val();
+                                            end_date = $('#userdate2').val() + " " + $('#usertime2').val();
                                             
                                             var startDate = $( "input[name='userdate1']" ).val(); //2017-12-10
                                             var startDateArr = startDate.split('-');
@@ -391,10 +403,7 @@
     
 
     
-    <!-- Map -->
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4E2DLjl0PUtVHjQruVcL0GJgmamn4UgY&callback=initMap">
-    </script>
+
     <!-- Jquery JS-->
     <script src="vendor/jquery-3.2.1.min.js"></script>
     <!-- Bootstrap JS-->

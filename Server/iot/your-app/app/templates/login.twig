@@ -120,16 +120,15 @@ $("#submit").click(function(event) {
                 location.href = "home";
             }
             else if(data == "password_change") {
-                location.href = "home";
                 alert("you should change the password");
-                alert("window done");
+                location.href = "home";
             }
             else {
                 alert("failed");
             }
         },
         error : function (request, error) {
-            alert(" Email already sent to your E-mail. ");
+            alert("There is something wrong on Sign in process.");
         }
     });
 });

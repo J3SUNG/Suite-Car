@@ -145,6 +145,9 @@
                                     <!-- MAP DATA-->
                                     <div id="chart_div">
                                         <script type="text/javascript">
+                                            google.load("visualization", "1", {packages:["corechart"]});
+                                            google.setOnLoadCallback(drawChart);
+                                            
                                             var user_no = {{user_no}};
                                             var sensor_no = {{sensor_no}};
                                             $now = new Date();
@@ -198,8 +201,6 @@
                                                 sensor_no = $("#combo option:selected").val();
                                             } 
                                             
-                                            google.load("visualization", "1", {packages:["corechart"]});
-                                            google.setOnLoadCallback(drawChart);
                                             var TEM = 0;
                                             var CO = 0;
                                             var O3 = 0;
@@ -244,44 +245,47 @@
                                                 if(view_type == 0){
                                                     var options = {
                                                         hAxis: {
-                                                        title: "Air Data Realtime",
-                                                                textPosition : 'none'
+                                                            title: "Air Data Realtime",
+                                                            textPosition : 'none'
                                                         },
                                                         curveType: 'function',
                                                         series: {
-                                                            0: { targetAxisIndex: 1, color: '#ff111d', type: 'line',lineDashStyle: [4, 4], lineWidth: 5}
+                                                            0: { targetAxisIndex: 0, type: 'line',lineDashStyle: [4, 4], lineWidth: 5},
+                                                            1: { targetAxisIndex: 1}
                                                         },
                                                         legend: {
                                                             align: 'top'
                                                         },
                                                         vAxes: {
-                                                            0: {title: 'Air AQI Data', titleTextStyle: {italic: false}},
-                                                            1: {title: 'Temperature', titleTextStyle: {italic: false}}
+                                                            0: {title: 'Temperature', titleTextStyle: {italic: false}, viewWindow: { min: 0, max: 600}},
+                                                            1: {title: 'Air AQI Data', titleTextStyle: {italic: false}, viewWindow: { min: 0, max: 600}}
+                                                            
                                                         }
                                                     };
                                                 }
                                                 else{
+                                                    $x_date = start_date + " ~ " + end_date;
                                                     var options = {
-                                                        hAxis: {
-                                                        title: "Air Data Realtime",
-                                                                textPosition : 'none'
+                                                        hAxis: { 
+                                                            title: $x_date,
+                                                            textPosition : 'none'
                                                         },
                                                         curveType: 'function',
                                                         series: {
-                                                            0: { targetAxisIndex: 1, color: '#ff111d', type: 'line',lineDashStyle: [4, 4], lineWidth: 5}
+                                                            0: { targetAxisIndex: 0, color: '#ff111d', type: 'line',lineDashStyle: [2, 2], lineWidth: 2},
+                                                            1: { targetAxisIndex: 1, color: '#f1ca3a'}
                                                         },
                                                         legend: {
                                                             align: 'top'
                                                         },
                                                         vAxes: {
-                                                            0: {title: 'Air Data', titleTextStyle: {italic: false}},
-                                                            1: {title: 'Temperature', titleTextStyle: {italic: false}}
+                                                            0: {title: 'Air Data', titleTextStyle: {italic: false}, minValue: 0, maxValue:500},
+                                                            1: {title: 'Temperature', titleTextStyle: {italic: false}, minValue: 0, maxValue:100}
                                                         }
                                                     };
                                                 }
                                                 
                                                 var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-
                                                 chart.draw(data, options);
 
                                                 view = new google.visualization.DataView(data);
@@ -314,6 +318,7 @@
 
                                             $('#combo').change(function() {
                                                 flag = 1;
+                                                drawChart();
                                             });
 
                                             var timer = setInterval(drawChart, 1000);
@@ -456,7 +461,7 @@
                                         document.getElementById('userdate1').value = month.toISOString().substring(0, 10);
                                         document.getElementById('userdate2').value = today.toISOString().substring(0, 10);
                                         document.getElementById('usertime1').value = "00:00";
-                                        document.getElementById('usertime2').value = "00:00";
+                                        document.getElementById('usertime2').value = "23:59";
 
                                         var start_date = $('#userdate1').val() + " " + $('#usertime1').val();
                                         var end_date = $('#userdate2').val() + " " + $('#usertime2').val();

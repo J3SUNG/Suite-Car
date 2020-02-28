@@ -9,4 +9,5 @@ class BluetoothDevice {
    var initialStart = true
    var connected = Constants.Connected.False
     var deviceAddress: String? = null
+    var sensorNo:Int=0
 }
