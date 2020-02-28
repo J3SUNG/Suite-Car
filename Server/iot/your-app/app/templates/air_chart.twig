@@ -241,19 +241,44 @@
                                                 // Create our data table out of JSON data loaded from server.
                                                 var data = new google.visualization.DataTable(jsonData);
                                                 
-                                                var options = {
-                                                    hAxis: {
-                                                    title: "Air Data Realtime",
-                                                            textPosition : 'none'
-                                                    },
-                                                    curveType: 'function',
-                                                    series: {
-                                                        0: { targetAxisIndex: 1, color: '#ff111d', type: 'line',lineDashStyle: [4, 4], lineWidth: 5}
-                                                    },
-                                                    legend: {
-                                                        align: 'top'
-                                                    }
-                                                };
+                                                if(view_type == 0){
+                                                    var options = {
+                                                        hAxis: {
+                                                        title: "Air Data Realtime",
+                                                                textPosition : 'none'
+                                                        },
+                                                        curveType: 'function',
+                                                        series: {
+                                                            0: { targetAxisIndex: 1, color: '#ff111d', type: 'line',lineDashStyle: [4, 4], lineWidth: 5}
+                                                        },
+                                                        legend: {
+                                                            align: 'top'
+                                                        },
+                                                        vAxes: {
+                                                            0: {title: 'Air AQI Data', titleTextStyle: {italic: false}},
+                                                            1: {title: 'Temperature', titleTextStyle: {italic: false}}
+                                                        }
+                                                    };
+                                                }
+                                                else{
+                                                    var options = {
+                                                        hAxis: {
+                                                        title: "Air Data Realtime",
+                                                                textPosition : 'none'
+                                                        },
+                                                        curveType: 'function',
+                                                        series: {
+                                                            0: { targetAxisIndex: 1, color: '#ff111d', type: 'line',lineDashStyle: [4, 4], lineWidth: 5}
+                                                        },
+                                                        legend: {
+                                                            align: 'top'
+                                                        },
+                                                        vAxes: {
+                                                            0: {title: 'Air Data', titleTextStyle: {italic: false}},
+                                                            1: {title: 'Temperature', titleTextStyle: {italic: false}}
+                                                        }
+                                                    };
+                                                }
                                                 
                                                 var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
 
