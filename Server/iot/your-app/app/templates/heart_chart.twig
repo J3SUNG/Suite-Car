@@ -175,12 +175,13 @@
                                         })
                                         function addOption(data){
                                             for(var index in data) {
-                                                var data_info = data[index].sensor_no;
+                                                var s_no = data[index].sensor_no;
+                                                var data_info = data[index].sname;
 
                                                 var frm = document.combobox;
                                                 var op = new Option();
-                                                op.value = data_info; // 값 설정
-                                                op.text = "Sensor_no : " + data_info; // 텍스트 설정
+                                                op.value = s_no; // 값 설정
+                                                op.text = data_info; // 텍스트 설정
                                         
                                                 op.selected = true; // 선택된 상태 설정 (기본값은 false이며 선택된 상태로 만들 경우에만 사용)
                                         
@@ -358,7 +359,7 @@
 
                                 <script>
                                     var today = new Date();
-                                    var month = new Date(today - 2592000000);
+                                    var month = new Date(today - 86400000);
                                                                                                             
                                     document.getElementById('userdate1').value = month.toISOString().substring(0, 10);
                                     document.getElementById('userdate2').value = today.toISOString().substring(0, 10);

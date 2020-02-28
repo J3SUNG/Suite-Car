@@ -61,7 +61,7 @@ final class ChartsController extends BaseController
                             AND STR_TO_DATE(time_in, '%Y-%m-%d %H:%i:%s')
                                 BETWEEN STR_TO_DATE(:start_date, '%Y-%m-%d %H:%i:%s')
                                     AND STR_TO_DATE(:end_date, '%Y-%m-%d %H:%i:%s')
-                                    ";
+                                    LIMIT 100";
                     $stmt = $this->em->getConnection()->prepare($sql);
                     $params['sensor_no'] = $sensor_no;
                     $params['start_date'] = $start_date;
@@ -247,14 +247,14 @@ final class ChartsController extends BaseController
         //air data receive
         
         if($type == 0){
-            $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND (type = 'INAIRSENSOR' OR type = 'OUTAIRSENSOR')";
+            $sql = "SELECT * from Sensors WHERE user_no = :user_no AND (type = 'INAIRSENSOR' OR type = 'OUTAIRSENSOR')";
             $stmt = $this->em->getConnection()->prepare($sql);
             $params['user_no'] = $user_no;
             $stmt->execute($params);
         }
         //heart data receive
         else if($type == 1){
-            $sql = "SELECT sensor_no from Sensors WHERE user_no = :user_no AND type = 'POLARSENSOR'";
+            $sql = "SELECT * from Sensors WHERE user_no = :user_no AND type = 'POLARSENSOR'";
             $stmt = $this->em->getConnection()->prepare($sql);
             $params['user_no'] = $user_no;
             $stmt->execute($params);
@@ -288,6 +288,7 @@ final class ChartsController extends BaseController
 				foreach ($result as $combo) {
                     $combobox[] =
 					array(
+                        "sname"=>$combo['sname'],
                         "sensor_no"=>$combo['sensor_no']
                     );
                 }

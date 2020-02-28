@@ -133,7 +133,7 @@
                                     <div class="sensor_title">
                                         Air Sensor Data
                                     </div><br>
-                                    <div class="sensor_no"> sensor_no : &nbsp </div>
+                                    <div class="sensor_no"> sensor name : &nbsp </div>
                                     <form name="combobox" class="combobox">
                                         <select id="combo" name="combo">
                                         </select>
@@ -179,7 +179,7 @@
                                                 var frm = document.combobox;
                                                 var op = new Option();
                                                 op.value = data_info; // 값 설정
-                                                op.text = "Sensor_no : " + data_info; // 텍스트 설정
+                                                op.text = "someone sensor"; // 텍스트 설정
                                         
                                                 op.selected = true; // 선택된 상태 설정 (기본값은 false이며 선택된 상태로 만들 경우에만 사용)
                                         
@@ -187,12 +187,12 @@
                                             }
                                             function addOption(data){
                                                 for(var index in data) {
-                                                    var data_info = data[index].sensor_no;
-
+                                                    var data_info = data[index].sname;
+                                                    var s_no = data[index].sensor_no;
                                                     var frm = document.combobox;
                                                     var op = new Option();
-                                                    op.value = data_info; // 값 설정
-                                                    op.text = "Sensor_no : " + data_info; // 텍스트 설정
+                                                    op.value = s_no; // 값 설정
+                                                    op.text = data_info; // 텍스트 설정
                                             
                                                     op.selected = true; // 선택된 상태 설정 (기본값은 false이며 선택된 상태로 만들 경우에만 사용)
                                             
@@ -251,15 +251,18 @@
                                                         curveType: 'function',
                                                         series: {
                                                             0: { targetAxisIndex: 0, type: 'line',lineDashStyle: [4, 4], lineWidth: 5},
-                                                            1: { targetAxisIndex: 1}
+                                                            1: { targetAxisIndex: 1},
+                                                            2: { targetAxisIndex: 1},
+                                                            3: { targetAxisIndex: 1},
+                                                            4: { targetAxisIndex: 1},
+                                                            5: { targetAxisIndex: 1}
                                                         },
                                                         legend: {
                                                             align: 'top'
                                                         },
                                                         vAxes: {
-                                                            0: {title: 'Temperature', titleTextStyle: {italic: false}, viewWindow: { min: 0, max: 600}},
-                                                            1: {title: 'Air AQI Data', titleTextStyle: {italic: false}, viewWindow: { min: 0, max: 600}}
-                                                            
+                                                            0: {title: 'Temperature', titleTextStyle: {italic: false}, viewWindow: { min: 0, max: 100}},
+                                                            1: {title: 'Air AQI Data', titleTextStyle: {italic: false}, viewWindow: { min: 0, max: 500}}
                                                         }
                                                     };
                                                 }
@@ -272,15 +275,24 @@
                                                         },
                                                         curveType: 'function',
                                                         series: {
-                                                            0: { targetAxisIndex: 0, color: '#ff111d', type: 'line',lineDashStyle: [2, 2], lineWidth: 2},
-                                                            1: { targetAxisIndex: 1, color: '#f1ca3a'}
+                                                            0: { targetAxisIndex: 0, type: 'line',lineDashStyle: [2, 2], lineWidth: 2},
+                                                            1: { targetAxisIndex: 1},
+                                                            2: { targetAxisIndex: 1},
+                                                            3: { targetAxisIndex: 1},
+                                                            4: { targetAxisIndex: 1},
+                                                            5: { targetAxisIndex: 1},
+                                                            6: { targetAxisIndex: 1},
+                                                            7: { targetAxisIndex: 1},
+                                                            8: { targetAxisIndex: 1},
+                                                            9: { targetAxisIndex: 1},
+                                                            10: { targetAxisIndex: 1}
                                                         },
                                                         legend: {
                                                             align: 'top'
                                                         },
                                                         vAxes: {
-                                                            0: {title: 'Air Data', titleTextStyle: {italic: false}, minValue: 0, maxValue:500},
-                                                            1: {title: 'Temperature', titleTextStyle: {italic: false}, minValue: 0, maxValue:100}
+                                                            0: {title: 'Temperature', titleTextStyle: {italic: false}, viewWindow: { min: 0, max: 100}},
+                                                            1: {title: 'Air AQI Data', titleTextStyle: {italic: false}, viewWindow: { min: 0, max: 500}}
                                                         }
                                                     };
                                                 }
@@ -456,12 +468,12 @@
                                     
                                     <script>
                                         var today = new Date();
-                                        var month = new Date(today - 2592000000);
+                                        var month = new Date(today - 86400000);
                                         
                                         document.getElementById('userdate1').value = month.toISOString().substring(0, 10);
-                                        document.getElementById('userdate2').value = today.toISOString().substring(0, 10);
-                                        document.getElementById('usertime1').value = "00:00";
-                                        document.getElementById('usertime2').value = "23:59";
+                                        document.getElementById('userdate2').value = month.toISOString().substring(0, 10);
+                                        document.getElementById('usertime1').value = "21:00";
+                                        document.getElementById('usertime2').value = "22:00";
 
                                         var start_date = $('#userdate1').val() + " " + $('#usertime1').val();
                                         var end_date = $('#userdate2').val() + " " + $('#usertime2').val();
