@@ -120,17 +120,18 @@
                     android:id="@+id/realtimeNotConnect"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:gravity="center"
                     android:text="Not Connected"
                     android:textColor="#FF0000"
                     android:textSize="15sp"
-                    android:visibility="gone"/>
+                    android:visibility="visible"/>
 
                 <LinearLayout
                     android:id="@+id/realtimeHeartLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:onClick="onClick"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/realtimeHRTextView"
@@ -222,7 +223,7 @@
                 style="@style/MenuButtonsSmall.White"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_no2"
+                android:src="@drawable/ic_no2_unselected"
                 fab:fab_label="NO2" />
 
             <com.github.clans.fab.FloatingActionButton

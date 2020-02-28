@@ -121,11 +121,11 @@ class MainActivity : AppCompatActivity(), ServiceConnection, SerialListener {
             it.visibility = View.GONE
             var icon: Int
             icon = when (it.id) {
-                R.id.coFAB -> R.drawable.ic_co
+                R.id.coFAB -> R.drawable.ic_co_unselected
                 R.id.so2FAB -> R.drawable.ic_so2
-                R.id.no2FAB -> R.drawable.ic_no2
-                R.id.o3FAB -> R.drawable.ic_o3
-                R.id.pm25FAB -> R.drawable.ic_pm25
+                R.id.no2FAB -> R.drawable.ic_no2_unselected
+                R.id.o3FAB -> R.drawable.ic_o3_unselected
+                R.id.pm25FAB -> R.drawable.ic_pm25_unselected
                 R.id.cancelFAB->R.drawable.ic_aqi
                 else -> 0
             }
@@ -233,7 +233,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection, SerialListener {
             R.id.suiteButton -> {
 
                // suiteManager.suite(inAirSuiteData,inTempSuiteData,outAirSuiteData,outTempSuiteData)
-                suiteManager.suite(10.0,10.0,10.0,10.0)
+                suiteManager.suite(10.0,10.0,30.0,10.0)
 
             }
             R.id.drawerEditUserButton -> {
@@ -958,6 +958,63 @@ class MainActivity : AppCompatActivity(), ServiceConnection, SerialListener {
             Log.d("DATE", sdf.format(dt).toString())
             Runnable {
                 myApi.udooDataTransfer(1,17,sdf.format(dt).toString(),
+                    random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,
+                    random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,
+                    random.nextDouble()*500,map.cur_loc.latitude+0.002,map.cur_loc.longitude+0.001)
+                    .enqueue(object :
+                        retrofit2.Callback<ResponseBody> {
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            Log.d("Dummy","Dummy")
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            Log.d("Close Account", t.message)
+                        }
+                    })
+            }.run()
+            Runnable {
+                myApi.udooDataTransfer(1,17,sdf.format(dt).toString(),
+                    random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,
+                    random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,
+                    random.nextDouble()*500,map.cur_loc.latitude+0.001,map.cur_loc.longitude+0.004)
+                    .enqueue(object :
+                        retrofit2.Callback<ResponseBody> {
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            Log.d("Dummy","Dummy")
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            Log.d("Close Account", t.message)
+                        }
+                    })
+            }.run()
+            Runnable {
+                myApi.udooDataTransfer(1,20,sdf.format(dt).toString(),
+                    random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,
+                    random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,
+                    random.nextDouble()*500,map.cur_loc.latitude-0.001,map.cur_loc.longitude-0.001)
+                    .enqueue(object :
+                        retrofit2.Callback<ResponseBody> {
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            Log.d("Dummy","Dummy")
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            Log.d("Close Account", t.message)
+                        }
+                    })
+            }.run()
+            Runnable {
+                myApi.udooDataTransfer(1,24,sdf.format(dt).toString(),
                     random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,
                     random.nextDouble()*500,random.nextDouble()*500,random.nextDouble()*500,
                     random.nextDouble()*500,map.cur_loc.latitude,map.cur_loc.longitude)

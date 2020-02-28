@@ -133,7 +133,9 @@ class AirInfoActivity : AppCompatActivity() {
                         whichData=z
                         if (data!!.getIntExtra("ViewType", 0) == 0) {
                             realTimeAqi()
+                            airInfoTypeTextView.text="RealTime AQI"
                         } else {
+                            airInfoTypeTextView.text="Historical AQI"
                             val startDate = data!!.getStringExtra("StartDate")
                             val endDate = data!!.getStringExtra("EndDate")
                             historicalAqi(
@@ -174,14 +176,18 @@ class AirInfoActivity : AppCompatActivity() {
                         var cols = jsonObject.getJSONArray("cols")
                         var rows = jsonObject.getJSONArray("rows")
                         Log.d("chart2_json", rows.getJSONObject(0).getJSONArray("c").getString(0))
+
                         var dataSets = ArrayList<LineDataSet>()
+                        ///
+                        /*
                         for (i in 1..5) {
                             var entries = ArrayList<Entry>()
                             for (j in 0 until (rows.length()))
                                 entries.add(
                                     Entry(
                                         j.toFloat(),
-                                        rows.getJSONObject(j).getJSONArray("c").getJSONObject(i).getDouble(
+                                        rows.getJSONObject(j).
+                                            getJSONArray("c").getJSONObject(i).getDouble(
                                             "v"
                                         ).toFloat()
                                     )
@@ -190,6 +196,82 @@ class AirInfoActivity : AppCompatActivity() {
 
                             dataSets.add(dataSet)
                         }
+                        */
+                        var entries = ArrayList<Entry>()
+                        for (j in 0 until (rows.length()))
+                            entries.add(
+                                Entry(
+                                    j.toFloat(),
+                                    rows.getJSONObject(j).
+                                        getJSONArray("c").getJSONObject(1).getDouble(
+                                        "v"
+                                    ).toFloat()
+                                )
+                            )
+                        var dataSet = LineDataSet(entries, "CO")
+                        dataSet.color=Color.RED
+                        dataSets.add(dataSet)
+
+                        entries = ArrayList<Entry>()
+                        for (j in 0 until (rows.length()))
+                            entries.add(
+                                Entry(
+                                    j.toFloat(),
+                                    rows.getJSONObject(j).
+                                        getJSONArray("c").getJSONObject(2).getDouble(
+                                        "v"
+                                    ).toFloat()
+                                )
+                            )
+                        dataSet = LineDataSet(entries, "SO2")
+                        dataSet.color=Color.DKGRAY
+                        dataSets.add(dataSet)
+
+                        entries = ArrayList<Entry>()
+                        for (j in 0 until (rows.length()))
+                            entries.add(
+                                Entry(
+                                    j.toFloat(),
+                                    rows.getJSONObject(j).
+                                        getJSONArray("c").getJSONObject(3).getDouble(
+                                        "v"
+                                    ).toFloat()
+                                )
+                            )
+                        dataSet = LineDataSet(entries, "NO2")
+                        dataSet.color=Color.GREEN
+                        dataSets.add(dataSet)
+
+                        entries = ArrayList<Entry>()
+                        for (j in 0 until (rows.length()))
+                            entries.add(
+                                Entry(
+                                    j.toFloat(),
+                                    rows.getJSONObject(j).
+                                        getJSONArray("c").getJSONObject(4).getDouble(
+                                        "v"
+                                    ).toFloat()
+                                )
+                            )
+                        dataSet = LineDataSet(entries, "O3")
+                        dataSet.color=Color.BLUE
+                        dataSets.add(dataSet)
+
+                        entries = ArrayList<Entry>()
+                        for (j in 0 until (rows.length()))
+                            entries.add(
+                                Entry(
+                                    j.toFloat(),
+                                    rows.getJSONObject(j).
+                                        getJSONArray("c").getJSONObject(5).getDouble(
+                                        "v"
+                                    ).toFloat()
+                                )
+                            )
+                        dataSet = LineDataSet(entries, "PM2.5")
+                        dataSet.color=Color.CYAN
+                        dataSets.add(dataSet)
+                        ///
                         var data = LineData(dataSets.toList())
                         airInfoLineChart.data = data
 

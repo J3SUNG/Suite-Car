@@ -96,7 +96,9 @@ class HeartActivity : AppCompatActivity() {
             }
             hrEntries.add(Entry(hrEntries.size.toFloat(), realTimeHrStack.first()))
             rrEntries.add(BarEntry(rrEntries.size.toFloat(), realTimeRrStack.first()))
-
+            hrAvg.text=realTimeHrStack.average().toString()
+            hrAvg.text=realTimeHrStack.min().toString()
+            hrAvg.text=realTimeHrStack.max().toString()
             realTimeHrStack.removeAt(0)
             realTimeRrStack.removeAt(0)
 
