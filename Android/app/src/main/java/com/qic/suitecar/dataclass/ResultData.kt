@@ -1,3 +1,3 @@
 package com.qic.suitecar.dataclass
 
-data class ResultData(var result:Boolean)
+data class ResultData(var result:Int)

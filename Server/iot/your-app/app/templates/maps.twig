@@ -1,0 +1,437 @@
+<html lang="en">
+
+<head>
+    <script type='text/javascript' src='http://code.jquery.com/jquery.min.js'></script>
+    <script src="js/jquery-2.0.3.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="au theme template">
+    <meta name="author" content="Hau Nguyen">
+    <meta name="keywords" content="au theme template">
+    
+    <!-- Title Page-->
+    <title>Suite Car</title>
+
+    <!-- Fontfaces CSS-->
+    <link href="css/font-face.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" media="all">
+    <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+
+    <!-- Bootstrap CSS-->
+    <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
+
+    <!-- Vendor CSS-->
+    <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
+    <link href="vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
+    <link href="vendor/wow/animate.css" rel="stylesheet" media="all">
+    <link href="vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" media="all">
+    <link href="vendor/slick/slick.css" rel="stylesheet" media="all">
+    <link href="vendor/select2/select2.min.css" rel="stylesheet" media="all">
+    <link href="vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" media="all">
+    <link href="vendor/vector-map/jqvmap.min.css" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="css/theme.css" rel="stylesheet" media="all">
+
+    <style>
+        .signup_button {
+            background-color: #27c96a;
+            border: none;
+            border-radius: 5px;
+            width: 130px;
+            height: 30px;
+            text-align: center;
+            color: white;
+            float: right;
+        }
+        .input_text {
+            border:0px;
+            font-size: 18px;
+            margin-top: 5px;
+        }
+        .button {
+            background-color: #27ae60;
+            border: none;
+            border-radius: 5px;
+            width: 130px;
+            height: 30px;
+            text-align: center;
+            color: white;
+            float: right;
+            margin-left: 20px;
+        }
+    </style>
+
+</head>
+
+<body class="animsition">
+    <div class="page-wrapper">
+        <!-- HEADER MOBILE-->
+        <header class="header-mobile d-block d-lg-none">
+            <div class="header-mobile__bar">
+                <div class="container-fluid">
+                    <div class="header-mobile-inner">
+                        <a class="logo" href="index.html">
+                            <img src="images/icon/logo.png" alt="CoolAdmin" />
+                        </a>
+                        <button class="hamburger hamburger--slider" type="button">
+                            <span class="hamburger-box">
+                                <span class="hamburger-inner"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- END HEADER MOBILE-->
+
+        <!-- MENU SIDEBAR-->
+        <!-- END MENU SIDEBAR-->
+
+        <!-- PAGE CONTAINER-->
+        <div class="page-container">
+            <!-- HEADER DESKTOP-->
+            <header id="header-desktop">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="logo">
+                            <a href="home">
+                                <img src="images/icon/logo.png" alt="Suite Car" />
+                            </a>
+                        </div>
+                        <div class="header-wrap">
+                            <div class="header-button">      
+                                <a href="team" class="nav">Team</a>   
+                                <a href="maps" class="nav">Map</a>
+                                <a href="air_chart" class="nav">Air Chart</a>
+                                <a href="heart_chart" class="nav">Heart Chart</a>
+                                <a href="list_view" class="nav">List View</a>
+                                <div class="account-wrap">
+                                    <div class="account-item clearfix js-item-menu">
+                                        <div class="image">
+                                            <img src="images/icon/avatar-03.jpg" alt="J3SUNG" />
+                                        </div>
+                                        <div class="content">
+                                            <a class="js-acc-btn" href="#">{{username}}</a>
+                                        </div>
+                                        <div class="account-dropdown js-dropdown">
+                                            <div class="info clearfix">
+                                                <div class="image">
+                                                    <a href="#">
+                                                        <img src="images/icon/avatar-03.jpg" alt="J3SUNG" />
+                                                    </a>
+                                                </div>
+                                                <div class="content">
+                                                    <h5 class="name">
+                                                        <a href="#">{{username}}</a>
+                                                    </h5> 
+                                                    <span class="email">{{email}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="account-dropdown__body">
+                                                <div class="account-dropdown__item">
+                                                    <a href="change_password_page">
+                                                        <i class="zmdi zmdi-account"></i>Password Change</a>
+                                                </div>
+                                                <div class="account-dropdown__item">
+                                                    <a href="id_cancelation_page">
+                                                        <i class="zmdi zmdi-settings"></i>ID Cancellation</a>
+                                                </div>
+                                                <div class="account-dropdown__item">
+                                                    <a id="signout">
+                                                        <i class="zmdi zmdi-power"></i>Sign Out</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- END HEADER DESKTOP-->
+
+            <div class="main-content" id="back_maps">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12 m-t-20">
+                                <div class="map_title">
+                                    Map
+                                </div><br>
+                                <!-- MAP DATA-->
+                                <!--<p id="demo"></p>
+                                <button onclick="getLocation()">try it</button>-->
+                                <label for="air_selection">Choose Air data</label>
+                                <select id = "air_selection">
+                                    <option value="PM25">PM2.5</option>
+                                    <option value="SO2">SO2</option>
+                                    <option value="NO2">NO2</option>
+                                    <option value="O3">O3</option>
+                                    <option value="CO">CO</option>
+                                </select>
+                                <div id="map"></div>
+                                <script>
+                                var TILE_SIZE = 256;
+                                var map;
+                                var activeInfoWindow;
+                                var marker = [];
+                                var infowindow = [];
+                                //var contents;
+                                var selection_airdata = 5;
+
+                                function func_get_json_data() {
+                                    var json = null;
+                                    $.ajax({
+                                        'async': false,
+                                        'global': false,
+                                        'url' : "/db_data_for_map",
+                                        'dataType' : "json",
+                                        'success' : function(data) {
+                                            json = data;
+                                        },
+                                        'error' : function(data) {
+                                            alert("No sensor working currently");
+                                        }
+                                    });
+                                    return json;
+                                }
+
+                                function initMap() {
+                                    var get_json_data = func_get_json_data();
+                                    var options = {
+                                        center : {lat : get_json_data[0].lat, // modify to current location
+                                        lng : get_json_data[0].lng},
+                                        zoom : 15,
+                                        mapTypeId : google.maps.MapTypeId.TERRAIN
+                                    }
+                                    
+                                    map = new google.maps.Map(document.getElementById("map"), options);
+                                    setTimeout(function(){ create_mark(get_json_data);
+                                                         }, 2000);
+                                }
+
+                                $('#air_selection').change(function() {
+                                    var selection = $(this).val();
+                                    switch(selection) {
+                                        case "CO" : selection_airdata = 1; break;
+                                        case "SO2" : selection_airdata = 2; break;
+                                        case "NO2" : selection_airdata = 3; break;
+                                        case "O3" : selection_airdata = 4; break;
+                                        case "PM25" : selection_airdata = 5; break;
+                                    }
+                                    create_mark(func_get_json_data());
+                                });
+
+                                function create_mark(json_data) {
+                                    clearOverlays();
+                                    var scale = 1 << map.getZoom();
+                                    var ne = project(map.getBounds().getNorthEast().lat(), map.getBounds().getNorthEast().lng());
+                                    var sw = project(map.getBounds().getSouthWest().lat(), map.getBounds().getSouthWest().lng());
+                                    var ne_pixel_point = new google.maps.Point(
+                                        Math.floor(ne.x * scale),
+                                        Math.floor(ne.y * scale));
+                                    //alert(ne_pixel_point.x);
+                                    var sw_pixel_point = new google.maps.Point(
+                                        Math.floor(sw.x * scale),
+                                        Math.floor(sw.y * scale));
+
+                                    for(var index in json_data) {
+                                        //alert(index);
+                                        var data_info = json_data[index];
+                                        var data_coordinate = project(data_info.lat, data_info.lng);
+                                        var data_pixel_point = new google.maps.Point(
+                                            Math.floor(data_coordinate.x * scale),
+                                            Math.floor(data_coordinate.y * scale));
+
+                                        //alert("data_info.lat" + data_info.lat + '<br>' + ne.lat());
+                                        /*
+                                        if((data_pixel_point.x > ne_pixel_point.x) || (data_pixel_point.y < ne_pixel_point.y)
+                                            || (data_pixel_point.x < sw_pixel_point.x) || (data_pixel_point.y > sw_pixel_point.y)) {
+                                                //alert("if entered" + data_pixel_point.x + "<br>" + data_pixel_point.y + "<br>" + index);
+                                                continue;
+                                            }
+                                        */
+                                        var selected_data;
+                                        switch(selection_airdata) {
+                                            case 1 : selected_data = data_info.CO_aqi; break;
+                                            case 2 : selected_data = data_info.SO2_aqi; break;
+                                            case 3 : selected_data = data_info.NO2_aqi; break;
+                                            case 4 : selected_data = data_info.O3_aqi; break;
+                                            case 5 : selected_data = data_info.PM25_aqi; break;
+                                        }
+                                        var data_color;
+                                        if(selected_data <= 50) {
+                                            data_color = '#00FF00';
+                                        }
+                                        else if(selected_data > 50 && selected_data <=100) {
+                                            data_color = '#FFFF00';
+                                        }
+                                        else if(selected_data > 100 && selected_data <= 150) {
+                                            data_color = '#FF8000';
+                                        }
+                                        else if(selected_data > 150 && selected_data <= 200) {
+                                            data_color = '#FF0000';
+                                        }
+                                        else if(selected_data > 200 && selected_data <= 300) {
+                                            data_color = '#FF00FF';
+                                        }
+                                        else if(selected_data > 300 && selected_data <= 500) {
+                                            data_color = '#800000';
+                                        }
+                                        else {
+                                            data_color = '#000000';
+                                        }
+                                        var contents = "<div><string><h1>" + "Sensor Name : " + data_info.sname + "</h1></div><br>"
+                                                    + "CO : " + data_info.CO_aqi + "<br>SO2 : " + data_info.SO2_aqi + "<br>NO2 : "
+                                                    + data_info.NO2_aqi + "<br>O3 : " + data_info.O3_aqi + "<br>PM2.5 : " + data_info.PM25_aqi
+                                                    + "<br>temperature : " + data_info.temperature + "<br>Time : " + data_info.time
+                                                    + "</string></div>"
+                                                    + "<br>"
+                                                    + "<a href='infowindow_to_chart?sensor=" + data_info.sensor_no + "&flag=" + 1 + "'>chart view</a>"
+                                                    ;
+                                        //alert("contents : " + contents[index] + " \n data_info.time : " + data_info.time);
+                                        //var map_zoom = map.getZoom();
+                                        //var radius_with_zoom = 10000 * map_zoom * (1 / Math.pow(2, map_zoom - 5));
+                                        //alert(data_info.time);
+                                        marker[index] = new google.maps.Circle({
+                                            map : map,
+                                            center : {lat : data_info.lat,
+                                            lng : data_info.lng},
+                                            radius : 100,
+                                            strokeColor: data_color,
+                                            strokeOpacity : 0.5,
+                                            strokeWeight : 2,
+                                            fillColor : data_color,
+                                            fillOpacity : 0.3,
+                                            draggable : false
+                                            //content : contents[index]
+                                        });
+                                        marker[index].content = contents;
+
+                                        infowindow[index] = new google.maps.InfoWindow();
+
+                                        google.maps.event.addListener(marker[index], 'click', function() {
+                                            //alert(contents[index] + "\nindex : " + index + "\ndata_info.time : " + data_info.time);
+                                            infowindow[index].setContent(this.content);
+                                            infowindow[index].setPosition(this.getCenter());
+                                            infowindow[index].open(map, this);
+                                            /*
+                                            if (selectedMarkerStoreId != null && selectedMarkerStoreId === marker[index].store_id) {
+                                                infoWindow.setContent(marker[index].htmlContent);
+                                            }
+
+                                            document.getElementById('infowin').innerHTML = "<p>" + obj[i]['Name'] + "<br />" + umFindroute(obj[i]['RouteID']) + "<br />" +
+                                                                                           "Speed: " + Math.round(obj[i]['GroundSpeed']) + " mph" + "</p>";
+                                            */
+                                        });
+
+                                        google.maps.event.addListener(map, 'idle', function() {
+                                            create_mark(func_get_json_data());
+                                        });
+                                    }
+                                }
+
+                                // The mapping between latitude, longitude and pixels is defined by the web
+                                // mercator projection.
+                                function project(latlng_lat, latlng_lng) {
+                                    var siny = Math.sin(latlng_lat * Math.PI / 180);
+
+                                    // Truncating to 0.9999 effectively limits latitude to 89.189. This is
+                                    // about a third of a tile past the edge of the world tile.
+                                    siny = Math.min(Math.max(siny, -0.9999), 0.9999);
+
+                                    return new google.maps.Point(
+                                        TILE_SIZE * (0.5 + latlng_lng / 360),
+                                        TILE_SIZE * (0.5 - Math.log((1 + siny) / (1 - siny)) / (4 * Math.PI)));
+                                }
+
+                                function clearOverlays() {
+                                    for(var i = 0; i < marker.length; i++) {
+                                        //alert(i);
+                                        //alert(marker.length + "<br>" + i + "<br>" + marker[i].center.lat() + "<br>" + marker[i].center.lng());
+                                        if(marker[i] != null) {
+                                            //infowindow[i].close();
+                                            marker[i].setMap(null);
+                                        }
+                                        infowindow[i] = null;
+                                        //marker[i].setMap(null);
+                                    }
+                                    marker = [];
+                                    infowindow = [];
+                                }
+                                setInterval(function(){create_mark(func_get_json_data());}, 10000);
+                                </script>
+                                <!-- END MAP DATA-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Map -->
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiAPSKH-VpDLtWk9tl3pn1gaF0ZmBTfq0&callback=initMap">
+    </script>
+    <!-- Jquery JS-->
+    <script src="vendor/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap JS-->
+    <script src="vendor/bootstrap-4.1/popper.min.js"></script>
+    <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
+    <!-- Vendor JS       -->
+    <script src="vendor/slick/slick.min.js">
+    </script>
+    <script src="vendor/wow/wow.min.js"></script>
+    <script src="vendor/animsition/animsition.min.js"></script>
+    <script src="vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
+    </script>
+    <script src="vendor/counter-up/jquery.waypoints.min.js"></script>
+    <script src="vendor/counter-up/jquery.counterup.min.js">
+    </script>
+    <script src="vendor/circle-progress/circle-progress.min.js"></script>
+    <script src="vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="vendor/chartjs/Chart.bundle.min.js"></script>
+    <script src="vendor/select2/select2.min.js">
+    </script>
+    <script src="vendor/vector-map/jquery.vmap.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.min.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.sampledata.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.world.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.brazil.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.europe.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.france.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.germany.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.russia.js"></script>
+    <script src="vendor/vector-map/jquery.vmap.usa.js"></script>
+
+    <!-- Main JS-->
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>
+
+<script type='text/javascript'>
+$("#signout").click(function(event) {
+    $.ajax({
+        url :"/signout",
+        success : function(data) {
+            if(data == "success") {
+                location.href = "login";
+            }
+            else {
+                alert("failed");
+            }
+        },
+        error : function (request, error) {
+            alert(" Email already sent to your E-mail. ");
+        }
+    });
+});
+</script>

@@ -40,6 +40,20 @@ Notes:	decreasing heading by 0.4em with every subsequent heading level
 /*                   GENERIC                           */
 /*-----------------------------------------------------*/
 /* ----- Normalize ----- */
+#map {
+    height: 500px;
+    width: auto;
+    border:1px solid gray;
+    box-shadow: 2px 2px 2px 2px;
+}
+  /* Optional: Makes the sample page fill the window. */
+ html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0px 0px 0px 0px;
+    padding: 0;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -69,7 +83,7 @@ input, textarea {
 
 button {
     border: none;
-    background: none;
+    background: none;    
 }
 
 img {
@@ -79,6 +93,13 @@ img {
 
 p {
     margin: 0;
+}
+
+.nav {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    margin-right: 40px;
 }
 
 .table-responsive {
@@ -241,6 +262,7 @@ section {
 }
 
 .section__content {
+    background-color: white;
     position: relative;
     margin: 0 auto;
     z-index: 1;
@@ -248,6 +270,10 @@ section {
 
 .section__content--w1830 {
     max-width: 1830px;
+}
+
+.container-fluid {
+    background-color: white;
 }
 
 .section__content--p30 {
@@ -273,9 +299,9 @@ section {
 }
 
 /*Page Objects*/
-.page-wrapper {
+.page-wrapper { 
     overflow: hidden;
-    background: #e5e5e5;
+    background: white;
     padding-bottom: 8vh;
 }
 
@@ -287,8 +313,8 @@ section {
 }
 }
 .page-container {
-    background: #e5e5e5;
-    padding-left: 300px;
+    background: white;
+    
 }
 
 @media (max-width: 991px) {
@@ -316,7 +342,8 @@ section {
 }
 
 .main-content {
-    padding-top: 116px;
+    background-color: white;
+    padding-top: 100px;
     min-height: 100vh;
 }
 
@@ -1181,16 +1208,16 @@ section {
 }
 
 /* ----- Header ----- */
-.header-desktop {
-    background: #f5f5f5;
+#header-desktop {
+    background: #27AE60;
     -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.1);
     box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.1);
     position: fixed;
     top: 0;
     right: 0;
-    left: 300px;
-    height: 75px;
+    left: 0;
+    height: 100px;
     z-index: 3;
 }
 
@@ -1230,11 +1257,13 @@ section {
 
 @media (max-width: 991px) {
     .logo {
+        float: left;
         text-align: center;
     }
 }
 
 .header-wrap {
+    float: right;
     display: -webkit-box;
     display: -webkit-flex;
     display: -moz-box;
@@ -1250,6 +1279,8 @@ section {
     -moz-box-pack: justify;
     -ms-flex-pack: justify;
     justify-content: space-between;
+    margin-right: 30px;
+    margin-top: 30px;
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
@@ -1397,6 +1428,12 @@ section {
     font-size: 12px;
 }
 
+.logo {
+    float: left;
+    width: 300px;
+    height: auto;
+}
+
 .account-wrap {
     position: relative;
 }
@@ -1426,7 +1463,7 @@ section {
 }
 
 .account-item > .content > a {
-    color: #333;
+    color: white;
     text-transform: capitalize;
     font-weight: 500;
 }
@@ -14568,7 +14605,7 @@ section {
 
 /* Background*/
 .bg-white {
-    background: #fff;
+    background: #f4f4e4;
 }
 
 .bg-overlay {
@@ -14648,4 +14685,407 @@ section {
 
 .vue-lists ul, .vue-lists ol {
     padding-left: 30px;
+}
+
+.signup_box {
+    margin:auto;
+    height:400px;
+    width:550px;
+    background-color: white;
+    box-shadow: 2px 2px 2px 2px;
+}
+
+.title {
+    float: left;
+    color: #27AE60;
+}
+
+.hr_w {
+    margin: auto;
+    border:solid 1px;
+    width: 450px;
+    margin-bottom: 30px;
+}
+.signup_info {
+    text-align: center;
+}
+.signup_button {
+    background-color: #27AE60;
+    border: none;
+    border-radius: 5px;
+    width: 130px;
+    height: 30px;
+    text-align: center;
+    color: white;
+    float: right;
+}
+.air_button {
+    background-color: #27AE60;
+    border: none;
+    border-radius: 5px;
+    width: 130px;
+    height: 30px;
+    text-align: center;
+    color: white;
+    margin-top: 30px;
+    margin-right: 10%;
+    float: right;
+}
+
+.input_text {
+    background-color: white;
+    text-align: center;
+    margin: auto;
+    border: none;
+    width: 160px;
+    font-size: 17px;
+}
+#cancel {
+    margin-right: 50px;
+}
+#submit {
+    margin-right: 20px;
+}
+.warning {
+    margin-left: 25%;
+    margin-right: 10px;
+    float: left;
+    width: auto;
+    height: 30px;
+}
+
+#air_submit {
+    margin-top: 30px;
+}
+
+.sensor_title {
+    font-weight: bold;
+    font-size: 25px;
+    border-radius: 100px;
+    border-color: black;
+    width: 350px;
+    height: 50px;
+    background-color: white;
+    color: #27AE60;
+    margin-left: 36%;
+    padding-top: 5px;
+    text-align: center;
+    box-shadow: 2px 2px 2px 2px;
+}
+
+.sensor_button_box {
+    background-color: white;
+    border: solid;
+    border-color: gray;
+    border-radius: 8px;
+    width: 208px;
+    height: 34px;
+    text-align: right;
+    margin-right: 10%;
+    float: right;
+}
+
+.sensor_button {
+    background-color: #27AE60;
+    border: none;
+    border-radius: 5px;
+    width: 49%;
+    height: 30px;
+    text-align: center;
+    color: white;
+}
+
+#button_historical {
+    background-color: white;
+    color: black;
+}
+
+#chart_div {
+    width: 75%;
+    height: 400px;
+    margin: auto;
+    float:left;
+}
+
+.sensor_no {
+    float: left;
+    margin-left: 10%;
+}
+
+.combobox {
+    float: left;
+}
+
+#date_submit {
+    float: left;
+    width: 100%;
+    height: 40px;
+    margin-left: 6%;
+    
+    visibility: hidden;
+}
+
+.userdate {
+    text-align: center;
+    border: solid;
+    margin-right: 10px;
+}
+
+#button_date_submit {
+    background-color: #27AE60;
+    border: none;
+    border-radius: 5px;
+    width: 100px;
+    height: 30px;
+    text-align: center;
+    color: white;
+}
+
+.text_box_div {
+    margin-top: 50px;
+    margin-right: 120px;
+    float: right;
+
+}
+
+.text_box {
+    margin-top: 20px;
+    margin-bottom: 40px;
+    border: solid;
+    border-color: gray;
+    border-radius: 15px;
+    width: 150px;
+    height: 60px;
+
+}
+
+.text_box_text {
+    float: left;
+    font-weight: bold;
+    color: #27AE60;
+    margin-left: 30px;
+    margin-top: 14px;
+}
+
+.change_text {
+    float: right;
+    margin-left: 5px;
+}
+
+.welcome_home {
+    background-color: white;
+}
+
+.home_image {
+    border-color: gray;
+    float: left;
+    width: 40%;
+    height: auto;
+    margin-left: 8%;
+    margin-right: 1%;
+    box-shadow: 2px 2px 2px 2px;
+}
+
+.home_text {
+    padding: 25px 10px 25px 10px;
+    border-radius: 10px;
+    float: right;
+    width: 41%;
+    height: 300px;
+    margin-top: 18px;
+    margin-left: 2%;
+    margin-right: 8%;
+}
+
+.welcome {
+    color: #27AE60;
+}
+
+.team_title {
+    font-weight: bold;
+    font-size: 25px;
+    border-radius: 100px;
+    border-color: black;
+    width: 350px;
+    height: 50px;
+    background-color: white;
+    color: #27AE60;
+    margin-left: 36%;
+    padding-top: 5px;
+    text-align: center;
+    box-shadow: 2px 2px 2px 2px;
+}
+
+.team_box {
+    background-color: white;
+}
+
+.team_all_image {
+    margin-left: 20%;
+    margin-right: 20%;
+    width: 40%;
+    height: auto;
+}
+
+.team_introduce {
+    padding: 5% 3% 5% 3%;
+    width: 45%;
+    height: 300px;
+    border-radius: 15px;
+    margin-bottom: 50px;
+    box-shadow: 2px 2px 2px 2px;
+}
+
+.team_left {
+    float: left;
+    margin-left: 3%;
+}
+
+.team_right {
+    float: right;
+    margin-right: 3%;
+}
+
+.team_image {
+    border: solid;
+    border-radius: 100px;
+    border-color: gray;
+    float: left;
+    width: 50%;
+    height: 100%;
+}
+
+.team_image_circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 100px;
+}
+
+.team_text {
+    color: black;
+    font-size: 18px;
+    text-align: center;
+    float: left;
+    width: 45%;
+    height: auto;
+    margin-left: 2%;
+    margin-right: 3%;
+}
+
+.list_view_title {
+    font-size: 30px;
+    font-weight: bold;
+    border-radius: 100px;
+    width: 300px;
+    height: 60px;
+    border-color: black;
+    padding-top: 7px;
+    background-color: white;
+    color: #27AE60;
+    text-align: center;
+    margin-left: 38%;
+    box-shadow: 2px 2px 2px 2px;
+}
+
+.list_view_div {
+    width: 70%;
+    margin: auto;
+    background-color: white;    
+}
+
+.list_view_box {
+    padding: 2% 2% 2% 2%;
+    float: left;
+    width: 40%;
+    height: 100px;
+    border-radius: 15px;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 20px;
+    box-shadow: 2px 2px 2px 2px;
+}
+
+.list_view_image {
+    border: solid;
+    border-radius: 100px;
+    border-color: gray;
+    float: left;
+    text-align: center;
+    width: 20%;
+    height: 100%;
+}
+
+.list_view_image_circle {
+    height: 100%;
+    border-radius: 100px;
+}
+
+.list_view_text {
+    font-size: 14px;
+    text-align: center;
+    float: left;
+    width: 60%;
+    height: auto;
+    margin-left: 8%;
+}
+
+.type_air_in {
+    background-color: lightblue;
+    color: black;
+}
+
+.type_air_out {
+    background-color: lightyellow;
+    color: black;
+}
+
+.type_heart {
+    background-color: lightpink;
+    color: black;
+}
+
+.type_car {
+    background-color: lightgreen;
+    color: black;
+}
+
+.type_addsensor {
+    background-color: lightgray;
+    color: black;
+}
+
+.yunkwon {
+    background-color: darkseagreen;
+}
+
+.jeseong {
+    background-color: thistle;
+}
+
+.seungsoo {
+    background-color: burlywood;
+}
+
+.jungmin {
+    background-color: skyblue;
+}
+
+.map_title {
+    font-size: 30px;
+    font-weight: bold;
+    border-radius: 100px;
+    width: 200px;
+    height: 60px;
+    border-color: black;
+    padding-top: 7px;
+    background-color: white;
+    color: #27AE60;
+    text-align: center;
+    margin-left: 39%;
+    box-shadow: 2px 2px 2px 2px;
+}
+
+.text_heart {
+    font-weight: bold;
+    text-align: center;
 }

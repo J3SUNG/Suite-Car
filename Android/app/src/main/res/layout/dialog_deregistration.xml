@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/mGreen"
+        android:gravity="center"
+        android:text="Remove Sensor"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/removeSensorId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Sensor Name" />
+
+        <TextView
+            android:id="@+id/removeSensorMac"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Sensor Mac address" />
+        <TextView
+            android:id="@+id/removeSensorType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Sensor Mac address" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/removeDialogRemoveButton"
+            style="@style/normalButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Remove" />
+
+        <Button
+            android:id="@+id/removeDialogCancelButton"
+            style="@style/normalButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Cancel" />
+    </LinearLayout>
+</LinearLayout>

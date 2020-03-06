@@ -15,6 +15,7 @@
             style="@style/editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/forgottenUsername"
             android:hint="Username" />
 
         <EditText
@@ -22,10 +23,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email"
+            android:id="@+id/forgottenEmail"
             android:inputType="textEmailAddress" />
 
         <Button
-            android:id="@+id/signInButton"
+            android:id="@+id/forgottenButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/logInButton"

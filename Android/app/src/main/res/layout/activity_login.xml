@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
         android:src="@drawable/logo"
-        android:id="@+id/logo"/>
+        android:id="@+id/logo"
+        />
 
     <com.google.android.material.tabs.TabLayout
         android:layout_below="@+id/logo"

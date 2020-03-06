@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import com.qic.suitecar.MainActivity
 import com.qic.suitecar.R
 import com.qic.suitecar.dataclass.ResultData
+import com.qic.suitecar.dataclass.ResultSignInData
 import com.qic.suitecar.util.IServer
 import com.qic.suitecar.util.RetrofitClient
 import kotlinx.android.synthetic.main.fragment_signin.*
@@ -46,23 +47,36 @@ class SignInFragment : Fragment(), View.OnClickListener {
             return
         }
         Runnable {
-            myApi.signIn(0, username!!, password!!).enqueue(object :
+            myApi.signin(1, username!!, password!!).enqueue(object :
                 retrofit2.Callback<ResponseBody> {
                 override fun onResponse(
                     call: Call<ResponseBody>,
                     response: Response<ResponseBody>
                 ) {
                     var a = response.body()!!.string()
+
                     var gson = Gson()
-                    var resultData = gson.fromJson(a, ResultData::class.java)
-                    if (resultData.result) {
-                        Toast.makeText(mContext,"Welcome to SuitCar",Toast.LENGTH_SHORT).show()
-                        SharedPreValue.setLoginFlag(context!!,true)
-                        var intent = Intent(mContext, MainActivity::class.java)
-                        startActivity(intent)
-                    } else {
-                        Toast.makeText(mContext,"Check your ID or Password",Toast.LENGTH_SHORT).show()
+                    var resultSignInData = gson.fromJson(a, ResultSignInData::class.java)
+                    when(resultSignInData.result){
+                        0->{
+                            Toast.makeText(mContext,"Check your ID or Password",Toast.LENGTH_SHORT).show()
+                            return
+                        }
+                        1->{
+                            Toast.makeText(mContext,"Welcome to SuitCar",Toast.LENGTH_SHORT).show()
+
+                        }
+                        2->{
+                            Toast.makeText(mContext,"You should change the password",Toast.LENGTH_SHORT).show()
+
+                        }
                     }
+                    SharedPreValue.setLoginFlag(mContext,true)
+                    SharedPreValue.setUserNo(mContext,resultSignInData.user_no)
+                    Log.d("SignIn",resultSignInData.user_no.toString()+"asd")
+                    SharedPreValue.setUsername(mContext,username!!)
+                    var intent = Intent(mContext, MainActivity::class.java)
+                    startActivity(intent)
                 }
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     Log.d("SignIn", "Fail : " + t.message)

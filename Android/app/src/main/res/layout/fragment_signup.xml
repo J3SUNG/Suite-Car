@@ -8,27 +8,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <EditText
-            style="@style/editText"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:hint="First Name" />
 
-        <EditText
-            style="@style/editText"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:hint="Last Name" />
+            <EditText
+                android:id="@+id/signUpFname"
+                style="@style/editText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="First Name" />
+
+            <EditText
+                android:id="@+id/signUpLname"
+                style="@style/editText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Last Name" />
         </LinearLayout>
 
 
         <EditText
+            android:id="@+id/signUpUsername"
             style="@style/editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,34 +41,39 @@
 
 
         <EditText
+            android:id="@+id/signUpPassword"
             style="@style/editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password" />
 
         <EditText
+            android:id="@+id/signUpConfirmPassword"
             style="@style/editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Retype Password" />
 
         <EditText
+            android:id="@+id/signUpEmail"
             style="@style/editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email" />
 
         <EditText
+            android:id="@+id/signUpPhone"
             style="@style/editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Phone" />
+
         <Button
+            android:id="@+id/signUpButton"
+            style="@style/logInButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/signUpButton"
-            android:text="Sign up"
-            style="@style/logInButton"
-            android:onClick="onClick"/>
+            android:onClick="onClick"
+            android:text="Sign up" />
     </LinearLayout>
 </LinearLayout>

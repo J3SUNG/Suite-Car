@@ -1,47 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:orientation="vertical"
     tools:context=".ui.airinfo.AirInfoActivity">
 
 
-
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/airInfoTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/airInfoTitle">
+        android:layout_height="50dp"
+        android:background="@color/mGreen"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
         <TextView
-            android:id="@+id/airInfoUsnTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="USN" />
+            android:id="@+id/airInfoTypeTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:gravity="left|center"
+            android:text="Realtime AQI"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="HOME" />
-    </RelativeLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent">
 
-    <com.github.demono.AutoScrollViewPager
-        android:id="@+id/airInfoViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        app:stopWhenTouch="true"
-        app:slideInterval="5000"
-        app:slideDirection="right"
-        app:slideDuration="5000"
-        android:layout_below="@+id/airInfoTitle"/>
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/airInfoLineChart"
+
+
+            <RelativeLayout
+                android:id="@+id/airInfoAutoLayout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/airInfoTitle"
+                android:layout_margin="5dp"
+                android:layout_weight="0.7">
+
+                <com.github.demono.AutoScrollViewPager
+                    android:id="@+id/airInfoViewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_margin="5dp"
+                    android:layout_toLeftOf="@+id/airInfoRightButton"
+                    android:layout_toRightOf="@+id/airInfoLeftButton"
+                    android:background="#00000000"
+                    app:slideDirection="right"
+                    app:slideDuration="5000"
+                    app:slideInterval="5000"
+                    app:stopWhenTouch="true" />
+
+                <Button
+                    android:id="@+id/airInfoLeftButton"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/ic_left"
+                    android:onClick="onClick" />
+
+                <Button
+                    android:id="@+id/airInfoRightButton"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/ic_right"
+                    android:onClick="onClick" />
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/airInfoSpinner"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="0.7"
+                android:spinnerMode="dropdown"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textColorHighlight="@color/white"
+                />
+            <Button
+                android:id="@+id/airInfoSettingButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="0.1"
+                android:background="@drawable/ic_settings_black_24dp"
+                android:onClick="onClick" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/airInfoViewPager"
-        android:onClick="onClick"/>
+        android:layout_margin="30dp">
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/airInfoLineChart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 
-</RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>
