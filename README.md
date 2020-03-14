@@ -2,10 +2,10 @@ Health-related-IoT-Tracking-Platform-Challenge
 
 Team C
 
-신윤권
-이제성
-박승수
-이정민
+YunKwon Shin 
+JeSeong Lee
+SeungSoo Park
+JungMin Lee
 
 Title : Suite Car
 
