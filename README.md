@@ -5,8 +5,8 @@
 <br/> <br/>
 
 ## Overview
-<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/7fd5849c-bd83-4b0c-a111-e64d501af387.jpg" width="300" height="200"/>
-<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/00113ef3-a3db-425f-bf41-789e03b57ff5.jpg" width="300" height="200"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/7fd5849c-bd83-4b0c-a111-e64d501af387.jpg" width="350" height="250"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/00113ef3-a3db-425f-bf41-789e03b57ff5.jpg" width="350" height="250"/>
 <img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/589cae3e-4812-4bef-9329-1e857e5e4340.jpg" width="150" height="250"/>
 <br/> <br/>
 
