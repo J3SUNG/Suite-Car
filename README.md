@@ -89,7 +89,75 @@ Outstanding Achievement Award 수상 <br/>
 ### 소프트웨어 설계
 
 - Reference Model
+
+![Reference Model drawio](https://github.com/J3SUNG/Suite-Car/assets/16315673/6b916ea0-5005-49cd-b065-7ddea530d47a)
+<br/><br/>
+
 - System Architecture
+
+![System Architecture drawio](https://github.com/J3SUNG/Suite-Car/assets/16315673/1fc7ce30-4c13-4ece-a233-765100294c9f)
+<br/><br/>
+
 - Procedure Design
+ 
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/a5787658-0944-42ce-a34c-88351b367199.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/53f357c4-3a6a-4d42-bdfe-d8ddc90419a7.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/7d5ac82c-788d-4853-ac50-021ce70d70d5.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/169a680c-3866-46f0-aef1-7e8fa01a4b8d.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/0c5ddc26-a33e-47a6-a89a-994b6d3277e0.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/003b0231-cc7b-43d1-a240-8a1f4dec3a7f.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/92261356-1a57-4b6f-8810-17bbf70c90c6.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/c22ed227-2328-48e4-b650-5a567e95ff1f.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/3f355ecb-f5cb-482f-890d-989e5fe5b214.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/beaff07f-4c07-47cc-9907-b6921490aa05.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/66dd0e4a-4f70-4d50-bff2-3ef59de7d708.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/e9fe911a-786b-4d07-9daf-208f1132996d.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/eea80955-74ba-4cae-bbc1-aae5d8434014.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/4d5b6b79-f9fd-4f02-ac8f-326025968f4c.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/5e1c3eec-fbc7-462e-9e1a-1a639a05228c.jpg" width="200" height="400"/>
+<br/><br/>
+
 - Flowchart
+
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/e33dda3f-644f-4bdb-a6c1-492c345db6ff.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/882d646c-7654-4d06-ba94-a2beb5866d0c.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/04af2666-a35a-4aa4-8e41-9f9526b4967c.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/5728fc7c-9bcf-4e02-b340-bb6d6d279bd1.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/9a47e453-b1ea-47c1-9907-346545930925.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/a273926a-e2a1-49b4-82a6-45d191d0a34e.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/fed39af9-3bd0-4108-9024-792bc0df7d9d.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/928a0f06-68e1-41a1-871c-39de07b95ac0.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/82047a21-e86e-4f81-8529-731befd051d8.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/17c42112-b82f-4ef2-9d57-8affb4466974.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/b26a4c2a-7305-4fef-b782-4d362f3d685f.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/37455d37-68f9-447e-ad8b-f8fbb85fc951.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/c34ec500-b11a-4333-9b07-b1293f38c6c8.jpg" width="200" height="400"/>
+<img src="https://github.com/J3SUNG/Suite-Car/assets/16315673/c1b58ab2-b72d-453a-b6b2-754b78c29dbc.jpg" width="200" height="400"/>
+<br/><br/>
+
 - Database Schema
+
+![Database Schema](https://github.com/J3SUNG/Suite-Car/assets/16315673/fa45f1fd-dfd7-4b28-955d-0410ede16660)
+<br/><br/>
+
+### 주요기능
+- User
+  - sign in
+  - sign out
+  - sign up
+  - user password change
+  - forgotten password
+  - id cancellation
+  
+- Sensor
+  - registration
+  - deregistration
+  - association
+  - deassociation
+  - list
+
+- Data
+  - realtime air quality data view
+  - realtime heart-related data view
+  - historical air quality data view
+  - historical heart-related data view
